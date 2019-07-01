@@ -6,6 +6,6 @@
     print("Hey!\nEnter your word: ");
     $word = getUserInput();
 
-    $list = getTextFileData('tex-hyphenation-patterns.txt');
+    $patterns = getTextFileData('tex-hyphenation-patterns.txt');
 
-    remakeWord($word, $list);
+    hyphenate($word, $patterns);
