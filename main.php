@@ -16,6 +16,7 @@
 
     $patterns = getPatternsForWord($word, $patternsList);
 
+    // debug [adds all patterns which are needed for the given word]
     $logcontent = $patterns;
     logtofile('patterns.txt', $logcontent);
 

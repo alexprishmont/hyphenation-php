@@ -49,10 +49,14 @@ function getPatternsForWord($word, $patternList) {
             $search = strval(array_search('.', $pchars));
             if (array_key_exists($search, $pchars)) {
                 if ($search == 0 && !findStartPattern($patterns)) {
-                    $patterns[] = $pattern;
+                    $wordSection = substr($word, 0, strlen($cleanString));
+                    if ($wordSection == $cleanString)
+                        $patterns[] = $pattern;
                 }
                 else if ($search > 0 && !findEndPattern($patterns)) {
-                    $patterns[] = $pattern;
+                    $wordSection = substr($word,strlen($word) - strlen($cleanString), strlen($word));
+                    if ($wordSection == $cleanString)
+                        $patterns[] = $pattern;
                 }
             }
             else $patterns[] = $pattern;
