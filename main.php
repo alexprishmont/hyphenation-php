@@ -2,14 +2,21 @@
     require_once("scan.php");
     require_once("algorithm.php");
 
+    require_once("debug.php");
+
 
     print("Hey!\nEnter your word: ");
     $word = getUserInput();
 
-    $patterns = getTextFileData('tex-hyphenation-patterns.txt');
+    $patternsList = getTextFileData('tex-hyphenation-patterns.txt');
 
     // Start measuring execution time
     $start_time = microtime(true);
+
+    $patterns = getPatternsForWord($word, $patternsList);
+
+    $logcontent = $patterns;
+    logtofile('patterns.txt', $logcontent);
 
     echo hyphenate($word, $patterns);
 

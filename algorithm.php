@@ -1,4 +1,5 @@
 <?php
+
 function array_insert(&$array, $position, $insert) {
     if (is_int($position))
         array_splice($array, $position, 0, $insert);
@@ -12,11 +13,25 @@ function array_insert(&$array, $position, $insert) {
     }
 }
 
+function getPatternsForWord($word, $patternList) {
+    $patterns = [];
+    foreach($patternList as $pattern) {
+        $pchars = str_split($pattern);
 
+        $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
+        $cleanString = substr($cleanString, 0, sizeof($pchars));
+
+        if (strpos($word, $cleanString) !== false)
+            $patterns[] = $pattern;
+    }
+    return $patterns;
+}
 
 function hyphenate($word, $patterns) {
     $chars = str_split($word);
 
+    $logcontent = "";
+    
     $remadeword = $word;
     $rchars = str_split($remadeword);
 
@@ -27,6 +42,11 @@ function hyphenate($word, $patterns) {
         $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
         $cleanString = substr($cleanString, 0, sizeof($pchars));
 
+        /*     debug
+        $logcontent .= "$cleanString / $pattern\n";
+        logtofile('log.txt', $logcontent);
+        */
+        
         $patternKeyPos = null;
         $position = null;
 
@@ -37,22 +57,35 @@ function hyphenate($word, $patterns) {
             }
             if ($pchars[$i] == '.') {
                 if ($i == 0) $position = 'start';
-                else if ($i == sizeof($pchars) - 1) $position = 'end';
+                else if ($i > 0) $position = 'end';
                 continue;
             }
         }
 
         $lengthOfPattern = strlen($pattern);
         $pos = strpos($remadeword, $cleanString);
+
         if ($pos !== false) {
-            if ($position == 'start' && $pos == 0) {
-                array_insert($rchars, 0 + $patternKeyPos, $pattern[$patternKeyPos]);
-            }
-            else if ($position == 'end' && $pos == strlen($word)) {
-                array_insert($rchars, sizeof($rchars) - $patternKeyPos, $pattern[$patternKeyPos]);
-            }
-            else {
-                array_insert($rchars, $pos + $patternKeyPos, $pattern[$patternKeyPos]);                                   
+            switch($position) {
+                case 'start': {
+                    if ($pos == 0)
+                        array_insert($rchars, 0 + $patternKeyPos - 1, $pattern[$patternKeyPos]);
+                    break;
+                }
+                case 'end': {
+                    if ($pos == strlen($remadeword))
+                        array_insert($rchars, strlen($remadeword) - $patternKeyPos - 1, $pattern[$patternKeyPos]);
+                    break;
+                }
+                default: {
+                    $newpos = $pos + $patternKeyPos;
+                    if (is_numeric($rchars[$newpos])) {
+                        if ($rchars[$newpos] < $pattern[$patternKeyPos])
+                            array_insert($rchars, $pos + $patternKeyPos, $pattern[$patternKeyPos]);
+                    }
+                    else array_insert($rchars, $pos + $patternKeyPos, $pattern[$patternKeyPos]);  
+                    break;
+                }
             }
             $remadeword = implode('', $rchars);
         }
