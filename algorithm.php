@@ -18,7 +18,7 @@ function findStartPattern(&$array = []) {
         $chars = str_split($item);
         for ($i = 0; $i < sizeof($chars); $i++) {
             if ($i == 0 && $chars[$i] == '.')
-                return true;
+                return $item;
         }
     }
     return false;
@@ -29,7 +29,7 @@ function findEndPattern(&$array = []) {
         $chars = str_split($item);
         for ($i = 0; $i < sizeof($chars); $i++) {
             if ($i > 0 && $chars[$i] == '.')
-                return true;
+                return $item;
         }
     }
     return false;
@@ -65,69 +65,53 @@ function getPatternsForWord($word, $patternList) {
     return $patterns;
 }
 
-function hyphenate($word, $patterns) {
-    $chars = str_split($word);
+function getDigitPlace($pattern) {
+    $split = str_split($pattern);
+    $places = [];
+    for ($i = 0; $i < sizeof($split); $i++) {
+        if (is_numeric($split[$i]))
+            $places[] = $i;
+    }
+    return $places;
+}
 
-    $logcontent = "";
-    
+function hyphenate($word, $patterns) {
     $remadeword = $word;
     $rchars = str_split($remadeword);
 
     foreach ($patterns as &$pattern) {
+        $pattern = trim(preg_replace('/\s+/', ' ', $pattern));
         $pattern = strval($pattern);
         $pchars = str_split($pattern);
 
         $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
         $cleanString = substr($cleanString, 0, sizeof($pchars));
 
-        /*     debug
-        $logcontent .= "$cleanString / $pattern\n";
-        logtofile('log.txt', $logcontent);
-        */
+        $patternSpot = strpos($word, $cleanString);
+        $digitPlaces = getDigitPlace($pattern);
+
+        if (findStartPattern($patterns) == $pattern) {
+            foreach ($digitPlaces as $digit) {
+                array_insert($rchars, $digit - 1, $pchars[$digit]);
+            }
+        }
+
+        if (findEndPattern($patterns) == $pattern) {
+            if ($patternSpot == sizeof($rchars) - strlen($cleanString) - 1) {
+                foreach ($digitPlaces as $digit) {
+                    $placement = sizeof($rchars) - strlen($cleanString) + $digit;
+                    array_insert($rchars, $placement, $pchars[$digit]);
+                }
+            }
+        }
         
-        $patternKeyPos = null;
-        $position = null;
-
-        for ($i = 0; $i < sizeof($pchars); $i++) {
-            if (is_numeric($pchars[$i])) {
-                $patternKeyPos = $i;
-                continue;
-            }
-            if ($pchars[$i] == '.') {
-                if ($i == 0) $position = 'start';
-                else if ($i > 0) $position = 'end';
-                continue;
+        if (findEndPattern($patterns) != $pattern && findStartPattern($patterns) != $pattern) {
+            foreach ($digitPlaces as $digit) {
+                // middle digits
             }
         }
 
-        $lengthOfPattern = strlen($pattern);
-        $pos = strpos($remadeword, $cleanString);
-
-        if ($pos !== false) {
-            switch($position) {
-                case 'start': {
-                    if ($pos == 0)
-                        array_insert($rchars, 0 + $patternKeyPos - 1, $pattern[$patternKeyPos]);
-                    break;
-                }
-                case 'end': {
-                    if ($pos == strlen($remadeword))
-                        array_insert($rchars, strlen($remadeword) - $patternKeyPos - 1, $pattern[$patternKeyPos]);
-                    break;
-                }
-                default: {
-                    $newpos = $pos + $patternKeyPos;
-                    if (is_numeric($rchars[$newpos])) {
-                        if ($rchars[$newpos] < $pattern[$patternKeyPos])
-                            array_insert($rchars, $pos + $patternKeyPos, $pattern[$patternKeyPos]);
-                    }
-                    else array_insert($rchars, $pos + $patternKeyPos, $pattern[$patternKeyPos]);  
-                    break;
-                }
-            }
-            $remadeword = implode('', $rchars);
-        }
-
+        $remadeword = implode('', $rchars);
     }
     return $remadeword;
 }

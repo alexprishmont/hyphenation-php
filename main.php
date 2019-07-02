@@ -20,7 +20,7 @@
     $logcontent = $patterns;
     logtofile('patterns.txt', $logcontent);
 
-    echo hyphenate($word, $patterns);
+    print(hyphenate($word, $patterns));
 
     // End measuring execution time
     $end_time = microtime(true);
