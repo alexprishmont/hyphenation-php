@@ -1,8 +1,9 @@
 <?php
+    require_once("debug.php"); // logtofile function
+
     require_once("scan.php");
     require_once("algorithm.php");
 
-    require_once("debug.php");
 
 
     print("Hey!\nEnter your word: ");

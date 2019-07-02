@@ -13,16 +13,50 @@ function array_insert(&$array, $position, $insert) {
     }
 }
 
+function findStartPattern(&$array = []) {
+    foreach ($array as $item) {
+        $chars = str_split($item);
+        for ($i = 0; $i < sizeof($chars); $i++) {
+            if ($i == 0 && $chars[$i] == '.')
+                return true;
+        }
+    }
+    return false;
+}
+
+function findEndPattern(&$array = []) {
+    foreach ($array as $item) {
+        $chars = str_split($item);
+        for ($i = 0; $i < sizeof($chars); $i++) {
+            if ($i > 0 && $chars[$i] == '.')
+                return true;
+        }
+    }
+    return false;
+}
+
 function getPatternsForWord($word, $patternList) {
     $patterns = [];
+
     foreach($patternList as $pattern) {
         $pchars = str_split($pattern);
 
         $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
         $cleanString = substr($cleanString, 0, sizeof($pchars));
 
-        if (strpos($word, $cleanString) !== false)
-            $patterns[] = $pattern;
+        $foundPosition = strpos($word, $cleanString);
+        if ($foundPosition !== false) {
+            $search = strval(array_search('.', $pchars));
+            if (array_key_exists($search, $pchars)) {
+                if ($search == 0 && !findStartPattern($patterns)) {
+                    $patterns[] = $pattern;
+                }
+                else if ($search > 0 && !findEndPattern($patterns)) {
+                    $patterns[] = $pattern;
+                }
+            }
+            else $patterns[] = $pattern;
+        }
     }
     return $patterns;
 }
