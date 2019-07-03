@@ -9,6 +9,6 @@ else {
     if (isset($argv[1]) && isset($argv[2])) {
         $option = $argv[1];
         $target = $argv[2];
-        makeMagic($option, $target);
+        loadAlgorithm($option, $target);
     }
 }

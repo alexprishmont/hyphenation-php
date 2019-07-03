@@ -4,9 +4,9 @@
     require_once("scan.php");
 
     require_once("algorithms/word-algorithm.php");
-    require_once("algorithms/sentence.php");
+    require_once("algorithms/string-algorithm.php");
 
-    function makeMagic($option, $target) {
+    function loadAlgorithm($option, $target) {
         $start_timing = microtime(true);
         $path = dirname(__FILE__, 2);
         $patternsList = getTextFileData($path."/tex-hyphenation-patterns.txt");
@@ -18,7 +18,7 @@
                 break;
             }
             case "-s": {
-
+                $test = new Stringhyphenation($target);
                 break;
             }
             case "-f": {
