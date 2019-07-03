@@ -67,7 +67,7 @@ function getPatternsForWord($word, $patternList) {
                     $patterns[] = $pattern;
             }
             else if ($pattern[strlen($pattern) - 1] == '.' && !findEndPattern($patterns)) {
-                $section = substr($word, 0, strlen($cleanString));
+                $section = substr($word, strlen($word) - strlen($cleanString), strlen($word));
                 if ($section == $cleanString)
                     $patterns[] = $pattern;
             }
