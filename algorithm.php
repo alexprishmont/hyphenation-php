@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @param array $array
+ * @return bool|mixed
+ * Function finds pattern which should be in the beginning of the word
+ * Returns false if there's no such pattern
+ * Return full pattern [string] if it found
+ */
 function findStartPattern(&$array = []) {
     foreach ($array as $item) {
         $chars = str_split($item);
@@ -11,6 +18,13 @@ function findStartPattern(&$array = []) {
     return false;
 }
 
+/**
+ * @param array $array
+ * @return bool|mixed
+ * Function finds pattern which should be in the end of the word
+ * Returns false if there's no such pattern
+ * Return full pattern [string] if it found
+ */
 function findEndPattern(&$array = []) {
     foreach ($array as $item) {
         $chars = str_split($item);
@@ -22,6 +36,12 @@ function findEndPattern(&$array = []) {
     return false;
 }
 
+/**
+ * @param $pattern
+ * @return bool|string|string[]|null
+ * Cleans pattern string
+ * Leaves only chars w/o any digits and other symbols
+ */
 function getCleanPatternString($pattern) {
     $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
     $cleanString = substr($cleanString, 0, sizeof(str_split($pattern)));
@@ -29,6 +49,13 @@ function getCleanPatternString($pattern) {
     return $cleanString;
 }
 
+/**
+ * @param $word
+ * @param $patternList
+ * @return array
+ * Sorts given patterns list
+ * Returns patterns which could be used for the given word
+ */
 function getPatternsForWord($word, $patternList) {
     $patterns = [];
 
@@ -58,7 +85,14 @@ function getPatternsForWord($word, $patternList) {
     return $patterns;
 }
 
-function getResult($pattern, $pos, $cleanString) {
+/**
+ * @param $pattern
+ * @param $pos
+ * @param $cleanString
+ * @return array
+ * Saves data to pattern 2D array
+ */
+function savePattern($pattern, $pos, $cleanString) {
     $chars = [];
     $chardigits = [];
     $enddigits = [];
@@ -86,6 +120,12 @@ function getResult($pattern, $pos, $cleanString) {
     ];
 }
 
+/**
+ * @param $word
+ * @param $patterns
+ * @return array
+ * Makes pattern struct using function savePattern($pattern, $pos, $cleanString)
+ */
 function getPatternsStruct($word, $patterns) {
     $patterns_struct = [];
     foreach ($patterns as $pattern) {
@@ -96,25 +136,30 @@ function getPatternsStruct($word, $patterns) {
             // beginning
             $position = strpos($word, substr($cleanString, 1));
             if ($position === 0)
-                $patterns_struct[] = getResult($patternWithoutDot, $position, $cleanString);
+                $patterns_struct[] = savePattern($patternWithoutDot, $position, $cleanString);
         }
         if (findStartPattern($patterns) != $pattern && findEndPattern($patterns) == $pattern) {
             // end
             $position = strpos($word, substr($cleanString, 0, strlen($cleanString) - 1));
             if ($position === strlen($word) - strlen($cleanString) + 1)
-                $patterns_struct[] = getResult($patternWithoutDot, $position, $cleanString);
+                $patterns_struct[] = savePattern($patternWithoutDot, $position, $cleanString);
         }
         if (findEndPattern($patterns) != $pattern && findStartPattern($patterns) != $pattern) {
             // middle
             $position = strpos($word, $cleanString);
             if ($position !== false)
-                $patterns_struct[] = getResult($patternWithoutDot, $position, $cleanString);
+                $patterns_struct[] = savePattern($patternWithoutDot, $position, $cleanString);
         }
     }
 
     return $patterns_struct;
 }
 
+/**
+ * @param $word
+ * @return array
+ * Makes 2D array for the given word, splits by chars and inserts zeros
+ */
 function getWordStruct($word) {
     $struct = [];
     for ($i = 0; $i < strlen($word); $i++) {
@@ -126,6 +171,10 @@ function getWordStruct($word) {
     return $struct;
 }
 
+/**
+ * @param $word_struct
+ * Final function which splits word to syllables
+ */
 function makeWordWithSyllables($word_struct) {
     $minus_count = 0;
     foreach ($word_struct as $char_struct) {
@@ -142,6 +191,11 @@ function makeWordWithSyllables($word_struct) {
     }
 }
 
+/**
+ * @param $word
+ * @param $patterns
+ * Main function which connects all other functions and returns result
+ */
 function hyphenate($word, $patterns) {
     $struct = getWordStruct($word);
     $patterns_struct = getPatternsStruct($word, $patterns);
@@ -170,5 +224,7 @@ function hyphenate($word, $patterns) {
             }
         }
     }
-    return makeWordWithSyllables($struct);
+
+    $wordWithSyllables = makeWordWithSyllables($struct);
+    return $wordWithSyllables;
 }
