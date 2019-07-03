@@ -10,9 +10,8 @@
 function findStartPattern(&$array = []) {
     foreach ($array as $item) {
         $chars = str_split($item);
-        for ($i = 0; $i < sizeof($chars); $i++) {
-            if ($i == 0 && $chars[$i] == '.')
-                return $item;
+        if($chars[0] == '.') {
+            return $item;
         }
     }
     return false;
@@ -28,10 +27,8 @@ function findStartPattern(&$array = []) {
 function findEndPattern(&$array = []) {
     foreach ($array as $item) {
         $chars = str_split($item);
-        for ($i = 0; $i < sizeof($chars); $i++) {
-            if ($i > 0 && $chars[$i] == '.')
-                return $item;
-        }
+        if ($chars[sizeof($chars) - 1] == '.')
+            return $item;
     }
     return false;
 }
@@ -121,6 +118,44 @@ function savePattern($pattern, $pos, $cleanString) {
 }
 
 /**
+ * @param $struct
+ * @param $word
+ * @param $withoutdot
+ * @param $cleanString
+ */
+function getPatternPositionAtStart(&$struct, $word, $withoutdot, $cleanString) {
+    // beginning
+    $position = strpos($word, substr($cleanString, 1));
+    if ($position === 0)
+        $struct[] = savePattern($withoutdot, $position, $cleanString);
+}
+
+/**
+ * @param $struct
+ * @param $word
+ * @param $withoutdot
+ * @param $cleanString
+ */
+function getPatternPositionAtEnd(&$struct, $word, $withoutdot, $cleanString) {
+    // end
+    $position = strpos($word, substr($cleanString, 0, strlen($cleanString) - 1));
+    if ($position === strlen($word) - strlen($cleanString) + 1)
+        $struct[] = savePattern($withoutdot, $position, $cleanString);
+}
+
+/**
+ * @param $struct
+ * @param $word
+ * @param $withoutdot
+ * @param $cleanString
+ */
+function getPatternPositionAtMiddle(&$struct, $word, $withoutdot, $cleanString) {
+    // middle
+    $position = strpos($word, $cleanString);
+    if ($position !== false)
+        $struct[] = savePattern($withoutdot, $position, $cleanString);
+}
+/**
  * @param $word
  * @param $patterns
  * @return array
@@ -132,26 +167,14 @@ function getPatternsStruct($word, $patterns) {
         $cleanString = getCleanPatternString($pattern);
         $patternWithoutDot = str_replace('.', '', $pattern);
 
-        if (findStartPattern($patterns) == $pattern) {
-            // beginning
-            $position = strpos($word, substr($cleanString, 1));
-            if ($position === 0)
-                $patterns_struct[] = savePattern($patternWithoutDot, $position, $cleanString);
-        }
-        if (findStartPattern($patterns) != $pattern && findEndPattern($patterns) == $pattern) {
-            // end
-            $position = strpos($word, substr($cleanString, 0, strlen($cleanString) - 1));
-            if ($position === strlen($word) - strlen($cleanString) + 1)
-                $patterns_struct[] = savePattern($patternWithoutDot, $position, $cleanString);
-        }
-        if (findEndPattern($patterns) != $pattern && findStartPattern($patterns) != $pattern) {
-            // middle
-            $position = strpos($word, $cleanString);
-            if ($position !== false)
-                $patterns_struct[] = savePattern($patternWithoutDot, $position, $cleanString);
-        }
-    }
+        if (findStartPattern($patterns) == $pattern)
+            getPatternPositionAtStart($patterns_struct, $word, $patternWithoutDot, $cleanString);
+        if (findStartPattern($patterns) != $pattern && findEndPattern($patterns) == $pattern)
+            getPatternPositionAtEnd($patterns_struct, $word, $patternWithoutDot, $cleanString);
+        if (findEndPattern($patterns) != $pattern && findStartPattern($patterns) != $pattern)
+            getPatternPositionAtMiddle($patterns_struct, $word, $patternWithoutDot, $cleanString);
 
+    }
     return $patterns_struct;
 }
 

@@ -1,10 +1,4 @@
 <?php
-
-    function getUserInput() {
-        $handle = fopen("php://stdin", "r");
-        return trim(fgets($handle));
-    }
-
     function getTextFileData($src) {
         $file = new SplFileObject($src);
         $data = [];

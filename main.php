@@ -6,8 +6,8 @@
 
 
 
-    print("Hey!\nEnter your word: ");
-    $word = getUserInput();
+    print("Hey!\n");
+    $word = readline("Enter your word: ");
 
     $patternsList = getTextFileData('tex-hyphenation-patterns.txt');
 
