@@ -18,7 +18,8 @@
                 break;
             }
             case "-s": {
-                $test = new Stringhyphenation($target);
+                $stringHyp = new Stringhyphenation($target, $patternsList);
+                $stringHyp->result();
                 break;
             }
             case "-f": {
