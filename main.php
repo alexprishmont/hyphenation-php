@@ -20,11 +20,12 @@
     $logcontent = $patterns;
     logtofile('patterns.txt', $logcontent);
 
-    print(hyphenate($word, $patterns));
+    $result = hyphenate($word, $patterns);
 
     // End measuring execution time
     $end_time = microtime(true);
     $execution_time = ($end_time - $start_time);
 
     // Print result
+    echo "\n$result\n";
     echo "\nExecution time of hyphenation algorithm = $execution_time sec.\n";

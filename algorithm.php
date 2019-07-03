@@ -1,18 +1,5 @@
 <?php
 
-function array_insert(&$array, $position, $insert) {
-    if (is_int($position))
-        array_splice($array, $position, 0, $insert);
-    else {
-        $pos = array_search($position, array_keys($array));
-        $array = array_merge(
-              array_slice($array, 0, $pos),
-              $insert,
-              array_slice($array, $pos)
-        );
-    }
-}
-
 function findStartPattern(&$array = []) {
     foreach ($array as $item) {
         $chars = str_split($item);
@@ -65,54 +52,118 @@ function getPatternsForWord($word, $patternList) {
     return $patterns;
 }
 
-function getDigitPlace($pattern) {
-    $split = str_split($pattern);
-    $places = [];
-    for ($i = 0; $i < sizeof($split); $i++) {
-        if (is_numeric($split[$i]))
-            $places[] = $i;
+function getResult($pattern, $pos, $cleanString) {
+    $chars = [];
+    $chardigits = [];
+    $enddigits = [];
+
+    preg_match_all('/[0-9]+[a-z]{1}/', $pattern, $chars);
+    preg_match_all('/[0-9]+$/', $pattern, $enddigit);
+
+    foreach ($chars as $x => $y) {
+        foreach ($y as $char) {
+            $c = preg_replace('/[0-9]+/', '', $char);
+            $n = intval(preg_replace('/[a-z]{1}/', '', $char));
+            $chardigits[$c] = $n;
+        }
     }
-    return $places;
+
+    foreach ($enddigits as $x => $y) {
+        foreach($y as $char) {
+            $chardigits[''] = intval($char);
+        }
+    }
+
+    return [
+        'position' => $pos,
+        'char_digits' => $chardigits,
+        'length' => strlen($cleanString)
+    ];
+}
+
+function getPatternsStruct($word, $patterns) {
+    $patterns_struct = [];
+    foreach ($patterns as $pattern) {
+        $cleanString = preg_replace('/[0-9]+/', '', $pattern);
+        $cleanString = trim(preg_replace('/\s+/', ' ', $cleanString));
+
+        if (findStartPattern($patterns) == $pattern) {
+            // beginning
+            $position = strpos($word, substr($cleanString, 1));
+            if ($position === 0)
+                $patterns_struct[] = getResult(str_replace('.', '', $pattern), $position, str_replace('.', '', $cleanString));
+        }
+        if (findStartPattern($patterns) != $pattern && findEndPattern($patterns) == $pattern) {
+            // end
+            $position = strpos($word, substr($cleanString, 0, strlen($cleanString) - 1));
+            if ($position === strlen($word) - strlen($cleanString) + 1)
+                $patterns_struct[] = getResult(str_replace('.', '', $pattern), $position, str_replace('.', '', $cleanString));
+        }
+        if (findEndPattern($patterns) != $pattern && findStartPattern($patterns) != $pattern) {
+            // middle
+            $position = strpos($word, $cleanString);
+            if ($position !== false)
+                $patterns_struct[] = getResult(str_replace('.', '', $pattern), $position, str_replace('.', '', $cleanString));
+        }
+    }
+
+    return $patterns_struct;
+}
+
+function getWordStruct($word) {
+    $struct = [];
+    for ($i = 0; $i < strlen($word); $i++) {
+        $struct[] = [
+            'char' => $word[$i],
+            'digit' => 0
+        ];
+    }
+    return $struct;
+}
+
+function makeWordWithSyllables($word_struct) {
+    $minus_count = 0;
+    foreach ($word_struct as $char_struct) {
+        $char = $char_struct['char'];
+        $digit = $char_struct['digit'];
+        if (!empty($digit)) {
+            if ($digit % 2 > 0) {
+                if ($minus_count > 0)
+                    echo '-';
+            }
+        }
+        echo $char;
+        $minus_count ++;
+    }
 }
 
 function hyphenate($word, $patterns) {
-    $remadeword = $word;
-    $rchars = str_split($remadeword);
+    $struct = getWordStruct($word);
+    $patterns_struct = getPatternsStruct($word, $patterns);
 
-    foreach ($patterns as &$pattern) {
-        $pattern = trim(preg_replace('/\s+/', ' ', $pattern));
-        $pattern = strval($pattern);
-        $pchars = str_split($pattern);
+    foreach($patterns_struct as $pattern_struct) {
+        $position = $pattern_struct['position'];
+        $digits = $pattern_struct['char_digits'];
 
-        $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
-        $cleanString = substr($cleanString, 0, sizeof($pchars));
-
-        $patternSpot = strpos($word, $cleanString);
-        $digitPlaces = getDigitPlace($pattern);
-
-        if (findStartPattern($patterns) == $pattern) {
-            foreach ($digitPlaces as $digit) {
-                array_insert($rchars, $digit - 1, $pchars[$digit]);
-            }
-        }
-
-        if (findEndPattern($patterns) == $pattern) {
-            if ($patternSpot == sizeof($rchars) - strlen($cleanString) - 1) {
-                foreach ($digitPlaces as $digit) {
-                    $placement = sizeof($rchars) - strlen($cleanString) + $digit;
-                    array_insert($rchars, $placement, $pchars[$digit]);
+        for ($i = $position; $i < $position + $pattern_struct['length']; $i++) {
+            if (isset($struct[$i])) {
+                $char = $struct[$i]['char'];
+                if (isset($digits[$char])) {
+                    $digit = $digits[$char];
+                    if ($digit > $struct[$i]['digit'])
+                        $struct[$i]['digit'] = $digit;
                 }
             }
         }
-        
-        if (findEndPattern($patterns) != $pattern && findStartPattern($patterns) != $pattern) {
-            foreach ($digitPlaces as $digit) {
-                // middle digits
+
+        if (isset($digits[''])) {
+            $index = $position + $pattern_struct['length'];
+            if (isset($struct[$index])) {
+                $digit = $digits[''];
+                if ($digit > $struct[$index]['digit'])
+                    $struct[$index]['digit'] = $digit;
             }
         }
-
-        $remadeword = implode('', $rchars);
     }
-    return $remadeword;
+    return makeWordWithSyllables($struct);
 }
-
