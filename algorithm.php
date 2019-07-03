@@ -22,14 +22,20 @@ function findEndPattern(&$array = []) {
     return false;
 }
 
+function getCleanPatternString($pattern) {
+    $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
+    $cleanString = substr($cleanString, 0, sizeof(str_split($pattern)));
+    $cleanString = trim(preg_replace('/\s+/', ' ', $cleanString));
+    return $cleanString;
+}
+
 function getPatternsForWord($word, $patternList) {
     $patterns = [];
 
     foreach($patternList as $pattern) {
         $pchars = str_split($pattern);
 
-        $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
-        $cleanString = substr($cleanString, 0, sizeof($pchars));
+        $cleanString = getCleanPatternString($pattern);
 
         $foundPosition = strpos($word, $cleanString);
         if ($foundPosition !== false) {
@@ -69,9 +75,8 @@ function getResult($pattern, $pos, $cleanString) {
     }
 
     foreach ($enddigits as $x => $y) {
-        foreach($y as $char) {
+        foreach($y as $char)
             $chardigits[''] = intval($char);
-        }
     }
 
     return [
@@ -84,26 +89,26 @@ function getResult($pattern, $pos, $cleanString) {
 function getPatternsStruct($word, $patterns) {
     $patterns_struct = [];
     foreach ($patterns as $pattern) {
-        $cleanString = preg_replace('/[0-9]+/', '', $pattern);
-        $cleanString = trim(preg_replace('/\s+/', ' ', $cleanString));
+        $cleanString = getCleanPatternString($pattern);
+        $patternWithoutDot = str_replace('.', '', $pattern);
 
         if (findStartPattern($patterns) == $pattern) {
             // beginning
             $position = strpos($word, substr($cleanString, 1));
             if ($position === 0)
-                $patterns_struct[] = getResult(str_replace('.', '', $pattern), $position, str_replace('.', '', $cleanString));
+                $patterns_struct[] = getResult($patternWithoutDot, $position, $cleanString);
         }
         if (findStartPattern($patterns) != $pattern && findEndPattern($patterns) == $pattern) {
             // end
             $position = strpos($word, substr($cleanString, 0, strlen($cleanString) - 1));
             if ($position === strlen($word) - strlen($cleanString) + 1)
-                $patterns_struct[] = getResult(str_replace('.', '', $pattern), $position, str_replace('.', '', $cleanString));
+                $patterns_struct[] = getResult($patternWithoutDot, $position, $cleanString);
         }
         if (findEndPattern($patterns) != $pattern && findStartPattern($patterns) != $pattern) {
             // middle
             $position = strpos($word, $cleanString);
             if ($position !== false)
-                $patterns_struct[] = getResult(str_replace('.', '', $pattern), $position, str_replace('.', '', $cleanString));
+                $patterns_struct[] = getResult($patternWithoutDot, $position, $cleanString);
         }
     }
 

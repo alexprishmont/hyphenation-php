@@ -1,5 +1,5 @@
 <?php
-    require_once("debug.php"); // logtofile function
+    // require_once("debug.php"); // logtofile function
 
     require_once("scan.php");
     require_once("algorithm.php");
@@ -17,8 +17,8 @@
     $patterns = getPatternsForWord($word, $patternsList);
 
     // debug [adds all patterns which are needed for the given word]
-    $logcontent = $patterns;
-    logtofile('patterns.txt', $logcontent);
+    /*$logcontent = $patterns;
+    logtofile('patterns.txt', $logcontent);*/
 
     $result = hyphenate($word, $patterns);
 
