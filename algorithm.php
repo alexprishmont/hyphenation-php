@@ -98,7 +98,7 @@ function savePattern($pattern, $pos, $cleanString) {
     $enddigits = [];
 
     preg_match_all('/[0-9]+[a-z]{1}/', $pattern, $chars);
-    preg_match_all('/[0-9]+$/', $pattern, $enddigit);
+    preg_match_all('/[0-9]+$/', $pattern, $enddigits);
 
     foreach ($chars as $x => $y) {
         foreach ($y as $char) {
