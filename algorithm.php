@@ -56,25 +56,20 @@ function getCleanPatternString($pattern) {
 function getPatternsForWord($word, $patternList) {
     $patterns = [];
 
-    foreach($patternList as $pattern) {
-        $pchars = str_split($pattern);
-
+    foreach ($patternList as $pattern) {
         $cleanString = getCleanPatternString($pattern);
+        $position = strpos($word, $cleanString);
 
-        $foundPosition = strpos($word, $cleanString);
-        if ($foundPosition !== false) {
-            $search = strval(array_search('.', $pchars));
-            if (array_key_exists($search, $pchars)) {
-                if ($search == 0 && !findStartPattern($patterns)) {
-                    $wordSection = substr($word, 0, strlen($cleanString));
-                    if ($wordSection == $cleanString)
-                        $patterns[] = $pattern;
-                }
-                else if ($search > 0 && !findEndPattern($patterns)) {
-                    $wordSection = substr($word,strlen($word) - strlen($cleanString), strlen($word));
-                    if ($wordSection == $cleanString)
-                        $patterns[] = $pattern;
-                }
+        if ($position !== false) {
+            if($pattern[0] == '.' && !findStartPattern($patterns)) {
+                $section = substr($word, 0, strlen($cleanString));
+                if ($section == $cleanString)
+                    $patterns[] = $pattern;
+            }
+            else if ($pattern[strlen($pattern) - 1] == '.') {
+                $section = substr($word, 0, strlen($cleanString));
+                if ($section == $cleanString)
+                    $patterns[] = $pattern;
             }
             else $patterns[] = $pattern;
         }
