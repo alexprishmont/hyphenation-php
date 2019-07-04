@@ -6,10 +6,11 @@ use \Algorithms\String\Stringhyphenation;
 use \Validations\EmailValidation;
 
 class Main {
+    const patterns_file = "/tex-hyphenation-patterns.txt";
     public static function load_algorithm(string $option, string $target):void {
         $start_timing = microtime(true);
         $path = dirname(__FILE__, 2);
-        $patterns = Scan::get_data_from_file($path."/tex-hyphenation-patterns.txt");
+        $patterns = Scan::get_data_from_file($path.self::patterns_file);
         switch ($option) {
             case "-w": {
                 $hyphenation = new Hyphenation($patterns, $target);
