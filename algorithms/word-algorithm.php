@@ -56,23 +56,10 @@ function getCleanPatternString($pattern) {
 
 function getPatternsForWord($word, $patternList) {
     $patterns = [];
-
     foreach ($patternList as $pattern) {
         $cleanString = getCleanPatternString($pattern);
-        $position = strpos($word, $cleanString);
-
-        if ($position !== false) {
-            if($pattern[0] == '.' && !findStartPattern($patterns)) {
-                $section = substr($word, 0, strlen($cleanString));
-                if ($section == $cleanString)
-                    $patterns[] = $pattern;
-            }
-            else if ($pattern[strlen($pattern) - 1] == '.' && !findEndPattern($patterns)) {
-                $section = substr($word, strlen($word) - strlen($cleanString), strlen($word));
-                if ($section == $cleanString)
-                    $patterns[] = $pattern;
-            }
-            else $patterns[] = $pattern;
+        if (strpos($word, $cleanString) !== false) {
+            $patterns[] = $pattern;
         }
     }
     return $patterns;
@@ -201,9 +188,9 @@ function makeWordWithSyllables($word_struct) {
         $char = $char_struct['char'];
         $digit = $char_struct['digit'];
         if (!empty($digit)) {
-            if ($digit % 2 > 0) {
+            if ($digit % 2 != 0) {
                 if ($minus_count > 0)
-                    $newword[] =  '-';
+                    $newword[] = '-';
             }
         }
         $newword[] = $char;

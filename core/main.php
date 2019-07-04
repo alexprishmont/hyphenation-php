@@ -5,6 +5,7 @@
 
     require_once("algorithms/word-algorithm.php");
     require_once("algorithms/string-algorithm.php");
+    require_once("validations/email-validation.php");
 
     function loadAlgorithm($option, $target) {
         $start_timing = microtime(true);
@@ -30,6 +31,11 @@
 
                 $stringHyp = new Stringhyphenation($string_for_hyphenation, $patternsList);
                 echo $stringHyp->result();
+                break;
+            }
+            case "-email": {
+                $validation = new EmailValidation($target);
+                echo ($validation->validate()) === 1 ? "This email is valid." : "Email not valid.";
                 break;
             }
             default: {
