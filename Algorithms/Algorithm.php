@@ -1,5 +1,5 @@
 <?php
-namespace Algorithm;
+namespace Algorithms;
 interface Algorithm {
     public function hyphenate():string;
 }

@@ -1,7 +1,7 @@
 <?php
-namespace Algorithm;
+namespace Algorithms;
 
-class Wordhyphenation implements Algorithm {
+class Hyphenation implements Algorithm {
 
     private $word;
     private $patterns = [];

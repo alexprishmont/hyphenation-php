@@ -1,12 +1,14 @@
 <?php
-namespace Algorithm;
-class Stringhyphenation implements Algorithm{
+namespace Algorithms\String;
+class Stringhyphenation extends \Algorithms\Hyphenation implements \Algorithms\Algorithm {
     private $string;
     private $cleanString;
     private $words = [];
     private $patterns;
 
-    public function __construct($string, $patterns) { $this->string = $string; $this->patterns = $patterns; }
+    public function __construct($string, $patterns) {
+        $this->string = $string; $this->patterns = $patterns;
+    }
     public function hyphenate():string {
         $this->clearString();
         $this->stringToWords();
@@ -16,7 +18,9 @@ class Stringhyphenation implements Algorithm{
     private function clearString() { $this->cleanString = preg_replace("/[^a-zA-Z]/", " ", $this->string); }
     private function hyphenateString() {
         foreach ($this->words as $word) {
-            $word_with_syllables = hyphenate($word, getPatternsForWord($word, $this->patterns));
+            parent::__construct($word, $this->patterns);
+            $word_with_syllables = parent::hyphenate();
+            var_dump($word_with_syllables);
             $this->string = str_replace($word, $word_with_syllables, $this->string);
         }
         return $this->string;
