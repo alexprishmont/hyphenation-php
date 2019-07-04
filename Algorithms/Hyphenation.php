@@ -9,12 +9,22 @@ class Hyphenation implements Algorithm {
     private $digits_in_word = [];
     private $completed_word_with_digits;
 
-    public function __construct($word, $patterns) { $this->word = $word; $this->patterns = $patterns; }
+    public function __construct($patterns, $word = null, $string = null) {
+        if (isset($word)) $this->word = $word;
+        $this->patterns = $patterns;
+    }
     public function hyphenate():string {
         $this->find_valid_patterns();
         $this->push_digits_to_word();
         $this->complete_word_with_digits();
         return $this->add_syllable_symbols();
+    }
+    public function __destruct() {
+        $this->word = null;
+        $this->patterns = [];
+        $this->valid_patterns = [];
+        $this->digits_in_word = [];
+        $this->completed_word_with_digits = null;
     }
 
     private function add_syllable_symbols():string {
