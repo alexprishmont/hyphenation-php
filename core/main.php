@@ -19,11 +19,17 @@
             }
             case "-s": {
                 $stringHyp = new Stringhyphenation($target, $patternsList);
-                $stringHyp->result();
+                echo $stringHyp->result();
                 break;
             }
             case "-f": {
+                $file = new SplFileObject($target);
+                $string_for_hyphenation = "";
+                while (!$file->eof())
+                    $string_for_hyphenation .= $file->fgets();
 
+                $stringHyp = new Stringhyphenation($string_for_hyphenation, $patternsList);
+                echo $stringHyp->result();
                 break;
             }
             default: {

@@ -196,18 +196,20 @@ function getWordStruct($word) {
  */
 function makeWordWithSyllables($word_struct) {
     $minus_count = 0;
+    $newword = [];
     foreach ($word_struct as $char_struct) {
         $char = $char_struct['char'];
         $digit = $char_struct['digit'];
         if (!empty($digit)) {
             if ($digit % 2 > 0) {
                 if ($minus_count > 0)
-                    echo '-';
+                    $newword[] =  '-';
             }
         }
-        echo $char;
+        $newword[] = $char;
         $minus_count ++;
     }
+    return implode('', $newword);
 }
 
 /**

@@ -6,28 +6,21 @@ class Stringhyphenation {
     private $cleanString;
     private $words = [];
     private $patterns;
-    private $syllableWords = [];
 
     public function __construct($string, $patterns) { $this->string = $string; $this->patterns = $patterns; }
     public function result() {
         $this->clearString();
         $this->stringToWords();
-
-        $this->hyphenateString();
-        $this->resultString();
-
-        echo $this->string;
+        return $this->hyphenateString();
     }
 
     private function clearString() { $this->cleanString = preg_replace("/[^a-zA-Z]/", " ", $this->string); }
     private function hyphenateString() {
-        foreach ($this->words as $word)
-            $this->syllableWords[] = hyphenate($word, getPatternsForWord($word, $this->patterns));
-    }
-    private function resultString() {
-        // TO-DO refactor syllableWords back to string with all symbols.
-      /* for ($i = 0; $i < strlen($this->string); $i++)
-            $this->string[$i] = $this->syllableWords[$i];*/
+        foreach ($this->words as $word) {
+            $word_with_syllables = hyphenate($word, getPatternsForWord($word, $this->patterns));
+            $this->string = str_replace($word, $word_with_syllables, $this->string);
+        }
+        return $this->string;
     }
     private function stringToWords() {
         $temp = preg_split('/(\s+)/', $this->cleanString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
