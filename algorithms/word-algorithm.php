@@ -18,16 +18,18 @@ class Wordhyphenation implements Algorithm {
     }
 
     private function add_syllable_symbols():string {
+        $result = $this->completed_word_with_digits;
         for ($i = 0; $i < strlen($this->completed_word_with_digits); $i++) {
             $c = $this->completed_word_with_digits[$i];
             if (is_numeric($c)) {
-                if ((int)$c % 2 > 0)
-                    str_replace($c, '-', $this->completed_word_with_digits);
+                if ((int)$c % 2 > 0) {
+                    $result = str_replace($c, '-', $result);
+                }
                 else
-                    str_replace($c, '', $this->completed_word_with_digits);
+                    $result = str_replace($c, '', $result);
             }
         }
-        return $this->completed_word_with_digits;
+        return $result;
     }
 
     private function complete_word_with_digits():void {
@@ -43,7 +45,7 @@ class Wordhyphenation implements Algorithm {
             $digits_in_pattern = $this->extract_digits_from_pattern($pattern);
             foreach ($digits_in_pattern as $position => $digit) {
                 $position = $position + strpos($this->word, $this->clear_pattern_string($pattern));
-                if (isset($this->digits_in_word[$position]) || $this->digits_in_word[$position] < $digit)
+                if (!isset($this->digits_in_word[$position]) || $this->digits_in_word[$position] < $digit)
                     $this->digits_in_word[$position] = $digit;
             }
         }
