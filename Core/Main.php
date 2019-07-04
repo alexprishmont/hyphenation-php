@@ -3,6 +3,7 @@
 namespace Core;
 use \Algorithms\Hyphenation;
 use \Algorithms\String\Stringhyphenation;
+use \Validations\EmailValidation;
 
 class Main {
     public static function load_algorithm(string $option, string $target):void {
@@ -18,6 +19,27 @@ class Main {
             case "-s": {
                 $hyphenation = new Stringhyphenation($patterns, null, $target);
                 print($hyphenation->hyphenate());
+                break;
+            }
+            case "-f": {
+                try {
+                    $file = new \SplFileObject($target);
+                    $string_for_hyphenation = "";
+
+                    while (!$file->eof())
+                        $string_for_hyphenation .= $file->fgets();
+
+                    $hyphenation = new Stringhyphenation($patterns, null, $string_for_hyphenation);
+                    print($hyphenation->hyphenate());
+                }
+                catch (\Exception $e) {
+                    print("\n Error $e\n");
+                }
+                break;
+            }
+            case "-email": {
+                $validation = new EmailValidation($target);
+                print(($validation->validate()) === 1 ? "This email is valid." : "Email not valid.");
                 break;
             }
             default: {

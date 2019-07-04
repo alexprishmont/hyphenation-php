@@ -1,5 +1,5 @@
 <?php
-namespace Validation;
+namespace Validations;
 interface Validation {
     public function validate();
 }

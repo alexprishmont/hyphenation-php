@@ -1,5 +1,5 @@
 <?php
-namespace Validation;
+namespace Validations;
 require_once (__DIR__ . '/Validation.php');
 class EmailValidation implements Validation {
     private $email;
