@@ -1,14 +1,13 @@
 <?php
-
-
-class Stringhyphenation {
+namespace Algorithm;
+class Stringhyphenation implements Algorithm{
     private $string;
     private $cleanString;
     private $words = [];
     private $patterns;
 
     public function __construct($string, $patterns) { $this->string = $string; $this->patterns = $patterns; }
-    public function result() {
+    public function hyphenate():string {
         $this->clearString();
         $this->stringToWords();
         return $this->hyphenateString();

@@ -3,6 +3,7 @@
 
     require_once("scan.php");
 
+    require_once(__DIR__.'/../algorithms/algorithm.php');
     require_once("algorithms/word-algorithm.php");
     require_once("algorithms/string-algorithm.php");
     require_once("validations/email-validation.php");
@@ -14,12 +15,14 @@
 
         switch($option) {
             case "-w": {
-                logtofile($path."/logs/patterns-for".$option.".txt", getPatternsForWord($target, $patternsList));
-                echo hyphenate($target, getPatternsForWord($target, $patternsList));
+                //logtofile($path."/logs/patterns-for".$option.".txt", getPatternsForWord($target, $patternsList));
+                //echo hyphenate($target, getPatternsForWord($target, $patternsList));
+                $hyphen = new Algorithm\Wordhyphenation($target, $patternsList);
+                echo $hyphen->hyphenate();
                 break;
-            }
+            }/*
             case "-s": {
-                $stringHyp = new Stringhyphenation($target, $patternsList);
+                $stringHyp = new Algorithm\Stringhyphenation($target, $patternsList);
                 echo $stringHyp->result();
                 break;
             }
@@ -29,15 +32,15 @@
                 while (!$file->eof())
                     $string_for_hyphenation .= $file->fgets();
 
-                $stringHyp = new Stringhyphenation($string_for_hyphenation, $patternsList);
+                $stringHyp = new Algorithm\Stringhyphenation($string_for_hyphenation, $patternsList);
                 echo $stringHyp->result();
                 break;
             }
             case "-email": {
-                $validation = new EmailValidation($target);
+                $validation = new Validation\EmailValidation($target);
                 echo ($validation->validate()) === 1 ? "This email is valid." : "Email not valid.";
                 break;
-            }
+            }*/
             default: {
                 echo "\nSuch option ($option) not available.\n";
                 break;

@@ -1,238 +1,83 @@
 <?php
+namespace Algorithm;
 
-/**
- * @param array $array
- * @return bool|mixed
- * Function finds pattern which should be in the beginning of the word
- * Returns false if there's no such pattern
- * Return full pattern [string] if it found
- */
-function findStartPattern(&$array = []) {
-    foreach ($array as $item) {
-        $chars = str_split($item);
-        if($chars[0] == '.') {
-            return $item;
-        }
-    }
-    return false;
-}
+class Wordhyphenation implements Algorithm {
 
-/**
- * @param array $array
- * @return bool|mixed
- * Function finds pattern which should be in the end of the word
- * Returns false if there's no such pattern
- * Return full pattern [string] if it found
- */
-function findEndPattern(&$array = []) {
-    foreach ($array as $item) {
-        $chars = str_split($item);
-        if ($chars[sizeof($chars) - 1] == '.')
-            return $item;
-    }
-    return false;
-}
+    private $word;
+    private $patterns = [];
+    private $valid_patterns = [];
+    private $digits_in_word = [];
+    private $completed_word_with_digits;
 
-/**
- * @param $pattern
- * @return bool|string|string[]|null
- * Cleans pattern string
- * Leaves only chars w/o any digits and other symbols
- */
-function getCleanPatternString($pattern) {
-    $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
-    $cleanString = substr($cleanString, 0, sizeof(str_split($pattern)));
-    $cleanString = trim(preg_replace('/\s+/', ' ', $cleanString));
-    return $cleanString;
-}
-
-/**
- * @param $word
- * @param $patternList
- * @return array
- * Sorts given patterns list
- * Returns patterns which could be used for the given word
- */
-
-function getPatternsForWord($word, $patternList) {
-    $patterns = [];
-    foreach ($patternList as $pattern) {
-        $cleanString = getCleanPatternString($pattern);
-        if (strpos($word, $cleanString) !== false) {
-            $patterns[] = $pattern;
-        }
-    }
-    return $patterns;
-}
-
-/**
- * @param $pattern
- * @param $pos
- * @param $cleanString
- * @return array
- * Saves data to pattern 2D array
- */
-function savePattern($pattern, $pos, $cleanString) {
-    $chars = [];
-    $chardigits = [];
-    $enddigits = [];
-
-    preg_match_all('/[0-9]+[a-z]{1}/', $pattern, $chars);
-    preg_match_all('/[0-9]+$/', $pattern, $enddigits);
-
-    foreach ($chars as $x => $y) {
-        foreach ($y as $char) {
-            $c = preg_replace('/[0-9]+/', '', $char);
-            $n = intval(preg_replace('/[a-z]{1}/', '', $char));
-            $chardigits[$c] = $n;
-        }
+    public function __construct($word, $patterns) { $this->word = $word; $this->patterns = $patterns; }
+    public function hyphenate():string {
+        $this->find_valid_patterns();
+        $this->push_digits_to_word();
+        $this->complete_word_with_digits();
+        return $this->add_syllable_symbols();
     }
 
-    foreach ($enddigits as $x => $y) {
-        foreach($y as $char)
-            $chardigits[''] = intval($char);
-    }
-
-    return [
-        'position' => $pos,
-        'char_digits' => $chardigits,
-        'length' => strlen($cleanString)
-    ];
-}
-
-/**
- * @param $struct
- * @param $word
- * @param $withoutdot
- * @param $cleanString
- */
-function getPatternPositionAtStart(&$struct, $word, $withoutdot, $cleanString) {
-    // beginning
-    $position = strpos($word, substr($cleanString, 1));
-    if ($position === 0)
-        $struct[] = savePattern($withoutdot, $position, $cleanString);
-}
-
-/**
- * @param $struct
- * @param $word
- * @param $withoutdot
- * @param $cleanString
- */
-function getPatternPositionAtEnd(&$struct, $word, $withoutdot, $cleanString) {
-    // end
-    $position = strpos($word, substr($cleanString, 0, strlen($cleanString) - 1));
-    if ($position === strlen($word) - strlen($cleanString) + 1)
-        $struct[] = savePattern($withoutdot, $position, $cleanString);
-}
-
-/**
- * @param $struct
- * @param $word
- * @param $withoutdot
- * @param $cleanString
- */
-function getPatternPositionAtMiddle(&$struct, $word, $withoutdot, $cleanString) {
-    // middle
-    $position = strpos($word, $cleanString);
-    if ($position !== false)
-        $struct[] = savePattern($withoutdot, $position, $cleanString);
-}
-/**
- * @param $word
- * @param $patterns
- * @return array
- * Makes pattern struct using function savePattern($pattern, $pos, $cleanString)
- */
-function getPatternsStruct($word, $patterns) {
-    $patterns_struct = [];
-    foreach ($patterns as $pattern) {
-        $cleanString = getCleanPatternString($pattern);
-        $patternWithoutDot = str_replace('.', '', $pattern);
-
-        if (findStartPattern($patterns) == $pattern)
-            getPatternPositionAtStart($patterns_struct, $word, $patternWithoutDot, $cleanString);
-        if (findStartPattern($patterns) != $pattern && findEndPattern($patterns) == $pattern)
-            getPatternPositionAtEnd($patterns_struct, $word, $patternWithoutDot, $cleanString);
-        if (findEndPattern($patterns) != $pattern && findStartPattern($patterns) != $pattern)
-            getPatternPositionAtMiddle($patterns_struct, $word, $patternWithoutDot, $cleanString);
-
-    }
-    return $patterns_struct;
-}
-
-/**
- * @param $word
- * @return array
- * Makes 2D array for the given word, splits by chars and inserts zeros
- */
-function getWordStruct($word) {
-    $struct = [];
-    for ($i = 0; $i < strlen($word); $i++) {
-        $struct[] = [
-            'char' => $word[$i],
-            'digit' => 0
-        ];
-    }
-    return $struct;
-}
-
-/**
- * @param $word_struct
- * Final function which splits word to syllables
- */
-function makeWordWithSyllables($word_struct) {
-    $minus_count = 0;
-    $newword = [];
-    foreach ($word_struct as $char_struct) {
-        $char = $char_struct['char'];
-        $digit = $char_struct['digit'];
-        if (!empty($digit)) {
-            if ($digit % 2 != 0) {
-                if ($minus_count > 0)
-                    $newword[] = '-';
+    private function add_syllable_symbols():string {
+        for ($i = 0; $i < strlen($this->completed_word_with_digits); $i++) {
+            $c = $this->completed_word_with_digits[$i];
+            if (is_numeric($c)) {
+                if ((int)$c % 2 > 0)
+                    str_replace($c, '-', $this->completed_word_with_digits);
+                else
+                    str_replace($c, '', $this->completed_word_with_digits);
             }
         }
-        $newword[] = $char;
-        $minus_count ++;
+        return $this->completed_word_with_digits;
     }
-    return implode('', $newword);
-}
 
-/**
- * @param $word
- * @param $patterns
- * Main function which connects all other functions and returns result
- */
-function hyphenate($word, $patterns) {
-    $struct = getWordStruct($word);
-    $patterns_struct = getPatternsStruct($word, $patterns);
-
-    foreach($patterns_struct as $pattern_struct) {
-        $position = $pattern_struct['position'];
-        $digits = $pattern_struct['char_digits'];
-
-        for ($i = $position; $i < $position + $pattern_struct['length']; $i++) {
-            if (isset($struct[$i])) {
-                $char = $struct[$i]['char'];
-                if (isset($digits[$char])) {
-                    $digit = $digits[$char];
-                    if ($digit > $struct[$i]['digit'])
-                        $struct[$i]['digit'] = $digit;
-                }
-            }
+    private function complete_word_with_digits():void {
+        foreach (str_split($this->word) as $i => $c) {
+            $this->completed_word_with_digits .= $c;
+            if (isset($this->digits_in_word[$i]))
+                $this->completed_word_with_digits .= $this->digits_in_word[$i];
         }
+    }
 
-        if (isset($digits[''])) {
-            $index = $position + $pattern_struct['length'];
-            if (isset($struct[$index])) {
-                $digit = $digits[''];
-                if ($digit > $struct[$index]['digit'])
-                    $struct[$index]['digit'] = $digit;
+    private function push_digits_to_word():void {
+        foreach ($this->valid_patterns as $pattern) {
+            $digits_in_pattern = $this->extract_digits_from_pattern($pattern);
+            foreach ($digits_in_pattern as $position => $digit) {
+                $position = $position + strpos($this->word, $this->clear_pattern_string($pattern));
+                if (isset($this->digits_in_word[$position]) || $this->digits_in_word[$position] < $digit)
+                    $this->digits_in_word[$position] = $digit;
             }
         }
     }
 
-    $wordWithSyllables = makeWordWithSyllables($struct);
-    return $wordWithSyllables;
+    private function extract_digits_from_pattern(string $pattern):array {
+        $digits = [];
+        if (preg_match_all('/[0-9]+/', $pattern, $matches, PREG_OFFSET_CAPTURE) > 0) {
+            $offset = preg_match('/[0-9]/', $pattern);
+            foreach ($matches[0] as $match) {
+                [$digit, $position] = $match;
+                $position = $position - $offset;
+                $offset = $offset + strlen($digit);
+                $digits[$position] = (int)$digit;
+            }
+        }
+        return $digits;
+    }
+
+    private function clear_pattern_string(string $pattern):string {
+        $clean_string = preg_replace("/[^a-zA-Z]/", "", $pattern);
+        $clean_string = substr($clean_string, 0, sizeof(str_split($pattern)));
+        return trim(preg_replace("/\s+/", " ", $clean_string));
+    }
+
+    private function find_valid_patterns():void {
+        foreach ($this->patterns as $pattern) {
+            $clean_string = $this->clear_pattern_string($pattern);
+            $position = strpos($this->word, $clean_string);
+
+            if ($position === false || ($pattern[0] == '.' && $position !== 0) || ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($clean_string)))
+                continue;
+
+            $this->valid_patterns[] = $pattern;
+        }
+    }
 }
