@@ -1,6 +1,9 @@
 <?php
 namespace Algorithms\String;
-class Stringhyphenation extends \Algorithms\Hyphenation implements \Algorithms\Algorithm {
+use Algorithms\Algorithm;
+use Algorithms\Hyphenation;
+
+class Stringhyphenation extends Hyphenation implements Algorithm {
     private $words = [];
     private $patterns = [];
     private $string;
