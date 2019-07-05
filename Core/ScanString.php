@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use Algorithms\String\Stringhyphenation;
+use Algorithms\Stringhyphenation;
 use SplFileObject;
 use Exception;
 

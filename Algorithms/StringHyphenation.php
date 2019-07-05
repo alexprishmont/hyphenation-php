@@ -1,9 +1,8 @@
 <?php
 
-namespace Algorithms\String;
+namespace Algorithms;
 
 use Algorithms\Interfaces\AlgorithmInterface;
-use Algorithms\Hyphenation;
 
 class StringHyphenation implements AlgorithmInterface
 {

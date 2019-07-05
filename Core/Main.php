@@ -2,8 +2,7 @@
 
 namespace Core;
 
-use Algorithms\Hyphenation;
-use Algorithms\String\StringHyphenation;
+use Algorithms\{Hyphenation, StringHyphenation};
 use Validations\EmailValidation;
 
 class Main
