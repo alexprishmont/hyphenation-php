@@ -6,7 +6,7 @@ use \Algorithms\String\Stringhyphenation;
 use \Validations\EmailValidation;
 
 class Main {
-    const patterns_file = "/tex-hyphenation-patterns.txt";
+    private const patterns_file = "/tex-hyphenation-patterns.txt";
     public static function load_algorithm(string $option, string $target):void {
         $path = dirname(__FILE__, 2);
         $patterns = Scan::get_data_from_file($path.self::patterns_file);
