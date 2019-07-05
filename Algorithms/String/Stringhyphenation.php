@@ -19,7 +19,6 @@ class Stringhyphenation implements AlgorithmInterface
         $words = $this->extract_words_from_string($string);
         foreach ($words as $word) {
             $word_with_syllable = $this->algorithm->hyphenate($word);
-            var_dump($word_with_syllable);
             $string = str_replace($word, $word_with_syllable, $string);
         }
         return $string;
