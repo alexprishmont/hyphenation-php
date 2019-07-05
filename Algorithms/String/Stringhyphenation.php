@@ -1,9 +1,8 @@
 <?php
 namespace Algorithms\String;
-use Algorithms\Algorithm;
 use Algorithms\Hyphenation;
 
-class Stringhyphenation extends Hyphenation implements Algorithm {
+class Stringhyphenation extends Hyphenation {
     private $words = [];
     private $patterns = [];
     private $string;
@@ -12,7 +11,7 @@ class Stringhyphenation extends Hyphenation implements Algorithm {
         parent::__construct($patterns, $word, $string);
         $this->patterns = $patterns;
         if (isset($string)) {
-            $this->words = $this->extract_words_from_string($string);
+            $this->words = $this->extract_words_from_string($string);require_once("Core/Autoloader.php");
             $this->string = $string;
         }
     }
@@ -25,10 +24,6 @@ class Stringhyphenation extends Hyphenation implements Algorithm {
             $this->string = str_replace($word, $word_with_syllables, $this->string);
         }
         return $this->string;
-    }
-
-    private function clear_string(string $string):string {
-        return preg_replace("/[^a-zA-Z]/", " ", $string);
     }
 
     private function extract_words_from_string(string $string):array {

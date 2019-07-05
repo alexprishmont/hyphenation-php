@@ -92,4 +92,9 @@ class Hyphenation implements Algorithm {
             $this->valid_patterns[] = $pattern;
         }
     }
+
+    protected function clear_string(string $string):string {
+        return preg_replace("/[^a-zA-Z]/", " ", $string);
+    }
+
 }
