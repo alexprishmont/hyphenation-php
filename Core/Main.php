@@ -2,17 +2,17 @@
 
 namespace Core;
 
-use \Algorithms\Hyphenation;
-use \Algorithms\String\Stringhyphenation;
-use \Validations\EmailValidation;
+use Algorithms\Hyphenation;
+use Algorithms\String\Stringhyphenation;
+use Validations\EmailValidation;
 
 class Main
 {
     private const patterns_file = "/tex-hyphenation-patterns.txt";
 
     private $word_algorithm;
-
     private $string_algorithm;
+    private $stringFromFile;
 
     private $argv;
     private $argc;
@@ -24,6 +24,7 @@ class Main
 
         $this->word_algorithm = new Hyphenation($patterns);
         $this->string_algorithm = new Stringhyphenation($this->word_algorithm);
+        $this->stringFromFile = new ScanString($this->string_algorithm);
 
         $this->argv = $argv;
         $this->argc = $argc;
@@ -51,30 +52,18 @@ class Main
         switch ($option) {
             case "-w":
                 {
-                    $algorithm = $this->word_algorithm;
-                    print($algorithm->hyphenate($target));
+                    print($this->word_algorithm->hyphenate($target));
                     break;
                 }
             case "-s":
                 {
-                    $algorithm = $this->string_algorithm;
-                    print($algorithm->hyphenate($target));
+                    print($this->string_algorithm->hyphenate($target));
                     break;
                 }
             case "-f":
                 {
-                    try {
-                        $file = new \SplFileObject($target);
-                        $string_for_hyphenation = "";
-
-                        while (!$file->eof())
-                            $string_for_hyphenation .= $file->fgets();
-
-                        $algorithm = $this->string_algorithm;
-                        print($algorithm->hyphenate($string_for_hyphenation));
-                    } catch (\Exception $e) {
-                        print("\n Error while openning file [$e] \n");
-                    }
+                    $this->stringFromFile->inputSrc($target);
+                    print($this->stringFromFile->result());
                     break;
                 }
             case "-email":
@@ -90,8 +79,14 @@ class Main
     private function show_choice(): void
     {
         print("Your entered arguments are wrong!\n");
-        print("Usage:\n php " . $this->argv[0] . " -w [word]\n php " . $this->argv[0] . " -s [sentence]\n php " . $this->argv[0] . " -f [file location]\n");
-        print("For email validation use:\n php " . $this->argv[0] . " -email [you_email]\n");
+        print("Usage: 
+            php " . $this->argv[0] . " -w [word] 
+            php " . $this->argv[0] . " -s [sentence] 
+            php " . $this->argv[0] . " -f [file location]"
+        );
+        print("\nFor email validation use: 
+            php " . $this->argv[0] . " -email [you_email]\n"
+        );
     }
 }
 
