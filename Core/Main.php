@@ -14,26 +14,32 @@ class Main
 
     private $string_algorithm;
 
-    public function __construct()
+    private $argv;
+    private $argc;
+
+    public function __construct(array $argv, int $argc)
     {
         $path = dirname(__FILE__, 2);
         $patterns = Scan::get_data_from_file($path . self::patterns_file);
 
         $this->word_algorithm = new Hyphenation($patterns);
         $this->string_algorithm = new Stringhyphenation($this->word_algorithm);
+
+        $this->argv = $argv;
+        $this->argc = $argc;
     }
 
-    public function startup(array $argv, int $argc): void
+    public function startup(): void
     {
-        if ($argc > 3 || $argc <= 2) {
-            echo "Your entered arguments are wrong!\n";
-            echo "Usage:\n $argv[0] -w [word]\n $argv[0] -s [sentence]\n $argv[0] -f [file location]\n";
-            echo "For email validation use: $argv[0] -email [you_email]\n";
-        } else {
+        $argv = $this->argv;
+        $argc = $this->argc;
+
+        if ($argc > 3 || $argc <= 2)
+            $this->show_choice();
+        else {
             if (isset($argv[1]) && isset($argv[2])) {
                 $option = $argv[1];
                 $target = $argv[2];
-
                 $this->load_algorithm($option, $target);
             }
         }
@@ -79,6 +85,13 @@ class Main
         }
         $end_timing = microtime(true);
         print("\nScript execution time = " . ($end_timing - $start_timing) . " seconds\n");
+    }
+
+    private function show_choice(): void
+    {
+        print("Your entered arguments are wrong!\n");
+        print("Usage:\n php " . $this->argv[0] . " -w [word]\n php " . $this->argv[0] . " -s [sentence]\n php " . $this->argv[0] . " -f [file location]\n");
+        print("For email validation use:\n php " . $this->argv[0] . " -email [you_email]\n");
     }
 }
 
