@@ -1,11 +1,8 @@
 <?php
-
-use Core\Main;
-
 require_once("Core/Autoloader.php");
-Core\Autoloader::register();
 
-$app = new Main();
+Core\Autoloader::register();
+$app = new Core\Main();
 
 if ($argc > 3 || $argc <= 2) {
     echo "Your entered arguments are wrong!\n";
