@@ -6,7 +6,7 @@ use SplFileObject;
 
 class Scan
 {
-    public static function get_data_from_file(string $src): array
+    public static function readDataFromFile(string $src): array
     {
         $file = new SplFileObject($src);
         $data = [];

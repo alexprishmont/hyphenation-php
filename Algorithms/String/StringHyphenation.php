@@ -5,7 +5,7 @@ namespace Algorithms\String;
 use Algorithms\Interfaces\AlgorithmInterface;
 use Algorithms\Hyphenation;
 
-class Stringhyphenation implements AlgorithmInterface
+class StringHyphenation implements AlgorithmInterface
 {
     private $algorithm;
 

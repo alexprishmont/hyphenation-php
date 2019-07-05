@@ -3,15 +3,15 @@
 namespace Core;
 
 use Algorithms\Hyphenation;
-use Algorithms\String\Stringhyphenation;
+use Algorithms\String\StringHyphenation;
 use Validations\EmailValidation;
 
 class Main
 {
     private const patterns_file = "/tex-hyphenation-patterns.txt";
 
-    private $word_algorithm;
-    private $string_algorithm;
+    private $wordAlgorithm;
+    private $stringAlgorithm;
     private $stringFromFile;
 
     private $argv;
@@ -20,11 +20,11 @@ class Main
     public function __construct(array $argv, int $argc)
     {
         $path = dirname(__FILE__, 2);
-        $patterns = Scan::get_data_from_file($path . self::patterns_file);
+        $patterns = Scan::readDataFromFile($path . self::patterns_file);
 
-        $this->word_algorithm = new Hyphenation($patterns);
-        $this->string_algorithm = new Stringhyphenation($this->word_algorithm);
-        $this->stringFromFile = new ScanString($this->string_algorithm);
+        $this->wordAlgorithm = new Hyphenation($patterns);
+        $this->stringAlgorithm = new StringHyphenation($this->wordAlgorithm);
+        $this->stringFromFile = new ScanString($this->stringAlgorithm);
 
         $this->argv = $argv;
         $this->argc = $argc;
@@ -36,28 +36,28 @@ class Main
         $argc = $this->argc;
 
         if ($argc > 3 || $argc <= 2)
-            $this->show_choice();
+            $this->showAllowedFlags();
         else {
             if (isset($argv[1]) && isset($argv[2])) {
                 $option = $argv[1];
                 $target = $argv[2];
-                $this->load_algorithm($option, $target);
+                $this->loadAlgorithm($option, $target);
             }
         }
     }
 
-    public function load_algorithm(string $option, string $target): void
+    public function loadAlgorithm(string $option, string $target): void
     {
         $start_timing = microtime(true);
         switch ($option) {
             case "-w":
                 {
-                    print($this->word_algorithm->hyphenate($target));
+                    print($this->wordAlgorithm->hyphenate($target));
                     break;
                 }
             case "-s":
                 {
-                    print($this->string_algorithm->hyphenate($target));
+                    print($this->stringAlgorithm->hyphenate($target));
                     break;
                 }
             case "-f":
@@ -76,7 +76,7 @@ class Main
         print("\nScript execution time = " . ($end_timing - $start_timing) . " seconds\n");
     }
 
-    private function show_choice(): void
+    private function showAllowedFlags(): void
     {
         print("Your entered arguments are wrong!\n");
         print("Usage: 
