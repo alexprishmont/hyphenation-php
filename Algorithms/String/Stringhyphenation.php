@@ -9,9 +9,9 @@ class Stringhyphenation implements AlgorithmInterface
 {
     private $algorithm;
 
-    public function __construct(array $patterns)
+    public function __construct(Hyphenation $algorithm)
     {
-        $this->algorithm = new Hyphenation($patterns);
+        $this->algorithm = $algorithm;
     }
 
     public function hyphenate(string $string): string

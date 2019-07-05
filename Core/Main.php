@@ -20,7 +20,7 @@ class Main
         $patterns = Scan::get_data_from_file($path . self::patterns_file);
 
         $this->word_algorithm = new Hyphenation($patterns);
-        $this->string_algorithm = new Stringhyphenation($patterns);
+        $this->string_algorithm = new Stringhyphenation($this->word_algorithm);
     }
 
     public function load_algorithm(string $option, string $target): void
