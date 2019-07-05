@@ -5,7 +5,7 @@ class Stringhyphenation extends \Algorithms\Hyphenation implements \Algorithms\A
     private $patterns = [];
     private $string;
 
-    public function __construct($patterns, $word = null, $string = null) {
+    public function __construct(array $patterns, string $word = null, string $string = null) {
         parent::__construct($patterns, $word, $string);
         $this->patterns = $patterns;
         if (isset($string)) {

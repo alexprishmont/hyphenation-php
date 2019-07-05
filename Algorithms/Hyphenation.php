@@ -9,7 +9,7 @@ class Hyphenation implements Algorithm {
     private $digits_in_word = [];
     private $completed_word_with_digits;
 
-    public function __construct($patterns, $word = null, $string = null) {
+    public function __construct(array $patterns, string $word = null, string $string = null) {
         if (isset($word)) $this->word = $word;
         $this->patterns = $patterns;
     }
