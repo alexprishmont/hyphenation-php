@@ -2,10 +2,9 @@
 
 namespace Core;
 
-use Algorithms\Hyphenation;
 use Algorithms\String\Stringhyphenation;
-use \SplFileObject;
-use \Exception;
+use SplFileObject;
+use Exception;
 
 class ScanString
 {
