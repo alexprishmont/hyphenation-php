@@ -5,6 +5,8 @@ use Core\Main;
 require_once("Core/Autoloader.php");
 Core\Autoloader::register();
 
+$app = new Main();
+
 if ($argc > 3 || $argc <= 2) {
     echo "Your entered arguments are wrong!\n";
     echo "Usage:\n $argv[0] -w [word]\n $argv[0] -s [sentence]\n $argv[0] -f [file location]\n";
@@ -14,8 +16,6 @@ if ($argc > 3 || $argc <= 2) {
         $option = $argv[1];
         $target = $argv[2];
 
-        $app = new Main();
         $app->load_algorithm($option, $target);
-
     }
 }
