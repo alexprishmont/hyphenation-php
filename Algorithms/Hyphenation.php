@@ -1,7 +1,9 @@
 <?php
+
 namespace Algorithms;
 
-class Hyphenation implements Algorithm {
+class Hyphenation implements AlgorithmInterface
+{
 
     private $word;
     private $patterns = [];
@@ -9,40 +11,47 @@ class Hyphenation implements Algorithm {
     private $digits_in_word = [];
     private $completed_word_with_digits;
 
-    public function __construct(array $patterns, string $word = null, string $string = null) {
-        if (isset($word)) $this->word = $word;
+    public function __construct(array $patterns)
+    {
         $this->patterns = $patterns;
     }
-    public function hyphenate():string {
+
+    public function hyphenate(string $word): string
+    {
+        $this->clear_variables();
+
+        $this->word = $word;
         $this->find_valid_patterns();
         $this->push_digits_to_word();
         $this->complete_word_with_digits();
         return $this->add_syllable_symbols();
     }
-    public function __destruct() {
+
+    private function clear_variables(): void
+    {
         $this->word = null;
-        $this->patterns = [];
+        $this->completed_word_with_digits = null;
         $this->valid_patterns = [];
         $this->digits_in_word = [];
-        $this->completed_word_with_digits = null;
     }
 
-    private function add_syllable_symbols():string {
+    private function add_syllable_symbols(): string
+    {
         $result = $this->completed_word_with_digits;
         for ($i = 0; $i < strlen($this->completed_word_with_digits); $i++) {
             $c = $this->completed_word_with_digits[$i];
             if (is_numeric($c)) {
                 if ((int)$c % 2 > 0) {
                     $result = str_replace($c, '-', $result);
-                }
-                else
+                } else
                     $result = str_replace($c, '', $result);
             }
         }
         return $result;
     }
 
-    private function complete_word_with_digits():void {
+    private function complete_word_with_digits(): void
+    {
         foreach (str_split($this->word) as $i => $c) {
             $this->completed_word_with_digits .= $c;
             if (isset($this->digits_in_word[$i]))
@@ -50,7 +59,8 @@ class Hyphenation implements Algorithm {
         }
     }
 
-    private function push_digits_to_word():void {
+    private function push_digits_to_word(): void
+    {
         foreach ($this->valid_patterns as $pattern) {
             $digits_in_pattern = $this->extract_digits_from_pattern($pattern);
             foreach ($digits_in_pattern as $position => $digit) {
@@ -61,7 +71,8 @@ class Hyphenation implements Algorithm {
         }
     }
 
-    private function extract_digits_from_pattern(string $pattern):array {
+    private function extract_digits_from_pattern(string $pattern): array
+    {
         $digits = [];
         if (preg_match_all('/[0-9]+/', $pattern, $matches, PREG_OFFSET_CAPTURE) > 0) {
             $offset = preg_match('/[0-9]/', $pattern);
@@ -75,13 +86,15 @@ class Hyphenation implements Algorithm {
         return $digits;
     }
 
-    private function clear_pattern_string(string $pattern):string {
+    private function clear_pattern_string(string $pattern): string
+    {
         $clean_string = preg_replace("/[^a-zA-Z]/", "", $pattern);
         $clean_string = substr($clean_string, 0, sizeof(str_split($pattern)));
         return trim(preg_replace("/\s+/", " ", $clean_string));
     }
 
-    private function find_valid_patterns():void {
+    private function find_valid_patterns(): void
+    {
         foreach ($this->patterns as $pattern) {
             $clean_string = $this->clear_pattern_string($pattern);
             $position = strpos($this->word, $clean_string);
@@ -92,9 +105,4 @@ class Hyphenation implements Algorithm {
             $this->valid_patterns[] = $pattern;
         }
     }
-
-    protected function clear_string(string $string):string {
-        return preg_replace("/[^a-zA-Z]/", " ", $string);
-    }
-
 }

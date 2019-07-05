@@ -1,10 +1,11 @@
 <?php
+
 namespace Validations;
-require_once (__DIR__ . '/Validation.php');
-class EmailValidation implements Validation {
-    private $email;
-    public function __construct(string $email) { $this->email = $email; }
-    public function validate():int {
-        return preg_match("/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/", $this->email);
+
+class EmailValidation implements ValidationInterface
+{
+    public static function validate(string $email): int
+    {
+        return preg_match("/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/", $email);
     }
 }
