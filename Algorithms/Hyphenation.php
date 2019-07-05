@@ -2,6 +2,8 @@
 
 namespace Algorithms;
 
+use Algorithms\Interfaces\AlgorithmInterface;
+
 class Hyphenation implements AlgorithmInterface
 {
 

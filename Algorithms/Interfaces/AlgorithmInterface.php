@@ -1,6 +1,6 @@
 <?php
 
-namespace Algorithms;
+namespace Algorithms\Interfaces;
 
 interface AlgorithmInterface
 {

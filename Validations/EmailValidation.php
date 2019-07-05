@@ -2,6 +2,8 @@
 
 namespace Validations;
 
+use Validations\Interfaces\ValidationInterface;
+
 class EmailValidation implements ValidationInterface
 {
     public static function validate(string $email): int

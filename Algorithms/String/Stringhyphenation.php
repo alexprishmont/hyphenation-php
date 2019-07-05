@@ -2,7 +2,7 @@
 
 namespace Algorithms\String;
 
-use Algorithms\AlgorithmInterface;
+use Algorithms\Interfaces\AlgorithmInterface;
 use Algorithms\Hyphenation;
 
 class Stringhyphenation implements AlgorithmInterface
