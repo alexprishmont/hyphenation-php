@@ -7,19 +7,23 @@ use Validations\EmailValidation;
 
 class Main
 {
-    private const patterns_file = "/tex-hyphenation-patterns.txt";
-
     private $wordAlgorithm;
     private $stringAlgorithm;
     private $stringFromFile;
+    private $config;
 
     private $argv;
     private $argc;
 
+    private $settings;
+
     public function __construct(array $argv, int $argc)
     {
+        $this->config = new Config();
+        $this->settings = $this->config->getConfigSettings();
+
         $path = dirname(__FILE__, 2);
-        $patterns = Scan::readDataFromFile($path . self::patterns_file);
+        $patterns = Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);
 
         $this->wordAlgorithm = new Hyphenation($patterns);
         $this->stringAlgorithm = new StringHyphenation($this->wordAlgorithm);
