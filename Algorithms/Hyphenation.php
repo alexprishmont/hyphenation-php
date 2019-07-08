@@ -102,7 +102,8 @@ class Hyphenation implements AlgorithmInterface
             $cleanString = $this->clearPatternString($pattern);
             $position = strpos($this->word, $cleanString);
 
-            if ($position === false || ($pattern[0] == '.' && $position !== 0) ||
+            if ($position === false ||
+                ($pattern[0] == '.' && $position !== 0) ||
                 ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($cleanString)))
                 continue;
 

@@ -93,7 +93,7 @@ class Main
             php " . $this->argv[0] . " -s [sentence] 
             php " . $this->argv[0] . " -f [file location]"
         );
-        print("\nFor email validation use: 
+        print("\nFor validations use: 
             php " . $this->argv[0] . " -email [you_email]\n"
         );
     }
