@@ -32,8 +32,8 @@ class Main
     {
         $this->config = new Config("config");
         $this->loggerConfig = new Config("logger");
-        $this->logger = new Logger();
 
+        $this->logger = new Logger($this->loggerConfig);
         $this->loadTime = new LoadTime();
 
         $this->settings = $this->config->getConfigSettings();
@@ -49,6 +49,8 @@ class Main
 
         $this->argv = $argv;
         $this->argc = $argc;
+
+        $this->logger->log(LogLevel::CRITICAL, "Hello world {test}", ["test" => "I am testwebee"]);
     }
 
     public function startup(): void
