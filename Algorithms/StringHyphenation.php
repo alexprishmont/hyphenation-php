@@ -25,7 +25,8 @@ class StringHyphenation implements AlgorithmInterface
 
     private function extractWordsFromString(string $string): array
     {
-        $temp = preg_split('/(\s+)/', $this->clearString($string), -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $temp = preg_split('/(\s+)/', $this->clearString($string), -1,
+            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
         $spaces = [];
         $words = array_reduce($temp, function (&$result, $item) use (&$spaces) {

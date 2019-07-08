@@ -9,9 +9,9 @@ class Hyphenation implements AlgorithmInterface
 
     private $word;
     private $patterns = [];
-    private $valid_patterns = [];
-    private $digits_in_word = [];
-    private $completed_word_with_digits;
+    private $validPatterns = [];
+    private $digitsInWord = [];
+    private $completedWordWithDigits;
 
     public function __construct(array $patterns)
     {
@@ -32,16 +32,16 @@ class Hyphenation implements AlgorithmInterface
     private function clearVariables(): void
     {
         $this->word = null;
-        $this->completed_word_with_digits = null;
-        $this->valid_patterns = [];
-        $this->digits_in_word = [];
+        $this->completedWordWithDigits = null;
+        $this->validPatterns = [];
+        $this->digitsInWord = [];
     }
 
     private function addSyllableSymbols(): string
     {
-        $result = $this->completed_word_with_digits;
-        for ($i = 0; $i < strlen($this->completed_word_with_digits); $i++) {
-            $c = $this->completed_word_with_digits[$i];
+        $result = $this->completedWordWithDigits;
+        for ($i = 0; $i < strlen($this->completedWordWithDigits); $i++) {
+            $c = $this->completedWordWithDigits[$i];
             if (is_numeric($c)) {
                 if ((int)$c % 2 > 0) {
                     $result = str_replace($c, '-', $result);
@@ -55,20 +55,20 @@ class Hyphenation implements AlgorithmInterface
     private function completeWordWithSyllables(): void
     {
         foreach (str_split($this->word) as $i => $c) {
-            $this->completed_word_with_digits .= $c;
+            $this->completedWordWithDigits .= $c;
             if (isset($this->digits_in_word[$i]))
-                $this->completed_word_with_digits .= $this->digits_in_word[$i];
+                $this->completedWordWithDigits .= $this->digitsInWord[$i];
         }
     }
 
     private function pushDigitsToWord(): void
     {
-        foreach ($this->valid_patterns as $pattern) {
+        foreach ($this->validPatterns as $pattern) {
             $digits_in_pattern = $this->extractDigitsFromWord($pattern);
             foreach ($digits_in_pattern as $position => $digit) {
                 $position = $position + strpos($this->word, $this->clearPatternString($pattern));
-                if (!isset($this->digits_in_word[$position]) || $this->digits_in_word[$position] < $digit)
-                    $this->digits_in_word[$position] = $digit;
+                if (!isset($this->digits_in_word[$position]) || $this->digitsInWord[$position] < $digit)
+                    $this->digitsInWord[$position] = $digit;
             }
         }
     }
@@ -90,21 +90,22 @@ class Hyphenation implements AlgorithmInterface
 
     private function clearPatternString(string $pattern): string
     {
-        $clean_string = preg_replace("/[^a-zA-Z]/", "", $pattern);
-        $clean_string = substr($clean_string, 0, sizeof(str_split($pattern)));
-        return trim(preg_replace("/\s+/", " ", $clean_string));
+        $cleanString = preg_replace("/[^a-zA-Z]/", "", $pattern);
+        $cleanString = substr($cleanString, 0, sizeof(str_split($pattern)));
+        return trim(preg_replace("/\s+/", " ", $cleanString));
     }
 
     private function findValidPatterns(): void
     {
         foreach ($this->patterns as $pattern) {
-            $clean_string = $this->clearPatternString($pattern);
-            $position = strpos($this->word, $clean_string);
+            $cleanString = $this->clearPatternString($pattern);
+            $position = strpos($this->word, $cleanString);
 
-            if ($position === false || ($pattern[0] == '.' && $position !== 0) || ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($clean_string)))
+            if ($position === false || ($pattern[0] == '.' && $position !== 0) ||
+                ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($cleanString)))
                 continue;
 
-            $this->valid_patterns[] = $pattern;
+            $this->validPatterns[] = $pattern;
         }
     }
 }
