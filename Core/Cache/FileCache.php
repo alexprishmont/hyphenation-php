@@ -4,7 +4,7 @@ namespace Core\Cache;
 
 use Core\Cache\Interfaces\CacheInterface;
 
-class Cache implements CacheInterface
+class FileCache implements CacheInterface
 {
     public function get($key, $default = null)
     {
