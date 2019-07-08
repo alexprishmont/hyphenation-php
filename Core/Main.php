@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core;
 
 use Algorithms\{Hyphenation, StringHyphenation};
+use Core\Exceptions\LoggerException;
 use Core\Log\LogLevel;
 use Validations\EmailValidation;
 use Core\Scans\{Scan, ScanString};
@@ -50,7 +51,7 @@ class Main
         $this->argv = $argv;
         $this->argc = $argc;
 
-        $this->logger->log(LogLevel::CRITICAL, "Hello world {test}", ["test" => "I am testwebee"]);
+        $this->logger->log(LogLevel::SUCCESS, "test");
     }
 
     public function startup(): void
