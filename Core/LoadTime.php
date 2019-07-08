@@ -1,7 +1,9 @@
 <?php
+
 namespace Core;
 
-class LoadTime {
+class LoadTime
+{
     private $timeStart = 0;
 
     public function __construct()
