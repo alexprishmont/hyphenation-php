@@ -50,12 +50,12 @@ class Config
                                         (ctype_upper($_sval) ? $_sval : '"' . $_sval . '"'));
                         }
                     } else {
-                        $data[] = $skey.' = '.(is_numeric($sval) ? $sval :
-                                (ctype_upper($sval) ? $sval : '"'.$sval.'"'));
+                        $data[] = $skey . ' = ' . (is_numeric($sval) ? $sval :
+                                (ctype_upper($sval) ? $sval : '"' . $sval . '"'));
                     }
                 }
             } else {
-                $data[] = $key.' = '.(is_numeric($val) ? $val :(ctype_upper($val) ? $val : '"'.$val.'"'));
+                $data[] = $key . ' = ' . (is_numeric($val) ? $val : (ctype_upper($val) ? $val : '"' . $val . '"'));
             }
         }
         return $data;
