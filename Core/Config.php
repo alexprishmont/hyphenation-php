@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Core;
 
-use Exception;
+use Core\Exceptions\InvalidArgumentException;
 
 class Config
 {
@@ -25,12 +25,8 @@ class Config
     {
         $this->settings[$key] = $value;
         $data = $this->refactorConfigArrayForSaving();
+        $this->saveSettingsToIni($data);
 
-        try {
-            $this->saveSettingsToIni($data);
-        } catch (Exception $e) {
-            print("\nError while saving config file! [$e]\n");
-        }
     }
 
     private function refactorConfigArrayForSaving(): array
@@ -68,7 +64,7 @@ class Config
         $maxRetries = 100;
 
         if (!$file)
-            return false;
+            throw new InvalidArgumentException("Wrong config file name!");
 
         do {
             if ($retries > 0)
@@ -78,7 +74,7 @@ class Config
         } while (!flock($file, LOCK_EX) && $retries <= $maxRetries);
 
         if ($retries == $maxRetries)
-            return false;
+            throw new InvalidArgumentException("Max retries count reached! Cannot rewrite config file");
 
         fwrite($file, implode(PHP_EOL, $data) . PHP_EOL);
         flock($file, LOCK_UN);
