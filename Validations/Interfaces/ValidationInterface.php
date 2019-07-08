@@ -4,5 +4,5 @@ namespace Validations\Interfaces;
 
 interface ValidationInterface
 {
-    public static function validate(string $data): int;
+    public function validate(string $data): int;
 }

@@ -6,8 +6,15 @@ use Validations\Interfaces\ValidationInterface;
 
 class EmailValidation implements ValidationInterface
 {
-    public static function validate(string $email): int
+    private $pattern;
+
+    public function __construct()
     {
-        return preg_match("/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/", $email);
+        $this->pattern = "/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/";
+    }
+
+    public function validate(string $email): int
+    {
+        return preg_match($this->pattern, $email);
     }
 }

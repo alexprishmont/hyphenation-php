@@ -11,6 +11,7 @@ class Main
     private $stringAlgorithm;
     private $stringFromFile;
     private $config;
+    private $emailValidator;
 
     private $argv;
     private $argc;
@@ -21,6 +22,8 @@ class Main
     {
         $this->config = new Config();
         $this->settings = $this->config->getConfigSettings();
+
+        $this->emailValidator = new EmailValidation();
 
         $path = dirname(__FILE__, 2);
         $patterns = Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);
@@ -71,7 +74,7 @@ class Main
                 }
             case "-email":
                 {
-                    print(EmailValidation::validate($target) === 1 ? "Email is valid." : "Email not valid.");
+                    print($this->emailValidator->validate($target) === 1 ? "Email is valid." : "Email not valid.");
                     break;
                 }
         }
