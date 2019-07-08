@@ -7,15 +7,19 @@ use Validations\EmailValidation;
 
 class Main
 {
+    // Classes
     private $wordAlgorithm;
     private $stringAlgorithm;
     private $stringFromFile;
     private $config;
     private $emailValidator;
+    private $loadTime;
 
+    // Arguments [array] & Arguments count
     private $argv;
     private $argc;
 
+    // Settings array from config file
     private $settings;
 
     public function __construct(array $argv, int $argc)
@@ -24,6 +28,7 @@ class Main
         $this->settings = $this->config->getConfigSettings();
 
         $this->emailValidator = new EmailValidation();
+        $this->loadTime = new LoadTime();
 
         $path = dirname(__FILE__, 2);
         $patterns = Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);
@@ -54,7 +59,6 @@ class Main
 
     public function loadAlgorithm(string $option, string $target): void
     {
-        $start_timing = microtime(true);
         switch ($option) {
             case "-w":
                 {
@@ -78,8 +82,6 @@ class Main
                     break;
                 }
         }
-        $end_timing = microtime(true);
-        print("\nScript execution time = " . ($end_timing - $start_timing) . " seconds\n");
     }
 
     private function showAllowedFlags(): void
