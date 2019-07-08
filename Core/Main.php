@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core;
 
 use Algorithms\{Hyphenation, StringHyphenation};
+use Core\Log\LogLevel;
 use Validations\EmailValidation;
 use Core\Scans\{Scan, ScanString};
 use Core\Log\Logger;

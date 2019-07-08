@@ -7,7 +7,7 @@ class LogLevel
     const CRITICAL = 'critical';
     const ERROR = 'error';
     const WARNING = 'warning';
-    const SUCCESS = 'notice';
+    const SUCCESS = 'success';
     const DEBUG = 'debug';
 
     const CRITICAL_COLOR = 91;

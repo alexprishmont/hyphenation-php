@@ -2,7 +2,6 @@
 
 namespace Core\Log;
 
-use Core\Log\Interfaces\LoggerAwareInterface;
 use Core\Log\Interfaces\LoggerInterface;
 use mysql_xdevapi\Exception;
 
