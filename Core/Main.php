@@ -26,10 +26,11 @@ class Main
     public function __construct(array $argv, int $argc)
     {
         $this->config = new Config();
+        $this->loadTime = new LoadTime();
+
         $this->settings = $this->config->getConfigSettings();
 
         $this->emailValidator = new EmailValidation($this->settings['EMAIL_VALIDATION_PATTERN']);
-        $this->loadTime = new LoadTime();
 
         $path = dirname(__FILE__, 2);
         $patterns = Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);

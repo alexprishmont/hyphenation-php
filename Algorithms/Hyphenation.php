@@ -7,7 +7,6 @@ use Algorithms\Interfaces\AlgorithmInterface;
 
 class Hyphenation implements AlgorithmInterface
 {
-
     private $word;
     private $patterns = [];
     private $validPatterns = [];
@@ -42,12 +41,15 @@ class Hyphenation implements AlgorithmInterface
     {
         $result = $this->completedWordWithDigits;
         for ($i = 0; $i < strlen($this->completedWordWithDigits); $i++) {
-            $c = $this->completedWordWithDigits[$i];
-            if (is_numeric($c)) {
-                if ((int)$c % 2 > 0) {
-                    $result = str_replace($c, '-', $result);
+            $char = $this->completedWordWithDigits[$i];
+            if (is_numeric($char)) {
+                if ((int)$char % 2 > 0) {
+                    if ($i != strlen($this->completedWordWithDigits) - 1)
+                        $result = str_replace($char, '-', $result);
+                    else
+                        $result = str_replace($char, '', $result);
                 } else
-                    $result = str_replace($c, '', $result);
+                    $result = str_replace($char, '', $result);
             }
         }
         return $result;
@@ -55,8 +57,8 @@ class Hyphenation implements AlgorithmInterface
 
     private function completeWordWithSyllables(): void
     {
-        foreach (str_split($this->word) as $i => $c) {
-            $this->completedWordWithDigits .= $c;
+        foreach (str_split($this->word) as $i => $char) {
+            $this->completedWordWithDigits .= $char;
             if (isset($this->digitsInWord[$i]))
                 $this->completedWordWithDigits .= $this->digitsInWord[$i];
         }
