@@ -1,11 +1,12 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core;
 
 use Algorithms\{Hyphenation, StringHyphenation};
 use Validations\EmailValidation;
 use Core\Scans\{Scan, ScanString};
+use Core\Log\Logger;
 
 class Main
 {
@@ -16,6 +17,8 @@ class Main
     private $config;
     private $emailValidator;
     private $loadTime;
+    private $loggerConfig;
+    private $logger;
 
     // Arguments [array] & Arguments count
     private $argv;
@@ -26,7 +29,10 @@ class Main
 
     public function __construct(array $argv, int $argc)
     {
-        $this->config = new Config();
+        $this->config = new Config("config");
+        $this->loggerConfig = new Config("logger");
+        $this->logger = new Logger();
+
         $this->loadTime = new LoadTime();
 
         $this->settings = $this->config->getConfigSettings();
