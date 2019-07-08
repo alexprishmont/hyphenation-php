@@ -35,7 +35,7 @@ class Main
         $this->loggerConfig = new Config("logger");
 
         $this->logger = new Logger($this->loggerConfig);
-        $this->loadTime = new LoadTime();
+        $this->loadTime = new LoadTime($this->logger);
 
         $this->settings = $this->config->getConfigSettings();
 
@@ -44,14 +44,12 @@ class Main
         $path = dirname(__FILE__, 2);
         $patterns = Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);
 
-        $this->wordAlgorithm = new Hyphenation($patterns);
+        $this->wordAlgorithm = new Hyphenation($patterns, $this->logger);
         $this->stringAlgorithm = new StringHyphenation($this->wordAlgorithm);
         $this->stringFromFile = new ScanString($this->stringAlgorithm);
 
         $this->argv = $argv;
         $this->argc = $argc;
-
-        $this->logger->log(LogLevel::SUCCESS, "test");
     }
 
     public function startup(): void

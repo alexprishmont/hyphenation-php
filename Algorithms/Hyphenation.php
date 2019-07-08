@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Algorithms;
 
 use Algorithms\Interfaces\AlgorithmInterface;
+use Core\Log\LogLevel;
 
 class Hyphenation implements AlgorithmInterface
 {
@@ -13,9 +14,12 @@ class Hyphenation implements AlgorithmInterface
     private $digitsInWord = [];
     private $completedWordWithDigits;
 
-    public function __construct(array $patterns)
+    private $logger;
+
+    public function __construct(array $patterns, object $logger = null)
     {
         $this->patterns = $patterns;
+        $this->logger = $logger;
     }
 
     public function hyphenate(string $word): string
@@ -110,6 +114,9 @@ class Hyphenation implements AlgorithmInterface
                 continue;
 
             $this->validPatterns[] = $pattern;
+
+            if ($this->logger !== null)
+                $this->logger->log(LogLevel::DEBUG, "Pattern for word {word}: {pattern}", ['word' => $this->word, 'pattern' => $pattern]);
         }
     }
 }
