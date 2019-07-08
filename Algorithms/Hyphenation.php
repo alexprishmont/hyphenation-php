@@ -56,7 +56,7 @@ class Hyphenation implements AlgorithmInterface
     {
         foreach (str_split($this->word) as $i => $c) {
             $this->completedWordWithDigits .= $c;
-            if (isset($this->digits_in_word[$i]))
+            if (isset($this->digitsInWord[$i]))
                 $this->completedWordWithDigits .= $this->digitsInWord[$i];
         }
     }
