@@ -20,7 +20,7 @@ class Main
     private $emailValidator;
     private $loadTime;
     private $loggerConfig;
-    private $logger;
+    private $logger = null;
 
     // Arguments [array] & Arguments count
     private $argv;
@@ -34,7 +34,10 @@ class Main
         $this->config = new Config("config");
         $this->loggerConfig = new Config("logger");
 
-        $this->logger = new Logger($this->loggerConfig);
+        $logConfig = $this->loggerConfig->getConfigSettings();
+        if ($logConfig['LOG_ENABLED'])
+            $this->logger = new Logger($this->loggerConfig);
+
         $this->loadTime = new LoadTime($this->logger);
 
         $this->settings = $this->config->getConfigSettings();
