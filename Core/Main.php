@@ -5,6 +5,7 @@ namespace Core;
 
 use Algorithms\{Hyphenation, StringHyphenation};
 use Validations\EmailValidation;
+use Core\Scans\{Scan, ScanString};
 
 class Main
 {
