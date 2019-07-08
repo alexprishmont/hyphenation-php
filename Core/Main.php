@@ -9,7 +9,7 @@ use Core\Scans\{Scan, ScanString};
 
 class Main
 {
-    // Classes
+    // Objects
     private $wordAlgorithm;
     private $stringAlgorithm;
     private $stringFromFile;
