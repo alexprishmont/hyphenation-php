@@ -28,7 +28,7 @@ class Main
         $this->config = new Config();
         $this->settings = $this->config->getConfigSettings();
 
-        $this->emailValidator = new EmailValidation();
+        $this->emailValidator = new EmailValidation($this->settings['EMAIL_VALIDATION_PATTERN']);
         $this->loadTime = new LoadTime();
 
         $path = dirname(__FILE__, 2);

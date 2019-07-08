@@ -9,9 +9,9 @@ class EmailValidation implements ValidationInterface
 {
     private $pattern;
 
-    public function __construct()
+    public function __construct($pattern)
     {
-        $this->pattern = "/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$/";
+        $this->pattern = $pattern;
     }
 
     public function validate(string $email): int
