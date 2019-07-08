@@ -69,12 +69,8 @@ class Logger implements LoggerInterface
 
     public function log($level, $message, array $context = [])
     {
-        try {
-            $this->isLogLevelValid($level);
-            $this->$level($message, $context);
-        } catch (LoggerException $e) {
-            $this->critical($e);
-        }
+        $this->isLogLevelValid($level);
+        $this->$level($message, $context);
     }
 
     private function processLog($message, array $context, $priority, string $priorityMessage, int $color)

@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace Core;
 
 use Algorithms\{Hyphenation, StringHyphenation};
-use Core\Exceptions\LoggerException;
-use Core\Log\LogLevel;
+use Core\Exceptions\ExceptionHandler;
 use Validations\EmailValidation;
 use Core\Scans\{Scan, ScanString};
 use Core\Log\Logger;
@@ -21,6 +20,7 @@ class Main
     private $loadTime;
     private $loggerConfig;
     private $logger = null;
+    private $exceptionHandler;
 
     // Arguments [array] & Arguments count
     private $argv;
@@ -39,6 +39,7 @@ class Main
             $this->logger = new Logger($this->loggerConfig);
 
         $this->loadTime = new LoadTime($this->logger);
+        $this->exceptionHandler = new ExceptionHandler($this->logger);
 
         $this->settings = $this->config->getConfigSettings();
 
