@@ -20,16 +20,16 @@ class Hyphenation implements AlgorithmInterface
 
     public function hyphenate(string $word): string
     {
-        $this->clear_variables();
+        $this->clearVariables();
 
         $this->word = $word;
-        $this->find_valid_patterns();
-        $this->push_digits_to_word();
-        $this->complete_word_with_digits();
-        return $this->add_syllable_symbols();
+        $this->findValidPatterns();
+        $this->pushDigitsToWord();
+        $this->completeWordWithSyllables();
+        return $this->addSyllableSymbols();
     }
 
-    private function clear_variables(): void
+    private function clearVariables(): void
     {
         $this->word = null;
         $this->completed_word_with_digits = null;
@@ -37,7 +37,7 @@ class Hyphenation implements AlgorithmInterface
         $this->digits_in_word = [];
     }
 
-    private function add_syllable_symbols(): string
+    private function addSyllableSymbols(): string
     {
         $result = $this->completed_word_with_digits;
         for ($i = 0; $i < strlen($this->completed_word_with_digits); $i++) {
@@ -52,7 +52,7 @@ class Hyphenation implements AlgorithmInterface
         return $result;
     }
 
-    private function complete_word_with_digits(): void
+    private function completeWordWithSyllables(): void
     {
         foreach (str_split($this->word) as $i => $c) {
             $this->completed_word_with_digits .= $c;
@@ -61,19 +61,19 @@ class Hyphenation implements AlgorithmInterface
         }
     }
 
-    private function push_digits_to_word(): void
+    private function pushDigitsToWord(): void
     {
         foreach ($this->valid_patterns as $pattern) {
-            $digits_in_pattern = $this->extract_digits_from_pattern($pattern);
+            $digits_in_pattern = $this->extractDigitsFromWord($pattern);
             foreach ($digits_in_pattern as $position => $digit) {
-                $position = $position + strpos($this->word, $this->clear_pattern_string($pattern));
+                $position = $position + strpos($this->word, $this->clearPatternString($pattern));
                 if (!isset($this->digits_in_word[$position]) || $this->digits_in_word[$position] < $digit)
                     $this->digits_in_word[$position] = $digit;
             }
         }
     }
 
-    private function extract_digits_from_pattern(string $pattern): array
+    private function extractDigitsFromWord(string $pattern): array
     {
         $digits = [];
         if (preg_match_all('/[0-9]+/', $pattern, $matches, PREG_OFFSET_CAPTURE) > 0) {
@@ -88,17 +88,17 @@ class Hyphenation implements AlgorithmInterface
         return $digits;
     }
 
-    private function clear_pattern_string(string $pattern): string
+    private function clearPatternString(string $pattern): string
     {
         $clean_string = preg_replace("/[^a-zA-Z]/", "", $pattern);
         $clean_string = substr($clean_string, 0, sizeof(str_split($pattern)));
         return trim(preg_replace("/\s+/", " ", $clean_string));
     }
 
-    private function find_valid_patterns(): void
+    private function findValidPatterns(): void
     {
         foreach ($this->patterns as $pattern) {
-            $clean_string = $this->clear_pattern_string($pattern);
+            $clean_string = $this->clearPatternString($pattern);
             $position = strpos($this->word, $clean_string);
 
             if ($position === false || ($pattern[0] == '.' && $position !== 0) || ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($clean_string)))
