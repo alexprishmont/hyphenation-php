@@ -64,6 +64,12 @@ class FileCache implements CacheInterface
         return $value;
     }
 
+    public function getCacheExpirationTime($key)
+    {
+        $path = $this->getPath($key);
+        return @filemtime($path);
+    }
+
     public function set($key, $value, $ttl = null)
     {
         $path = $this->getPath($key);
@@ -76,7 +82,7 @@ class FileCache implements CacheInterface
         $tempPath = $this->cachePath . DIRECTORY_SEPARATOR . uniqid('', true);
 
         if (is_int($ttl))
-            $expiresAt = $this->getTime + $ttl;
+            $expiresAt = $this->getTime() + $ttl;
         elseif ($ttl instanceof DateInterval)
             $expiresAt = date_create_from_format("U", $this->getTime())->add($ttl)->getTimestamp();
         elseif ($ttl === null)
@@ -106,22 +112,67 @@ class FileCache implements CacheInterface
 
     public function clear()
     {
+        $success = true;
+
+        $paths = $this->listPaths();
+
+        foreach ($paths as $path) {
+            if (!unlink($path))
+                $success = false;
+        }
+
+        return $success;
     }
 
     public function getMultiple($keys, $default = null)
     {
+        if (!is_array($keys) && !$keys instanceof \Traversable)
+            throw new InvalidArgumentException("Keys must be either of type array or Traversable");
+
+        $values = [];
+
+        foreach ($keys as $key)
+            $values[$key] = $this->get($key) ?: $default;
+
+        return $values;
     }
 
     public function setMultiple($values, $ttl = null)
     {
+        if (!is_array($values) && !$values instanceof \Traversable)
+            throw new InvalidArgumentException("Keys must be either of type array or Traversable");
+
+        $ok = true;
+
+        foreach ($values as $key => $value) {
+            if (is_int($key))
+                $key = (string)$key;
+
+            $this->validateKey($key);
+            $ok = $this->set($key, $value, $ttl) && $ok;
+        }
+
+        return $ok;
     }
 
     public function deleteMultiple($keys)
     {
+        if (!is_array($keys) && !$keys instanceof \Traversable)
+            throw new InvalidArgumentException("Keys must be either of type array or Traversable");
+
+        $ok = true;
+
+        foreach ($keys as $key) {
+            $this->validateKey($key);
+            $ok = $ok && $this->delete($key);
+        }
+
+        return $ok;
     }
 
     public function has($key)
     {
+        return $this->get($key, $this) !== $this;
     }
 
     private function getTime()
@@ -135,7 +186,7 @@ class FileCache implements CacheInterface
 
         $hash = hash("sha256", $key);
 
-        return $this->$cachePath
+        return $this->cachePath
             . DIRECTORY_SEPARATOR
             . strtoupper($hash[0])
             . DIRECTORY_SEPARATOR
@@ -159,6 +210,23 @@ class FileCache implements CacheInterface
 
         if (preg_match(self::PSR16_RESERVED, $key, $match) === 1)
             throw new InvalidArgumentException("invalid character in key: {$match[0]}");
+    }
+
+    private function listPaths()
+    {
+        $iterator = new \RecursiveDirectoryIterator(
+            $this->cachePath,
+            \FilesystemIterator::CURRENT_AS_PATHNAME | \FilesystemIterator::SKIP_DOTS
+        );
+
+        $iterator = new \RecursiveIteratorIterator($iterator);
+
+        foreach ($iterator as $path) {
+            if (is_dir($path))
+                continue;
+
+            yield $path;
+        }
     }
 
     private function mkdir($path)

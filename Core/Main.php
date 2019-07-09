@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core;
 
 use Algorithms\{Hyphenation, StringHyphenation};
+use Core\Cache\FileCache;
 use Core\Exceptions\ExceptionHandler;
 use Validations\EmailValidation;
 use Core\Scans\{Scan, ScanString};
@@ -29,12 +30,27 @@ class Main
     // Settings array from config file
     private $settings;
 
+    // Cache settings
+    private const DEFAULT_EXPIRATION = 86400;
+    private const DIR_MODE = 0775;
+    private const FILE_MODE = 0664;
+    private $cache;
+
     public function __construct(array $argv, int $argc)
     {
+        // Cache setup
+        $cachePath = dirname(__FILE__, 2) . "/Output/Cache";
+        $this->cache = new FileCache($cachePath, self::DEFAULT_EXPIRATION, self::DIR_MODE, self::FILE_MODE);
+
+        assert(file_exists($cachePath));
+        assert(is_writable($cachePath));
+
+        // Application configuration
         $this->config = new Config("config");
         $this->loggerConfig = new Config("logger");
 
         $logConfig = $this->loggerConfig->getConfigSettings();
+
         if ($logConfig['LOG_ENABLED'])
             $this->logger = new Logger($this->loggerConfig);
 
@@ -46,6 +62,7 @@ class Main
         $this->emailValidator = new EmailValidation($this->settings['EMAIL_VALIDATION_PATTERN']);
 
         $path = dirname(__FILE__, 2);
+
         $patterns = Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);
 
         $this->wordAlgorithm = new Hyphenation($patterns, $this->logger);
@@ -74,28 +91,40 @@ class Main
 
     public function loadAlgorithm(string $option, string $target): void
     {
-        switch ($option) {
-            case "-w":
-                {
-                    print($this->wordAlgorithm->hyphenate($target));
-                    break;
-                }
-            case "-s":
-                {
-                    print($this->stringAlgorithm->hyphenate($target));
-                    break;
-                }
-            case "-f":
-                {
-                    $this->stringFromFile->inputSrc($target);
-                    print($this->stringFromFile->result());
-                    break;
-                }
-            case "-email":
-                {
-                    print($this->emailValidator->validate($target) === 1 ? "Email is valid." : "Email not valid.");
-                    break;
-                }
+        if ($this->cache->has($target)) {
+            print($this->cache->get($target));
+            return;
+        }
+        else {
+            $result = "";
+            switch ($option) {
+                case "-w":
+                    {
+                        $result = $this->wordAlgorithm->hyphenate($target);
+                        print($result);
+                        break;
+                    }
+                case "-s":
+                    {
+                        $result = $this->stringAlgorithm->hyphenate($target);
+                        print($result);
+                        break;
+                    }
+                case "-f":
+                    {
+                        $this->stringFromFile->inputSrc($target);
+                        $result = $this->stringFromFile->result();
+                        print($result);
+                        break;
+                    }
+                case "-email":
+                    {
+                        $result = $this->emailValidator->validate($target) === 1 ? "Email is valid." : "Email not valid.";
+                        print($result);
+                        break;
+                    }
+            }
+            $this->cache->set($target, $result);
         }
     }
 
