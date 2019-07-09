@@ -2,10 +2,10 @@
 
 namespace Core\Exceptions;
 
-use \Exception;
+use Exception;
 use Throwable;
 
-class InvalidArgumentException extends Exception
+class ServiceNotFoundException extends Exception
 {
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {
@@ -14,6 +14,7 @@ class InvalidArgumentException extends Exception
 
     public function __toString()
     {
-        return "[ERROR] [{$this->code}]: {$this->message}\n";
+        return "[SERVICE] [{$this->code}]: {$this->message}\n";
     }
+
 }

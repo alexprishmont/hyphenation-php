@@ -13,15 +13,7 @@ use Core\Log\Logger;
 class Main
 {
     // Objects
-    private $wordAlgorithm;
-    private $stringAlgorithm;
-    private $stringFromFile;
-    private $config;
-    private $emailValidator;
-    private $loadTime;
-    private $loggerConfig;
-    private $logger = null;
-    private $exceptionHandler;
+    private $container = [];
 
     // Arguments [array] & Arguments count
     private $argv;
@@ -38,37 +30,7 @@ class Main
 
     public function __construct(array $argv, int $argc)
     {
-        // Cache setup
-        $cachePath = dirname(__FILE__, 2) . "/Output/Cache";
-        $this->cache = new FileCache($cachePath, self::DEFAULT_EXPIRATION, self::DIR_MODE, self::FILE_MODE);
-
-        assert(file_exists($cachePath));
-        assert(is_writable($cachePath));
-
-        // Application configuration
-        $this->config = new Config("config");
-        $this->loggerConfig = new Config("logger");
-
-        $logConfig = $this->loggerConfig->getConfigSettings();
-
-        if ($logConfig['LOG_ENABLED'])
-            $this->logger = new Logger($this->loggerConfig);
-
-        $this->loadTime = new LoadTime($this->logger);
-        $this->exceptionHandler = new ExceptionHandler($this->logger);
-
-        $this->settings = $this->config->getConfigSettings();
-
-        $this->emailValidator = new EmailValidation($this->settings['EMAIL_VALIDATION_PATTERN']);
-
-        $path = dirname(__FILE__, 2);
-
-        $patterns = Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);
-
-        $this->wordAlgorithm = new Hyphenation($patterns, $this->logger);
-        $this->stringAlgorithm = new StringHyphenation($this->wordAlgorithm);
-        $this->stringFromFile = new ScanString($this->stringAlgorithm);
-
+        $this->loadDependencies();
         $this->argv = $argv;
         $this->argc = $argc;
     }
@@ -91,40 +53,33 @@ class Main
 
     public function loadAlgorithm(string $option, string $target): void
     {
-        if ($this->cache->has($target)) {
-            print($this->cache->get($target));
-            return;
-        }
-        else {
-            $result = "";
-            switch ($option) {
-                case "-w":
-                    {
-                        $result = $this->wordAlgorithm->hyphenate($target);
-                        print($result);
-                        break;
-                    }
-                case "-s":
-                    {
-                        $result = $this->stringAlgorithm->hyphenate($target);
-                        print($result);
-                        break;
-                    }
-                case "-f":
-                    {
-                        $this->stringFromFile->inputSrc($target);
-                        $result = $this->stringFromFile->result();
-                        print($result);
-                        break;
-                    }
-                case "-email":
-                    {
-                        $result = $this->emailValidator->validate($target) === 1 ? "Email is valid." : "Email not valid.";
-                        print($result);
-                        break;
-                    }
-            }
-            $this->cache->set($target, $result);
+        $result = "";
+        switch ($option) {
+            case "-w":
+                {
+                    $result = $this->container['word_algorithm']->hyphenate($target);
+                    print($result);
+                    break;
+                }
+            case "-s":
+                {
+                    $result = $this->container['string_algorithm']->hyphenate($target);
+                    print($result);
+                    break;
+                }
+            case "-f":
+                {
+                    $this->container['scan_string_service']->inputSrc($target);
+                    $result = $this->container['scan_string_service']->result();
+                    print($result);
+                    break;
+                }
+            case "-email":
+                {
+                    $result = $this->container['email_validator']->validate($target) === 1 ? "Email is valid." : "Email not valid.";
+                    print($result);
+                    break;
+                }
         }
     }
 
@@ -139,6 +94,49 @@ class Main
         print("\nFor validations use: 
             php " . $this->argv[0] . " -email [you_email]\n"
         );
+    }
+
+    private function getDefaultCachePath(): string
+    {
+        $cachePath = dirname(__FILE__, 2) . "/Output/Cache";
+        assert(file_exists($cachePath));
+        assert(is_writable($cachePath));
+        return $cachePath;
+    }
+
+    private function getDefaultPatternList(): array
+    {
+        $path = dirname(__FILE__, 2);
+        return Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);
+    }
+
+    private function loadDependencies(): void
+    {
+        $this->cache = new FileCache($this->getDefaultCachePath(), self::DEFAULT_EXPIRATION, self::DIR_MODE, self::FILE_MODE);
+
+        $this->container['config'] = new Config("config");
+        $this->settings = $this->container['config']->getConfigSettings();
+
+        $this->container['logger_config'] = new Config("logger");
+        $logConfig = $this->container['logger_config']->getConfigSettings();
+        if ($logConfig['LOG_ENABLED'])
+            $this->container['logger'] = new Logger($this->container['logger_config']);
+        else
+            $this->container['logger'] = null;
+
+        $this->container['load_time'] = new LoadTime($this->container['logger']);
+        $this->container['exception_handler'] = new ExceptionHandler($this->container['logger']);
+
+        $logConfig = $this->container['logger_config']->getConfigSettings();
+
+        if ($logConfig['LOG_ENABLED'])
+            $this->container['logger'] = new Logger($this->container['logger_config']);
+
+
+        $this->container['email_validator'] = new EmailValidation($this->settings['EMAIL_VALIDATION_PATTERN']);
+        $this->container['word_algorithm'] = new Hyphenation($this->getDefaultPatternList(), $this->cache, $this->container['logger']);
+        $this->container['string_algorithm'] = new StringHyphenation($this->container['word_algorithm'], $this->cache);
+        $this->container['scan_string_service'] = new ScanString($this->container['string_algorithm']);
     }
 }
 

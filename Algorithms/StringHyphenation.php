@@ -1,27 +1,30 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Algorithms;
 
 use Algorithms\Interfaces\AlgorithmInterface;
+use Core\Cache\FileCache;
 
 class StringHyphenation implements AlgorithmInterface
 {
     private $algorithm;
+    private $cache;
 
-    public function __construct(Hyphenation $algorithm)
+    public function __construct(Hyphenation $algorithm, FileCache $cache)
     {
         $this->algorithm = $algorithm;
+        $this->cache = $cache;
     }
 
     public function hyphenate(string $string): string
     {
+        $result = $string;
         $words = $this->extractWordsFromString($string);
         foreach ($words as $word) {
-            $word_with_syllable = $this->algorithm->hyphenate($word);
-            $string = str_replace($word, $word_with_syllable, $string);
+            $result = str_replace($word, $this->algorithm->hyphenate($word), $result);
         }
-        return $string;
+        return $result;
     }
 
     private function extractWordsFromString(string $string): array

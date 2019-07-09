@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Algorithms;
 
 use Algorithms\Interfaces\AlgorithmInterface;
+use Core\Cache\FileCache;
+use Core\Log\Logger;
 use Core\Log\LogLevel;
 
 class Hyphenation implements AlgorithmInterface
@@ -15,22 +17,29 @@ class Hyphenation implements AlgorithmInterface
     private $completedWordWithDigits;
 
     private $logger;
+    private $cache;
 
-    public function __construct(array $patterns, object $logger = null)
+    public function __construct(array $patterns, FileCache $cache, Logger $logger = null)
     {
         $this->patterns = $patterns;
         $this->logger = $logger;
+        $this->cache = $cache;
     }
 
     public function hyphenate(string $word): string
     {
-        $this->clearVariables();
-
-        $this->word = $word;
-        $this->findValidPatterns();
-        $this->pushDigitsToWord();
-        $this->completeWordWithSyllables();
-        return $this->addSyllableSymbols();
+        if (!$this->cache->has($word)) {
+            $this->clearVariables();
+            $this->word = $word;
+            $this->findValidPatterns();
+            $this->pushDigitsToWord();
+            $this->completeWordWithSyllables();
+            $result = $this->addSyllableSymbols();
+            $this->cache->set($word, $result);
+            return $result;
+        } else {
+            return (string)$this->cache->get($word);
+        }
     }
 
     private function clearVariables(): void
