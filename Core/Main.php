@@ -6,6 +6,7 @@ namespace Core;
 use Algorithms\{Hyphenation, StringHyphenation};
 use Core\Cache\FileCache;
 use Core\Exceptions\ExceptionHandler;
+use Core\Log\LogLevel;
 use Validations\EmailValidation;
 use Core\Scans\{Scan, ScanString};
 use Core\Log\Logger;
@@ -53,7 +54,6 @@ class Main
 
     public function loadAlgorithm(string $option, string $target): void
     {
-        $result = "";
         switch ($option) {
             case "-w":
                 {
@@ -106,8 +106,14 @@ class Main
 
     private function getDefaultPatternList(): array
     {
-        $path = dirname(__FILE__, 2);
-        return Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);
+        if (!$this->cache->has("patterns")) {
+            $path = dirname(__FILE__, 2);
+            $patterns = Scan::readDataFromFile($path . $this->settings['PATTERNS_SOURCE']);
+            $this->cache->set("patterns", $patterns);
+            return $patterns;
+        } else {
+            return $this->cache->get("patterns");
+        }
     }
 
     private function loadDependencies(): void

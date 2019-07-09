@@ -39,3 +39,274 @@
 2019-07-09 09:12:59 [debug]: Pattern for word forest: 2st.
 
 2019-07-09 09:12:59 [success]: Script execution time 0.0088279247283936
+2019-07-09 12:45:46 [success]: Script execution time 0.0017609596252441
+2019-07-09 12:46:00 [success]: Script execution time 0.0019121170043945
+2019-07-09 12:46:37 [success]: Script execution time 0.0016870498657227
+2019-07-09 12:46:39 [success]: Script execution time 0.0017650127410889
+2019-07-09 12:46:42 [debug]: Pattern for word forest: 1fo
+
+2019-07-09 12:46:42 [debug]: Pattern for word forest: fo2r
+
+2019-07-09 12:46:42 [debug]: Pattern for word forest: or5est.
+
+2019-07-09 12:46:42 [debug]: Pattern for word forest: 2re.
+
+2019-07-09 12:46:42 [debug]: Pattern for word forest: r4es.
+
+2019-07-09 12:46:42 [debug]: Pattern for word forest: res2t
+
+2019-07-09 12:46:42 [debug]: Pattern for word forest: 2st.
+
+2019-07-09 12:46:42 [success]: Script execution time 0.0088300704956055
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: .mis1
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: a2n
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: 2is.
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: 5mi.
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: m2is
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: 2n1s2
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: n2sl
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: s1l2
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: s3lat
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: 2st.
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: st4r
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: 4te.
+
+2019-07-09 12:46:53 [debug]: Pattern for word mistranslate: 1tra
+
+2019-07-09 12:46:53 [success]: Script execution time 0.013139963150024
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: .mis1
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: a2n
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: 2is.
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: 5mi.
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: m2is
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: 2n1s2
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: n2sl
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: s1l2
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: s3lat
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: 2st.
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: st4r
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: 4te.
+
+2019-07-09 12:51:13 [debug]: Pattern for word mistranslate: 1tra
+
+2019-07-09 12:51:13 [success]: Script execution time 0.013310194015503
+2019-07-09 12:51:16 [success]: Script execution time 0.0020370483398438
+2019-07-09 12:51:17 [success]: Script execution time 0.0030591487884521
+2019-07-09 12:51:17 [success]: Script execution time 0.0026209354400635
+2019-07-09 12:51:18 [success]: Script execution time 0.0021100044250488
+2019-07-09 12:51:18 [success]: Script execution time 0.0026350021362305
+2019-07-09 12:51:18 [success]: Script execution time 0.0020420551300049
+2019-07-09 12:51:19 [success]: Script execution time 0.0020878314971924
+2019-07-09 12:51:19 [success]: Script execution time 0.0020749568939209
+2019-07-09 12:51:19 [success]: Script execution time 0.0019938945770264
+2019-07-09 12:51:20 [success]: Script execution time 0.0020289421081543
+2019-07-09 12:51:20 [success]: Script execution time 0.0020620822906494
+2019-07-09 12:51:20 [success]: Script execution time 0.0021891593933105
+2019-07-09 12:51:21 [success]: Script execution time 0.0033519268035889
+2019-07-09 12:51:21 [success]: Script execution time 0.0020880699157715
+2019-07-09 12:51:21 [success]: Script execution time 0.0026819705963135
+2019-07-09 12:51:22 [success]: Script execution time 0.0020349025726318
+2019-07-09 13:00:48 [success]: Script execution time 0.0017960071563721
+2019-07-09 13:00:52 [success]: Script execution time 0.0017759799957275
+2019-07-09 13:00:56 [success]: Script execution time 0.0019850730895996
+2019-07-09 13:00:58 [success]: Script execution time 0.0018258094787598
+2019-07-09 13:01:02 [debug]: Pattern for word forward: 2a2r
+
+2019-07-09 13:01:02 [debug]: Pattern for word forward: 1fo
+
+2019-07-09 13:01:02 [debug]: Pattern for word forward: fo2r
+
+2019-07-09 13:01:02 [debug]: Pattern for word forward: r1w
+
+2019-07-09 13:01:02 [success]: Script execution time 0.0082540512084961
+2019-07-09 13:01:10 [debug]: Pattern for word hello: .he2
+
+2019-07-09 13:01:10 [debug]: Pattern for word hello: ello4
+
+2019-07-09 13:01:10 [debug]: Pattern for word hello: l1l
+
+2019-07-09 13:01:10 [debug]: Pattern for word hello: ll4o
+
+2019-07-09 13:01:10 [debug]: Pattern for word hello: 3lo.
+
+2019-07-09 13:01:10 [success]: Script execution time 0.0081429481506348
+2019-07-09 13:01:12 [success]: Script execution time 0.0016942024230957
+2019-07-09 13:01:16 [success]: Script execution time 0.0017240047454834
+2019-07-09 13:05:40 [success]: Script execution time 0.0020129680633545
+2019-07-09 13:05:41 [success]: Script execution time 0.00193190574646
+2019-07-09 13:05:43 [success]: Script execution time 0.0027878284454346
+2019-07-09 13:05:43 [success]: Script execution time 0.0017499923706055
+2019-07-09 13:07:20 [success]: Script execution time 0.0017910003662109
+2019-07-09 13:07:22 [success]: Script execution time 0.0018799304962158
+2019-07-09 13:07:23 [success]: Script execution time 0.0018019676208496
+2019-07-09 13:10:38 [success]: Script execution time 0.0020389556884766
+2019-07-09 13:10:40 [success]: Script execution time 0.0014619827270508
+2019-07-09 13:10:41 [success]: Script execution time 0.0017671585083008
+2019-07-09 13:10:41 [success]: Script execution time 0.0014669895172119
+2019-07-09 13:10:42 [success]: Script execution time 0.0051889419555664
+2019-07-09 13:10:42 [success]: Script execution time 0.0016388893127441
+2019-07-09 13:10:44 [success]: Script execution time 0.0014572143554688
+2019-07-09 13:10:45 [success]: Script execution time 0.0018749237060547
+2019-07-09 13:10:45 [success]: Script execution time 0.0014519691467285
+2019-07-09 13:10:46 [success]: Script execution time 0.0017001628875732
+2019-07-09 13:10:49 [success]: Script execution time 0.0017290115356445
+2019-07-09 13:10:49 [success]: Script execution time 0.0014848709106445
+2019-07-09 13:10:50 [success]: Script execution time 0.0014750957489014
+2019-07-09 13:10:51 [success]: Script execution time 0.0016350746154785
+2019-07-09 13:10:51 [success]: Script execution time 0.0014700889587402
+2019-07-09 13:10:52 [success]: Script execution time 0.0014681816101074
+2019-07-09 13:10:52 [success]: Script execution time 0.0017979145050049
+2019-07-09 13:10:53 [success]: Script execution time 0.0015392303466797
+2019-07-09 13:10:53 [success]: Script execution time 0.0014369487762451
+2019-07-09 13:10:53 [success]: Script execution time 0.0014970302581787
+2019-07-09 13:10:54 [success]: Script execution time 0.0060369968414307
+2019-07-09 13:10:54 [success]: Script execution time 0.0014770030975342
+2019-07-09 13:10:59 [success]: Script execution time 0.0014758110046387
+2019-07-09 13:11:00 [success]: Script execution time 0.001460075378418
+2019-07-09 13:11:00 [success]: Script execution time 0.0019519329071045
+2019-07-09 13:12:46 [success]: Script execution time 0.0015099048614502
+2019-07-09 13:12:47 [success]: Script execution time 0.0014300346374512
+2019-07-09 13:13:20 [critical]: File load time: 0.0009610652923584
+2019-07-09 13:13:20 [success]: Script execution time 0.0045499801635742
+2019-07-09 13:13:23 [critical]: File load time: 0.00091290473937988
+2019-07-09 13:13:23 [success]: Script execution time 0.0051460266113281
+2019-07-09 13:13:24 [critical]: File load time: 0.00095295906066895
+2019-07-09 13:13:24 [success]: Script execution time 0.0046391487121582
+2019-07-09 13:13:25 [critical]: File load time: 0.00091004371643066
+2019-07-09 13:13:25 [success]: Script execution time 0.003899097442627
+2019-07-09 13:13:25 [critical]: File load time: 0.00093317031860352
+2019-07-09 13:13:25 [success]: Script execution time 0.0046310424804688
+2019-07-09 13:13:25 [critical]: File load time: 0.00085711479187012
+2019-07-09 13:13:25 [success]: Script execution time 0.0040750503540039
+2019-07-09 13:13:26 [critical]: File load time: 0.00091218948364258
+2019-07-09 13:13:26 [success]: Script execution time 0.0041351318359375
+2019-07-09 13:13:26 [critical]: File load time: 0.00090312957763672
+2019-07-09 13:13:26 [success]: Script execution time 0.0039768218994141
+2019-07-09 13:13:54 [critical]: File load time: 0.0011389255523682
+2019-07-09 13:13:54 [success]: Script execution time 0.0043580532073975
+2019-07-09 13:13:55 [critical]: File load time: 0.001068115234375
+2019-07-09 13:13:55 [success]: Script execution time 0.0041921138763428
+2019-07-09 13:14:08 [critical]: File load time: 0.0010640621185303
+2019-07-09 13:14:08 [success]: Script execution time 0.004371166229248
+2019-07-09 13:14:09 [critical]: File load time: 0.001060962677002
+2019-07-09 13:14:09 [success]: Script execution time 0.0043001174926758
+2019-07-09 13:14:12 [critical]: File load time: 0.0010590553283691
+2019-07-09 13:14:12 [success]: Script execution time 0.0043308734893799
+2019-07-09 13:14:13 [critical]: File load time: 0.0010898113250732
+2019-07-09 13:14:13 [success]: Script execution time 0.0041589736938477
+2019-07-09 13:14:13 [critical]: File load time: 0.0011048316955566
+2019-07-09 13:14:13 [success]: Script execution time 0.0045459270477295
+2019-07-09 13:14:14 [critical]: File load time: 0.0010590553283691
+2019-07-09 13:14:14 [success]: Script execution time 0.0046029090881348
+2019-07-09 13:14:26 [critical]: File load time: 0.00086307525634766
+2019-07-09 13:14:26 [success]: Script execution time 0.0038599967956543
+2019-07-09 13:14:27 [critical]: File load time: 0.00095391273498535
+2019-07-09 13:14:27 [success]: Script execution time 0.0039479732513428
+2019-07-09 13:14:43 [success]: Script execution time 0.0015180110931396
+2019-07-09 13:14:44 [success]: Script execution time 0.0015201568603516
+2019-07-09 13:14:44 [success]: Script execution time 0.0015060901641846
+2019-07-09 13:14:45 [success]: Script execution time 0.0014989376068115
+2019-07-09 13:14:45 [success]: Script execution time 0.0019350051879883
+2019-07-09 13:14:46 [success]: Script execution time 0.0014300346374512
+2019-07-09 13:14:46 [success]: Script execution time 0.0015759468078613
+2019-07-09 13:14:46 [success]: Script execution time 0.0016701221466064
+2019-07-09 13:15:09 [success]: Script execution time 0.0014259815216064
+2019-07-09 13:15:12 [success]: Script execution time 0.0015578269958496
+2019-07-09 13:15:18 [debug]: Pattern for word dependency: 1cy
+
+2019-07-09 13:15:18 [debug]: Pattern for word dependency: 2de.
+
+2019-07-09 13:15:18 [debug]: Pattern for word dependency: 1den
+
+2019-07-09 13:15:18 [debug]: Pattern for word dependency: de1p
+
+2019-07-09 13:15:18 [debug]: Pattern for word dependency: n1de
+
+2019-07-09 13:15:18 [debug]: Pattern for word dependency: 4pe.
+
+2019-07-09 13:15:18 [success]: Script execution time 0.0081801414489746
+2019-07-09 13:15:24 [success]: Script execution time 0.0014731884002686
+2019-07-09 13:15:26 [success]: Script execution time 0.00142502784729
+2019-07-09 13:18:20 [debug]: Pattern for word dependency: 1cy
+
+2019-07-09 13:18:20 [debug]: Pattern for word dependency: 2de.
+
+2019-07-09 13:18:20 [debug]: Pattern for word dependency: 1den
+
+2019-07-09 13:18:20 [debug]: Pattern for word dependency: de1p
+
+2019-07-09 13:18:20 [debug]: Pattern for word dependency: n1de
+
+2019-07-09 13:18:20 [debug]: Pattern for word dependency: 4pe.
+
+2019-07-09 13:18:20 [success]: Script execution time 0.008065938949585
+2019-07-09 13:18:21 [success]: Script execution time 0.0015251636505127
+2019-07-09 13:18:22 [success]: Script execution time 0.00152587890625
+2019-07-09 13:18:23 [success]: Script execution time 0.0015048980712891
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: .mis1
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: a2n
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: 2is.
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: 5mi.
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: m2is
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: 2n1s2
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: n2sl
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: s1l2
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: s3lat
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: 2st.
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: st4r
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: 4te.
+
+2019-07-09 13:18:26 [debug]: Pattern for word mistranslate: 1tra
+
+2019-07-09 13:18:26 [success]: Script execution time 0.0092310905456543
+2019-07-09 13:18:26 [success]: Script execution time 0.0014917850494385
+2019-07-09 13:18:27 [success]: Script execution time 0.0015208721160889
+2019-07-09 13:18:27 [success]: Script execution time 0.0014288425445557
+2019-07-09 13:18:27 [success]: Script execution time 0.0014591217041016
+2019-07-09 13:18:27 [success]: Script execution time 0.001708984375
+2019-07-09 13:18:28 [success]: Script execution time 0.0014810562133789
+2019-07-09 13:18:29 [success]: Script execution time 0.0014328956604004
+2019-07-09 13:18:29 [success]: Script execution time 0.0014338493347168
+2019-07-09 13:18:29 [success]: Script execution time 0.0015079975128174
+2019-07-09 13:18:30 [success]: Script execution time 0.0014848709106445
+2019-07-09 13:18:30 [success]: Script execution time 0.0014259815216064
+2019-07-09 13:18:40 [success]: Script execution time 0.0014839172363281
+2019-07-09 13:18:42 [success]: Script execution time 0.001474142074585
+2019-07-09 13:18:42 [success]: Script execution time 0.0027389526367188
+2019-07-09 13:18:42 [success]: Script execution time 0.00142502784729
+2019-07-09 13:18:42 [success]: Script execution time 0.0014228820800781
+2019-07-09 13:18:43 [success]: Script execution time 0.001431941986084
+2019-07-09 13:18:43 [success]: Script execution time 0.0014572143554688
