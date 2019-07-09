@@ -2,6 +2,7 @@
 
 namespace Core\Log;
 
+use Core\Config;
 use Core\Exceptions\LoggerException;
 use Core\Log\Interfaces\LoggerInterface;
 use Core\Tools;
@@ -12,9 +13,9 @@ class Logger implements LoggerInterface
 {
     private $config;
 
-    public function __construct(object $config)
+    public function __construct(Config $config)
     {
-        $this->config = $config->getConfigSettings();
+        $this->config = $config->get("logger");
     }
 
     public function critical($message, array $context = [])

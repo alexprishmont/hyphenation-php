@@ -19,11 +19,15 @@ class Hyphenation implements AlgorithmInterface
     private $logger;
     private $cache;
 
-    public function __construct(array $patterns, FileCache $cache, Logger $logger = null)
+    public function __construct(FileCache $cache, Logger $logger = null)
     {
-        $this->patterns = $patterns;
         $this->logger = $logger;
         $this->cache = $cache;
+    }
+
+    public function setPatternsList(array $patterns): void
+    {
+        $this->patterns = $patterns;
     }
 
     public function hyphenate(string $word): string

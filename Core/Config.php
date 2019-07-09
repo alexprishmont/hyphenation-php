@@ -10,18 +10,13 @@ class Config
     private $settings;
     private $path;
 
-    public function __construct(string $configFile)
+    public function get(string $configFile)
     {
         $this->path = dirname(__FILE__, 2) . "/Config/".$configFile.".ini";
-        $this->settings = parse_ini_file($this->path);
+        return $this->settings = parse_ini_file($this->path);
     }
 
-    public function getConfigSettings(): array
-    {
-        return $this->settings;
-    }
-
-    public function writeConfigSettings(string $key, string $value): void
+    public function write(string $key, string $value): void
     {
         $this->settings[$key] = $value;
         $data = $this->refactorConfigArrayForSaving();

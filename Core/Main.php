@@ -103,7 +103,7 @@ class Main
 
     private function getDefaultCachePath(): string
     {
-        $cachePath = dirname(__FILE__, 2) . "/Output/Cache";
+        $cachePath = dirname(__FILE__, 2) . $this->settings['OUTPUT_SRC'] . $this->settings['CACHE_OUTPUT_SRC'];
         assert(file_exists($cachePath));
         assert(is_writable($cachePath));
         return $cachePath;
@@ -123,10 +123,10 @@ class Main
 
     private function loadDependencies(): void
     {
-        $this->cache = new FileCache($this->getDefaultCachePath(), self::DEFAULT_EXPIRATION, self::DIR_MODE, self::FILE_MODE);
-
         $this->container['config'] = new Config("config");
         $this->settings = $this->container['config']->getConfigSettings();
+
+        $this->cache = new FileCache($this->getDefaultCachePath(), self::DEFAULT_EXPIRATION, self::DIR_MODE, self::FILE_MODE);
 
         $this->container['logger_config'] = new Config("logger");
         $logConfig = $this->container['logger_config']->getConfigSettings();
