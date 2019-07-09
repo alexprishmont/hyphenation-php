@@ -80,6 +80,11 @@ class Main
                     print($result);
                     break;
                 }
+            default:
+                {
+                    $this->showAllowedFlags();
+                    break;
+                }
         }
     }
 
@@ -142,7 +147,7 @@ class Main
         $this->container['email_validator'] = new EmailValidation($this->settings['EMAIL_VALIDATION_PATTERN']);
         $this->container['word_algorithm'] = new Hyphenation($this->getDefaultPatternList(), $this->cache, $this->container['logger']);
         $this->container['string_algorithm'] = new StringHyphenation($this->container['word_algorithm'], $this->cache);
-        $this->container['scan_string_service'] = new ScanString($this->container['string_algorithm']);
+        $this->container['scan_string_service'] = new ScanString($this->container['string_algorithm'], $this->cache);
     }
 }
 

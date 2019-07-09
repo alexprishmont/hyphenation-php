@@ -1,9 +1,10 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Core\Scans;
 
 use Algorithms\Stringhyphenation;
+use Core\Cache\FileCache;
 use SplFileObject;
 use Exception;
 
@@ -12,20 +13,29 @@ class ScanString
     private $fileSrc;
 
     private $algorithm;
+    private $cache;
 
-    public function __construct(Stringhyphenation $stringAlgorithm)
+    public function __construct(Stringhyphenation $stringAlgorithm, FileCache $cache)
     {
         $this->algorithm = $stringAlgorithm;
+        $this->cache = $cache;
     }
 
     public function inputSrc(string $src): void
     {
         $this->fileSrc = $src;
     }
+
     public function result(): string
     {
-        $string = $this->loadStringFromFile();
-        return $this->algorithm->hyphenate($string);
+        if ($this->cache->has($this->fileSrc)) {
+            return (string)$this->cache->get($this->fileSrc);
+        } else {
+            $string = $this->loadStringFromFile();
+            $result = $this->algorithm->hyphenate($string);
+            $this->cache->set($this->fileSrc, $result);
+            return $result;
+        }
     }
 
     private function loadStringFromFile(): string
