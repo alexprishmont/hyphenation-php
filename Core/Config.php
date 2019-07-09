@@ -10,9 +10,9 @@ class Config
     private $settings;
     private $path;
 
-    public function __construct(string $logFile)
+    public function __construct(string $configFile)
     {
-        $this->path = dirname(__FILE__, 2) . "/Config/".$logFile.".ini";
+        $this->path = dirname(__FILE__, 2) . "/Config/".$configFile.".ini";
         $this->settings = parse_ini_file($this->path);
     }
 
