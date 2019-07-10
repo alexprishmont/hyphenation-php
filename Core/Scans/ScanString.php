@@ -7,8 +7,6 @@ use Algorithms\StringHyphenation;
 use Core\Application;
 use Core\Cache\FileCache;
 use Core\Tools;
-use SplFileObject;
-use Exception;
 
 class ScanString
 {
@@ -25,38 +23,29 @@ class ScanString
 
     public function hyphenate(string $src): string
     {
-        if ($this->cache->has($src)) {
-            return (string)$this->cache->get($src);
-        } else {
-            $string = $this->loadStringFromFile($src);
-            $result = $this->algorithm->hyphenate($string);
-            $this->cache->set($src, $result);
-            return $result;
-        }
-    }
-
-    private function loadStringFromFile(string $src): string
-    {
-        $result = "";
         if ($this->isFileExists($src)) {
-            $result = $this->getStringFromFile($src);
+            $result = "";
+            if ($this->cache->has($src)) {
+                return (string)$this->cache->get($src);
+            } else {
+                $chunks = $this->getChunksFromArray($src);
+                foreach ($chunks as $key => $value) {
+                    $implodedChunks = implode(' ', $value);
+                    $result .= $this->algorithm->hyphenate($implodedChunks);
+                }
+                $this->cache->set($src, $result);
+                return $result;
+            }
         }
-        return $result;
     }
 
-    private function getStringFromFile(string $src): string
+    private function getChunksFromArray(string $src): array
     {
-        $return = "";
-        try {
-            $file = new SplFileObject($src);
+        $return = file_get_contents($src);
+        $return = preg_split('/\s+/', $return);
 
-            while (!$file->eof())
-                $return .= $file->fgets();
-
-        } catch (Exception $e) {
-            die("Error while trying to load  file!\n$e");
-        }
-        return $return;
+        $chunks = array_chunk($return, 1000);
+        return $chunks;
     }
 
     private function isFileExists(string $src): bool

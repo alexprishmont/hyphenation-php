@@ -16,11 +16,13 @@ class StringHyphenation implements AlgorithmInterface
 
     public function hyphenate(string $string): string
     {
-        $result = $string;
         $words = $this->extractWordsFromString($string);
+        $result = $string;
+
         foreach ($words as $word) {
             $result = str_replace($word, $this->algorithm->hyphenate($word), $result);
         }
+
         return $result;
     }
 
