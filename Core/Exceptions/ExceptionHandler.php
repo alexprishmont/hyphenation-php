@@ -9,9 +9,8 @@ class ExceptionHandler
 {
     private $logger;
 
-    public function __construct(Logger $log = null)
+    public function __construct(Logger $log)
     {
-        @set_exception_handler([$this, 'exceptionHandlerFunction']);
         $this->logger = $log;
     }
 

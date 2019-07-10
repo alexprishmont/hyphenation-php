@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Core;
 
-use Core\Cache\Cache;
 use Core\DI\Container;
 use Core\Exceptions\InvalidFlagException;
 use Core\Log\LogLevel;
@@ -28,7 +27,6 @@ class Application
         'scan' => 'Core\Scans\Scan',
         'logger' => 'Core\Log\Logger',
         'cacheController' => 'Core\Cache\Cache',
-        //'emailValidator' => 'Validations\EmailValidation'
     ];
 
     private const VALID_FLAGS = [
@@ -53,6 +51,12 @@ class Application
 
         $this->container
             ->set(self::DEPENDENCIES['cacheController']);
+
+        @set_exception_handler([
+            $this->container
+                ->get(self::DEPENDENCIES['exceptionhandler']),
+            'exceptionHandlerFunction'
+        ]);
 
         $this->argv = $argv;
         $this->argc = $argc;
@@ -82,7 +86,7 @@ class Application
         $argc = $this->argc;
 
         if ($argc > 3 || $argc <= 2) {
-            print("\nInvalid flags count.\n");
+            throw new InvalidFlagException("Invalid flags count.");
         } else {
             $this->validateFlag($argv[1]);
             $this->loadAlgorithm($argv);
