@@ -12,8 +12,6 @@ use Exception;
 
 class ScanString
 {
-    private $fileSrc;
-
     private $algorithm;
     private $cache;
 
@@ -25,37 +23,32 @@ class ScanString
         $this->cache->setup(Tools::getDefaultCachePath(Application::$settings), Tools::CACHE_DEFAULT_EXPIRATION, Tools::CACHE_DIR_MODE, Tools::CACHE_FILE_MODE);
     }
 
-    public function inputSrc(string $src): void
+    public function hyphenate(string $src): string
     {
-        $this->fileSrc = $src;
-    }
-
-    public function hyphenate(): string
-    {
-        if ($this->cache->has($this->fileSrc)) {
-            return (string)$this->cache->get($this->fileSrc);
+        if ($this->cache->has($src)) {
+            return (string)$this->cache->get($src);
         } else {
-            $string = $this->loadStringFromFile();
+            $string = $this->loadStringFromFile($src);
             $result = $this->algorithm->hyphenate($string);
-            $this->cache->set($this->fileSrc, $result);
+            $this->cache->set($src, $result);
             return $result;
         }
     }
 
-    private function loadStringFromFile(): string
+    private function loadStringFromFile(string $src): string
     {
         $result = "";
-        if ($this->isFileExists()) {
-            $result = $this->getStringFromFile();
+        if ($this->isFileExists($src)) {
+            $result = $this->getStringFromFile($src);
         }
         return $result;
     }
 
-    private function getStringFromFile(): string
+    private function getStringFromFile(string $src): string
     {
         $return = "";
         try {
-            $file = new SplFileObject($this->fileSrc);
+            $file = new SplFileObject($src);
 
             while (!$file->eof())
                 $return .= $file->fgets();
@@ -66,8 +59,8 @@ class ScanString
         return $return;
     }
 
-    private function isFileExists(): bool
+    private function isFileExists(string $src): bool
     {
-        return file_exists($this->fileSrc);
+        return file_exists($src);
     }
 }

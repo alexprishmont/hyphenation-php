@@ -93,8 +93,7 @@ class Application
                 }
             case '-f':
                 {
-                    $this->container->get(self::DEPENDENCIES['fileHyphenation'])->inputSrc($target);
-                    print($this->container->get(self::DEPENDENCIES['fileHyphenation'])->hyphenate());
+                    print($this->container->get(self::DEPENDENCIES['fileHyphenation'])->hyphenate($target));
                     break;
                 }
         }
