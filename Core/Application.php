@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Core;
 
+use Core\Cache\Cache;
 use Core\DI\Container;
 use Core\Exceptions\InvalidFlagException;
 use Core\Log\LogLevel;
+use Validations\EmailValidation;
 
 class Application
 {
@@ -25,6 +27,7 @@ class Application
         'config' => 'Core\Config',
         'scan' => 'Core\Scans\Scan',
         'logger' => 'Core\Log\Logger',
+        'cacheController' => 'Core\Cache\Cache',
         //'emailValidator' => 'Validations\EmailValidation'
     ];
 
@@ -33,7 +36,7 @@ class Application
         "-s",
         "-f",
         "-email",
-        "-reset-cache"
+        "-reset"
     ];
 
     public function __construct(array $argv, int $argc)
@@ -41,8 +44,15 @@ class Application
         LoadTime::startMeasuring();
         $this->container = new Container();
 
-        $this->container->set(self::DEPENDENCIES['config']);
-        self::$settings = $this->container->get(self::DEPENDENCIES['config'])->get('config');
+        $this->container
+            ->set(self::DEPENDENCIES['config']);
+
+        self::$settings = $this->container
+            ->get(self::DEPENDENCIES['config'])
+            ->get('config');
+
+        $this->container
+            ->set(self::DEPENDENCIES['cacheController']);
 
         $this->argv = $argv;
         $this->argc = $argc;
@@ -52,8 +62,12 @@ class Application
     public function __destruct()
     {
         LoadTime::endMeasuring();
-        if ($this->container->get(self::DEPENDENCIES['logger'])->getLoggerStatus()) {
-            $this->container->get(self::DEPENDENCIES['logger'])->log(LogLevel::SUCCESS, "Script execution time {time} seconds.", ['time' => LoadTime::getTime()]);
+        if ($this->container
+            ->get(self::DEPENDENCIES['logger'])
+            ->getLoggerStatus()) {
+            $this->container
+                ->get(self::DEPENDENCIES['logger'])
+                ->log(LogLevel::SUCCESS, "Script execution time {time} seconds.", ['time' => LoadTime::getTime()]);
         }
     }
 
@@ -83,17 +97,48 @@ class Application
         switch ($option) {
             case '-w':
                 {
-                    print($this->container->get(self::DEPENDENCIES['hyphenation'])->hyphenate($target));
+                    print($this->container
+                        ->get(self::DEPENDENCIES['hyphenation'])
+                        ->hyphenate($target)
+                    );
                     break;
                 }
             case '-s':
                 {
-                    print($this->container->get(self::DEPENDENCIES['stringHyphenation'])->hyphenate($target));
+                    print($this->container
+                        ->get(self::DEPENDENCIES['stringHyphenation'])
+                        ->hyphenate($target)
+                    );
                     break;
                 }
             case '-f':
                 {
-                    print($this->container->get(self::DEPENDENCIES['fileHyphenation'])->hyphenate($target));
+                    print($this->container
+                        ->get(self::DEPENDENCIES['fileHyphenation'])
+                        ->hyphenate($target)
+                    );
+                    break;
+                }
+            case '-email':
+                {
+                    print(EmailValidation::validate($target) === 1 ? "Email is valid." : "Email is not valid");
+                    break;
+                }
+            case '-reset':
+                {
+                    if ($target == 'cache') {
+                        $this->container
+                            ->get(self::DEPENDENCIES['cacheController'])
+                            ->clear();
+
+                        if ($this->container
+                            ->get(self::DEPENDENCIES['logger'])
+                            ->getLoggerStatus()) {
+                            $this->container
+                                ->get(self::DEPENDENCIES['logger'])
+                                ->log(LogLevel::SUCCESS, "Cache cleared.");
+                        }
+                    }
                     break;
                 }
         }
