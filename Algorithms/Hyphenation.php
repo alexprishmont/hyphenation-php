@@ -28,7 +28,11 @@ class Hyphenation implements AlgorithmInterface
         $this->cache = $cache;
 
         $this->patterns = $scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
-        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings), Tools::CACHE_DEFAULT_EXPIRATION, Tools::CACHE_DIR_MODE, Tools::CACHE_FILE_MODE);
+        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
+            Tools::CACHE_DEFAULT_EXPIRATION,
+            Tools::CACHE_DIR_MODE,
+            Tools::CACHE_FILE_MODE
+        );
     }
 
     public function hyphenate(string $word): string
