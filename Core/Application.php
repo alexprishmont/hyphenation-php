@@ -132,6 +132,8 @@ class Application
                                 ->get(DependenciesLoader::get()['logger'])
                                 ->log(LogLevel::SUCCESS, "Cache cleared.");
                         }
+                    } else {
+                        throw new InvalidFlagException("You can only reset 'cache'. Use: php startup -reset cache");
                     }
                     break;
                 }
