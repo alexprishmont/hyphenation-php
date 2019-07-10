@@ -1,0 +1,11 @@
+{
+  "hyphenation": "Algorithms\\Hyphenation",
+  "stringHyphenation": "Algorithms\\StringHyphenation",
+  "fileHyphenation": "Core\\Scans\\ScanString",
+  "exceptionhandler": "Core\\Exceptions\\ExceptionHandler",
+  "cache": "Core\\Cache\\FileCache",
+  "cacheController": "Core\\Cache\\Cache",
+  "config": "Core\\Config",
+  "scan": "Core\\Scans\\Scan",
+  "logger": "Core\\Log\\Logger"
+}

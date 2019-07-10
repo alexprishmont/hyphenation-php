@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core;
 
 use Core\DI\Container;
+use Core\DI\DependenciesLoader;
 use Core\Exceptions\InvalidFlagException;
 use Core\Log\LogLevel;
 use Validations\EmailValidation;
@@ -16,18 +17,6 @@ class Application
 
     private $argv;
     private $argc;
-
-    private const DEPENDENCIES = [
-        'hyphenation' => 'Algorithms\Hyphenation',
-        'stringHyphenation' => 'Algorithms\StringHyphenation',
-        'fileHyphenation' => 'Core\Scans\ScanString',
-        'exceptionhandler' => 'Core\Exceptions\ExceptionHandler',
-        'cache' => 'Core\Cache\FileCache',
-        'config' => 'Core\Config',
-        'scan' => 'Core\Scans\Scan',
-        'logger' => 'Core\Log\Logger',
-        'cacheController' => 'Core\Cache\Cache',
-    ];
 
     private const VALID_FLAGS = [
         "-w",
@@ -42,21 +31,21 @@ class Application
         LoadTime::startMeasuring();
         $this->container = new Container();
 
+        @set_exception_handler([
+            $this->container
+                ->get(DependenciesLoader::get()['exceptionhandler']),
+            'exceptionHandlerFunction'
+        ]);
+
         $this->container
-            ->set(self::DEPENDENCIES['config']);
+            ->set(DependenciesLoader::get()['config']);
 
         self::$settings = $this->container
-            ->get(self::DEPENDENCIES['config'])
+            ->get(DependenciesLoader::get()['config'])
             ->get('config');
 
         $this->container
-            ->set(self::DEPENDENCIES['cacheController']);
-
-        @set_exception_handler([
-            $this->container
-                ->get(self::DEPENDENCIES['exceptionhandler']),
-            'exceptionHandlerFunction'
-        ]);
+            ->set(DependenciesLoader::get()['cacheController']);
 
         $this->argv = $argv;
         $this->argc = $argc;
@@ -67,10 +56,10 @@ class Application
     {
         LoadTime::endMeasuring();
         if ($this->container
-            ->get(self::DEPENDENCIES['logger'])
+            ->get(DependenciesLoader::get()['logger'])
             ->getLoggerStatus()) {
             $this->container
-                ->get(self::DEPENDENCIES['logger'])
+                ->get(DependenciesLoader::get()['logger'])
                 ->log(LogLevel::SUCCESS, "Script execution time {time} seconds.", ['time' => LoadTime::getTime()]);
         }
     }
@@ -103,7 +92,7 @@ class Application
             case '-w':
                 {
                     print($this->container
-                        ->get(self::DEPENDENCIES['hyphenation'])
+                        ->get(DependenciesLoader::get()['hyphenation'])
                         ->hyphenate($target)
                     );
                     break;
@@ -111,7 +100,7 @@ class Application
             case '-s':
                 {
                     print($this->container
-                        ->get(self::DEPENDENCIES['stringHyphenation'])
+                        ->get(DependenciesLoader::get()['stringHyphenation'])
                         ->hyphenate($target)
                     );
                     break;
@@ -119,7 +108,7 @@ class Application
             case '-f':
                 {
                     print($this->container
-                        ->get(self::DEPENDENCIES['fileHyphenation'])
+                        ->get(DependenciesLoader::get()['fileHyphenation'])
                         ->hyphenate($target)
                     );
                     break;
@@ -133,14 +122,14 @@ class Application
                 {
                     if ($target == 'cache') {
                         $this->container
-                            ->get(self::DEPENDENCIES['cacheController'])
+                            ->get(DependenciesLoader::get()['cacheController'])
                             ->clear();
 
                         if ($this->container
-                            ->get(self::DEPENDENCIES['logger'])
+                            ->get(DependenciesLoader::get()['logger'])
                             ->getLoggerStatus()) {
                             $this->container
-                                ->get(self::DEPENDENCIES['logger'])
+                                ->get(DependenciesLoader::get()['logger'])
                                 ->log(LogLevel::SUCCESS, "Cache cleared.");
                         }
                     }
