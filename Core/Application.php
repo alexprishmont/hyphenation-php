@@ -86,6 +86,7 @@ class Application
         $argc = $this->argc;
 
         if ($argc > 3 || $argc <= 2) {
+            $this->printHelp();
             throw new InvalidFlagException("Invalid flags count.");
         } else {
             $this->validateFlag($argv[1]);
@@ -149,6 +150,15 @@ class Application
         print(PHP_EOL);
     }
 
+    private function printHelp(): void
+    {
+        print("\nUsage php {$this->argv[0]} [flag] [target]\n");
+        foreach (self::VALID_FLAGS as $flag) {
+            print("  php {$this->argv[0]} {$flag} [target]\n");
+        }
+        print(PHP_EOL);
+    }
+
     private function validateFlag(string $flag)
     {
         $ok = false;
@@ -157,7 +167,9 @@ class Application
                 $ok = true;
         }
 
-        if (!$ok)
+        if (!$ok) {
+            $this->printHelp();
             throw new InvalidFlagException("Flag [{$flag}] does not exist.");
+        }
     }
 }
