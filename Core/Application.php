@@ -49,7 +49,6 @@ class Application
 
         $this->argv = $argv;
         $this->argc = $argc;
-
     }
 
     public function __destruct()

@@ -133,8 +133,10 @@ class Hyphenation implements AlgorithmInterface
 
             $this->validPatterns[] = $pattern;
 
-            if ($this->logger->getValidPatternsLogStatus()) {
-                $this->logger->log(LogLevel::DEBUG, "Pattern for word {word}: {pattern}", ['word' => $this->word, 'pattern' => $pattern]);
+            if ($this->logger
+                ->getValidPatternsLogStatus()) {
+                $this->logger
+                    ->log(LogLevel::DEBUG, "Pattern for word {word}: {pattern}", ['word' => $this->word, 'pattern' => $pattern]);
             }
         }
     }
