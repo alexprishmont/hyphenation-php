@@ -19,8 +19,22 @@ class StringHyphenation implements AlgorithmInterface
         $words = $this->extractWordsFromString($string);
         $result = $string;
 
-        foreach ($words as $word) {
-            $result = str_replace($word, $this->algorithm->hyphenate($word), $result);
+        $imploded = implode(' ', $words);
+        $implodedResult = $this->algorithm->hyphenate($imploded);
+
+        $hyphendWords = preg_split('/(\s+)/', $implodedResult);
+
+        $fixed = [];
+        $i = 0;
+        foreach ($hyphendWords as $word) {
+            if (strpos($word, '-') === 0 || strpos($word, '-') === 0)
+                $word = str_replace('-', '', $word);
+            $fixed[$words[$i]] = $word;
+            $i++;
+        }
+
+        foreach ($fixed as $key => $value) {
+            $result = str_replace($key, $value, $result);
         }
 
         return $result;
