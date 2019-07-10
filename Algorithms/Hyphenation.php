@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace Algorithms;
 
 use Algorithms\Interfaces\AlgorithmInterface;
+use Core\Application;
 use Core\Cache\FileCache;
 use Core\Log\Logger;
 use Core\Log\LogLevel;
+use Core\Scans\Scan;
+use Core\Tools;
 
 class Hyphenation implements AlgorithmInterface
 {
@@ -19,15 +22,13 @@ class Hyphenation implements AlgorithmInterface
     private $logger;
     private $cache;
 
-    public function __construct(FileCache $cache, Logger $logger = null)
+    public function __construct(FileCache $cache, Logger $logger, Scan $scan)
     {
         $this->logger = $logger;
         $this->cache = $cache;
-    }
 
-    public function setPatternsList(array $patterns): void
-    {
-        $this->patterns = $patterns;
+        $this->patterns = $scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
+        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings), Tools::CACHE_DEFAULT_EXPIRATION, Tools::CACHE_DIR_MODE, Tools::CACHE_FILE_MODE);
     }
 
     public function hyphenate(string $word): string
@@ -77,7 +78,7 @@ class Hyphenation implements AlgorithmInterface
         foreach (str_split($this->word) as $i => $char) {
             $this->completedWordWithDigits .= $char;
             if (isset($this->digitsInWord[$i]))
-                $this->completedWordWithDigits .= $this->digitsInWord[$i];
+            $this->completedWordWithDigits .= $this->digitsInWord[$i];
         }
     }
 
@@ -128,8 +129,9 @@ class Hyphenation implements AlgorithmInterface
 
             $this->validPatterns[] = $pattern;
 
-            if ($this->logger !== null)
+            if ($this->logger->getValidPatternsLogStatus()) {
                 $this->logger->log(LogLevel::DEBUG, "Pattern for word {word}: {pattern}", ['word' => $this->word, 'pattern' => $pattern]);
+            }
         }
     }
 }

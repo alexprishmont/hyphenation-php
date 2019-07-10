@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Core\Scans;
 
-use Algorithms\Stringhyphenation;
+use Algorithms\StringHyphenation;
+use Core\Application;
 use Core\Cache\FileCache;
+use Core\Tools;
 use SplFileObject;
 use Exception;
 
@@ -15,10 +17,12 @@ class ScanString
     private $algorithm;
     private $cache;
 
-    public function __construct(Stringhyphenation $stringAlgorithm, FileCache $cache)
+    public function __construct(StringHyphenation $stringAlgorithm, FileCache $cache)
     {
         $this->algorithm = $stringAlgorithm;
         $this->cache = $cache;
+
+        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings), Tools::CACHE_DEFAULT_EXPIRATION, Tools::CACHE_DIR_MODE, Tools::CACHE_FILE_MODE);
     }
 
     public function inputSrc(string $src): void
@@ -26,7 +30,7 @@ class ScanString
         $this->fileSrc = $src;
     }
 
-    public function result(): string
+    public function hyphenate(): string
     {
         if ($this->cache->has($this->fileSrc)) {
             return (string)$this->cache->get($this->fileSrc);

@@ -2,28 +2,23 @@
 
 namespace Core;
 
-use Core\Log\Logger;
-use Core\Log\LogLevel;
-
 class LoadTime
 {
-    private $timeStart = 0;
-    private $logger;
+    private static $startTime;
+    private static $endTime;
 
-    public function __construct(Logger $logger = null)
+    public static function startMeasuring(): void
     {
-        $this->timeStart = microtime(true);
-        $this->logger = $logger;
+        self::$startTime = microtime(true);
     }
 
-    public function __destruct()
+    public static function endMeasuring(): void
     {
-        $endTime = microtime(true) - $this->timeStart;
-        if (isset($this->logger)) {
-            print("\n");
-            $this->logger->log(LogLevel::SUCCESS, "Script execution time {time}", ['time' => $endTime]);
-            print("\n");
-        } else
-            print("\nScript execution time: $endTime seconds\n");
+        self::$endTime = microtime(true);
+    }
+
+    public static function getTime(): string
+    {
+        return (string)(self::$endTime - self::$startTime);
     }
 }

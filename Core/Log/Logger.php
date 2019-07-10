@@ -18,6 +18,16 @@ class Logger implements LoggerInterface
         $this->config = $config->get("logger");
     }
 
+    public function getLoggerStatus(): bool
+    {
+        return $this->config['LOG_ENABLED'];
+    }
+
+    public function getValidPatternsLogStatus(): bool
+    {
+        return $this->config['LOG_VALID_PATTERNS'];
+    }
+
     public function critical($message, array $context = [])
     {
         return $this->processLog($message,
@@ -76,6 +86,9 @@ class Logger implements LoggerInterface
 
     private function processLog($message, array $context, $priority, string $priorityMessage, int $color)
     {
+        if (!$this->config['LOG_ENABLED'])
+            return;
+
         $date = new DateTime('now', new DateTimeZone($this->config['DATE_TIMEZONE']));
         $date = $date->format($this->config['DATE_FORMAT']);
 
