@@ -14,7 +14,7 @@ use Core\Tools;
 class Hyphenation implements AlgorithmInterface
 {
     private $word;
-    private $patterns = [];
+    public $patterns = [];
     private $validPatterns = [];
     private $digitsInWord = [];
     private $completedWordWithDigits;
