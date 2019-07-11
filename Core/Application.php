@@ -38,6 +38,12 @@ class Application
         ]);
 
         $this->container
+            ->set(DependenciesLoader::get()['mysql']);
+
+        $this->container
+            ->get(DependenciesLoader::get()['mysql'])->connect();
+
+        $this->container
             ->set(DependenciesLoader::get()['config']);
 
         self::$settings = $this->container
@@ -46,6 +52,7 @@ class Application
 
         $this->container
             ->set(DependenciesLoader::get()['cacheController']);
+
 
         $this->argv = $argv;
         $this->argc = $argc;
@@ -64,7 +71,7 @@ class Application
 
             $this->container
                 ->get(DependenciesLoader::get()['logger'])
-                ->log(LogLevel::WARNING, "Script used {memory} of memory.",['memory' => Memory::get()]);
+                ->log(LogLevel::WARNING, "Script used {memory} of memory.", ['memory' => Memory::get()]);
         }
     }
 

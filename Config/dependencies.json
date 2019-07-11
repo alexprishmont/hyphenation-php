@@ -7,5 +7,6 @@
   "cacheController": "Core\\Cache\\Cache",
   "config": "Core\\Config",
   "scan": "Core\\Scans\\Scan",
-  "logger": "Core\\Log\\Logger"
+  "logger": "Core\\Log\\Logger",
+  "mysql": "Core\\Database\\Connection"
 }
