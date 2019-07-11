@@ -57,9 +57,14 @@ class Application
         if ($this->container
             ->get(DependenciesLoader::get()['logger'])
             ->getLoggerStatus()) {
+
             $this->container
                 ->get(DependenciesLoader::get()['logger'])
                 ->log(LogLevel::SUCCESS, "Script execution time {time} seconds.", ['time' => LoadTime::getTime()]);
+
+            $this->container
+                ->get(DependenciesLoader::get()['logger'])
+                ->log(LogLevel::WARNING, "Script memory usage {memory}.",['memory' => Memory::get()]);
         }
     }
 
