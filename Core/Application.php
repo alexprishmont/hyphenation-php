@@ -64,7 +64,7 @@ class Application
 
             $this->container
                 ->get(DependenciesLoader::get()['logger'])
-                ->log(LogLevel::WARNING, "Script memory usage {memory}.",['memory' => Memory::get()]);
+                ->log(LogLevel::WARNING, "Script used {memory} of memory.",['memory' => Memory::get()]);
         }
     }
 
