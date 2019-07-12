@@ -18,14 +18,17 @@ class Application
     public static $settings;
 
     private const VALID_FLAGS = [
-        "-w",
-        "-s",
-        "-f",
-        "-email",
-        "-reset",
-        "-database",
-        "-import"
+        "-w" => '[word]',
+        "-s" => '["sentence"]',
+        "-f" => '["path to file"]',
+        "-email" => '[email]',
+        "-reset" => 'cache',
+        "-import" => 'patterns/words',
+        "-source" => 'file/database'
     ];
+
+    const FILE_SOURCE = 'file';
+    const DB_SOURCE = 'database';
 
     public function __construct(array $argv, int $argc)
     {
@@ -63,40 +66,86 @@ class Application
         $this->validateArguments();
         $this->validateFlag($this->argv[1]);
 
-        if ($this->argv[1] == '-reset') {
-            if ($this->argv[2] == 'cache') {
-                $this->getInstance('cacheController')
-                    ->clear();
+        $this->loadAlgorithm();
 
-                $this->getInstance('logger')->log(LogLevel::SUCCESS, "Cache cleared.");
-            }
-        } else if ($this->argv[1] == '-import') {
-            $source = readline("\n Source [patterns/words]? ");
-            if ($source == 'words') {
-                $src = readline("\n Please enter source path to the words file: ");
+    }
 
-            } else if ($source == 'patterns') {
-                $this->getInstance('logger')
-                    ->log(LogLevel::WARNING,
-                        "Patterns would be loaded from {src}!",
-                        ['src' => self::$settings['PATTERNS_SOURCE']]);
-
-                $this->getInstance('mysql')
-                    ->importPatterns(self::$settings['PATTERNS_SOURCE']);
-
-            } else {
-                $this->getInstance('logger')
-                    ->log(LogLevel::ERROR, "Such source [{source}] not available.", ['source' => $source]);
-            }
+    private function loadAlgorithm(): void
+    {
+        $target = $this->argv[2];
+        switch ($this->argv[1]) {
+            case '-w':
+                {
+                    print($this->getInstance('hyphenation')->hyphenate($target) . PHP_EOL);
+                    break;
+                }
+            case '-s':
+                {
+                    print($this->getInstance('stringHyphenation')->hyphenate($target) . PHP_EOL);
+                    break;
+                }
+            case '-f':
+                {
+                    print($this->getInstance('fileHyphenation')->hyphenate($target) . PHP_EOL);
+                    break;
+                }
+            case '-email':
+                {
+                    break;
+                }
+            case '-reset':
+                {
+                    if ($target == 'cache') {
+                        $this->resetCache();
+                    }
+                    break;
+                }
+            case '-import':
+                {
+                    $this->importFiles();
+                    break;
+                }
+            case '-source':
+                {
+                    break;
+                }
         }
+    }
 
+    private function resetCache(): void
+    {
+        $this->getInstance('cacheController')
+            ->clear();
+        $this->getInstance('logger')->log(LogLevel::SUCCESS, "Cache cleared.");
+    }
+
+    private function importFiles(): void
+    {
+        $source = $this->argv[2];
+        if ($source == 'words') {
+            $src = readline("\n Please enter source path to the words file: ");
+            $this->getInstance('mysql')->importWords($src);
+
+        } else if ($source == 'patterns') {
+            $this->getInstance('logger')
+                ->log(LogLevel::WARNING,
+                    "Patterns would be loaded from {src}!",
+                    ['src' => self::$settings['PATTERNS_SOURCE']]);
+
+            $this->getInstance('mysql')
+                ->importPatterns();
+
+        } else {
+            $this->getInstance('logger')
+                ->log(LogLevel::ERROR, "Such source [{source}] not available.", ['source' => $source]);
+        }
     }
 
     private function validateArguments(): void
     {
         $arguments = $this->argc;
 
-        if (($arguments <= 2 && $this->argv[1] != '-import') || $arguments > 3) {
+        if ($arguments <= 2 || ($arguments > 3 && $this->argv[1] != '-import')) {
             $this->printHelp();
             throw new InvalidFlagException("Your entered arguments count is not valid.");
         }
@@ -106,8 +155,8 @@ class Application
     {
         $ok = false;
 
-        foreach (self::VALID_FLAGS as $validFlag) {
-            if ($flag == $validFlag) {
+        foreach (self::VALID_FLAGS as $key => $value) {
+            if ($flag == $key) {
                 $ok = true;
                 break;
             }
@@ -122,8 +171,8 @@ class Application
     private function printHelp(): void
     {
         print("\nUsage: php {$this->argv[0]} [flag] [target]\n");
-        foreach (self::VALID_FLAGS as $flag) {
-            print("  php {$this->argv[0]} {$flag} [target]\n");
+        foreach (self::VALID_FLAGS as $key => $value) {
+            print("  php {$this->argv[0]} {$key} {$value}\n");
         }
         print(PHP_EOL);
     }
@@ -139,5 +188,4 @@ class Application
         $this->container
             ->set(DependenciesLoader::get()[$instance]);
     }
-
 }

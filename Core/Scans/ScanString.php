@@ -6,17 +6,20 @@ namespace Core\Scans;
 use Algorithms\StringHyphenation;
 use Core\Application;
 use Core\Cache\FileCache;
+use Core\Database\Connection;
 use Core\Tools;
 
 class ScanString
 {
     private $algorithm;
     private $cache;
+    private $db;
 
-    public function __construct(StringHyphenation $stringAlgorithm, FileCache $cache)
+    public function __construct(StringHyphenation $stringAlgorithm, FileCache $cache, Connection $db)
     {
         $this->algorithm = $stringAlgorithm;
         $this->cache = $cache;
+        $this->db = $db;
 
         $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
             Tools::CACHE_DEFAULT_EXPIRATION,
@@ -48,7 +51,7 @@ class ScanString
         $return = file_get_contents($src);
         $return = preg_split('/\s+/', $return);
 
-        $chunks = array_chunk($return, 1000);
+        $chunks = array_chunk($return, 100);
         return $chunks;
     }
 

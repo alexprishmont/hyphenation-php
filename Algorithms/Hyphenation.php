@@ -6,8 +6,7 @@ namespace Algorithms;
 use Algorithms\Interfaces\AlgorithmInterface;
 use Core\Application;
 use Core\Cache\FileCache;
-use Core\Log\Logger;
-use Core\Log\LogLevel;
+use Core\Database\Connection;
 use Core\Scans\Scan;
 use Core\Tools;
 
@@ -19,15 +18,20 @@ class Hyphenation implements AlgorithmInterface
     private $digitsInWord = [];
     private $completedWordWithDigits;
 
-    private $logger;
     private $cache;
+    private $db;
 
-    public function __construct(FileCache $cache, Logger $logger, Scan $scan)
+    public function __construct(FileCache $cache, Connection $db, Scan $scan)
     {
-        $this->logger = $logger;
+        $this->db = $db;
         $this->cache = $cache;
 
-        $this->patterns = $scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
+        if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
+            $this->patterns = $scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
+        } else if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
+            $this->patterns = $db->getPatterns();
+        }
+
         $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
             Tools::CACHE_DEFAULT_EXPIRATION,
             Tools::CACHE_DIR_MODE,
@@ -38,17 +42,39 @@ class Hyphenation implements AlgorithmInterface
     public function hyphenate(string $word): string
     {
         if (!$this->cache->has($word)) {
-            $this->clearVariables();
-            $this->word = $word;
-            $this->findValidPatterns();
-            $this->pushDigitsToWord();
-            $this->completeWordWithSyllables();
-            $result = $this->addSyllableSymbols();
-            $this->cache->set($word, $result);
-            return $result;
+            if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
+                $query = $this->db->query("select word from results where result_for = ? limit 1", [$word]);
+                if ($query->rowCount() > 0) {
+                    $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+                    $word_result = "";
+                    foreach ($result as $data) {
+                        $word_result = $data['word'];
+                    }
+                    $this->cache->set($word, $word_result);
+                    return $word_result;
+                } else {
+                    $result = $this->getResult($word);
+                    $this->db->query("insert into results (word, result_for) values (?, ?)", [$result, $word]);
+                    return $result;
+                }
+            } else {
+                return $this->getResult($word);
+            }
         } else {
             return (string)$this->cache->get($word);
         }
+    }
+
+    private function getResult(string $word): string
+    {
+        $this->clearVariables();
+        $this->word = $word;
+        $this->findValidPatterns();
+        $this->pushDigitsToWord();
+        $this->completeWordWithSyllables();
+        $result = $this->addSyllableSymbols();
+        $this->cache->set($word, $result);
+        return $result;
     }
 
     private function clearVariables(): void
@@ -122,6 +148,16 @@ class Hyphenation implements AlgorithmInterface
 
     private function findValidPatterns(): void
     {
+        if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
+            $query = $this->db->query("select pattern from valid_patterns where valid_for = ?", $this->word);
+            if ($query->rowCount() > 0) {
+                foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
+                    $this->validPatterns[] = $data['pattern'];
+                }
+                return;
+            }
+        }
+
         foreach ($this->patterns as $pattern) {
             $cleanString = $this->clearPatternString($pattern);
             $position = strpos($this->word, $cleanString);
@@ -131,13 +167,11 @@ class Hyphenation implements AlgorithmInterface
                 ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($cleanString)))
                 continue;
 
-            $this->validPatterns[] = $pattern;
-
-            if ($this->logger
-                ->getValidPatternsLogStatus()) {
-                $this->logger
-                    ->log(LogLevel::DEBUG, "Pattern for word {word}: {pattern}", ['word' => $this->word, 'pattern' => $pattern]);
+            if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
+                $this->db
+                    ->query('insert into valid_patterns (pattern, valid_for) values (?, ?)', [$pattern, $this->word]);
             }
+            $this->validPatterns[] = $pattern;
         }
     }
 }
