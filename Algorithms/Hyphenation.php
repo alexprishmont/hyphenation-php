@@ -7,6 +7,8 @@ use Algorithms\Interfaces\AlgorithmInterface;
 use Core\Application;
 use Core\Cache\FileCache;
 use Core\Database\Connection;
+use Core\Log\Logger;
+use Core\Log\LogLevel;
 use Core\Scans\Scan;
 use Core\Tools;
 
@@ -20,11 +22,13 @@ class Hyphenation implements AlgorithmInterface
 
     private $cache;
     private $db;
+    private $logger;
 
-    public function __construct(FileCache $cache, Connection $db, Scan $scan)
+    public function __construct(FileCache $cache, Connection $db, Scan $scan, Logger $log)
     {
         $this->db = $db;
         $this->cache = $cache;
+        $this->logger = $log;
 
         if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
             $this->patterns = $scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
@@ -43,20 +47,20 @@ class Hyphenation implements AlgorithmInterface
     {
         if (!$this->cache->has($word)) {
             if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
+                $word_result = "";
                 $query = $this->db->query("select word from results where result_for = ? limit 1", [$word]);
                 if ($query->rowCount() > 0) {
                     $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-                    $word_result = "";
                     foreach ($result as $data) {
                         $word_result = $data['word'];
                     }
                     $this->cache->set($word, $word_result);
-                    return $word_result;
                 } else {
-                    $result = $this->getResult($word);
-                    $this->db->query("insert into results (word, result_for) values (?, ?)", [$result, $word]);
-                    return $result;
+                    $word_result = $this->getResult($word);
+                    $this->db->query("insert into results (word, result_for) values (?, ?)", [$word_result, $word]);
                 }
+                $this->getUsedPatterns($word);
+                return $word_result;
             } else {
                 return $this->getResult($word);
             }
@@ -146,18 +150,20 @@ class Hyphenation implements AlgorithmInterface
         return trim(preg_replace("/\s+/", " ", $cleanString));
     }
 
-    private function findValidPatterns(): void
+    private function getUsedPatterns(string $word): void
     {
-        if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
-            $query = $this->db->query("select pattern from valid_patterns where valid_for = ?", $this->word);
-            if ($query->rowCount() > 0) {
-                foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
-                    $this->validPatterns[] = $data['pattern'];
-                }
-                return;
+        $query = $this->db->query("select pattern from valid_patterns where valid_for = ?", [$word]);
+        if ($query->rowCount() > 0) {
+            foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
+                $this->logger
+                    ->log(LogLevel::WARNING, "Pattern {pattern} used for word {word}",
+                        ['pattern' => $data['pattern'], 'word' => $word]);
             }
         }
+    }
 
+    private function findValidPatterns(): void
+    {
         foreach ($this->patterns as $pattern) {
             $cleanString = $this->clearPatternString($pattern);
             $position = strpos($this->word, $cleanString);

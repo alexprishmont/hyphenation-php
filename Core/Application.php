@@ -7,6 +7,7 @@ use Core\DI\Container;
 use Core\DI\DependenciesLoader;
 use Core\Exceptions\InvalidFlagException;
 use Core\Log\LogLevel;
+use Validations\EmailValidation;
 
 class Application
 {
@@ -65,9 +66,7 @@ class Application
     {
         $this->validateArguments();
         $this->validateFlag($this->argv[1]);
-
         $this->loadAlgorithm();
-
     }
 
     private function loadAlgorithm(): void
@@ -91,6 +90,7 @@ class Application
                 }
             case '-email':
                 {
+                    print(EmailValidation::validate($target) ? "Email is valid." : "Email is not valid.");
                     break;
                 }
             case '-reset':
@@ -107,6 +107,11 @@ class Application
                 }
             case '-source':
                 {
+                    if ($target == self::DB_SOURCE || $target == self::FILE_SOURCE) {
+                        self::$settings['DEFAULT_SOURCE'] = $target;
+                    } else {
+                        throw new InvalidFlagException("Your entered new source[{$target}] is invalid.");
+                    }
                     break;
                 }
         }
