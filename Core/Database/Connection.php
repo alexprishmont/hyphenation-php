@@ -90,11 +90,20 @@ class Connection implements DatabaseInterface
     {
         $patterns = $this->scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
 
-        $statement = $this->handle->prepare("replace into `patterns` (`pattern`) values (?)");
-        foreach ($patterns as $pattern) {
-            $statement->execute([$pattern]);
+        try {
+            $this->handle->beginTransaction();
+
+            $statement = $this->handle->prepare("replace into `patterns` (`pattern`) values (?)");
+            foreach ($patterns as $pattern) {
+                $statement->execute([$pattern]);
+            }
+
+            $this->handle->commit();
+            $this->logger->log(LogLevel::SUCCESS, "New patterns imported.");
+        } catch (\Exception $e) {
+            $this->handle->rollBack();
         }
-        $this->logger->log(LogLevel::SUCCESS, "New patterns imported.");
+
     }
 
     public function importWords(string $source): void
@@ -106,10 +115,19 @@ class Connection implements DatabaseInterface
         $words = file_get_contents($path);
         $words = preg_split('/\s+/', $words);
 
-        $statement = $this->handle->prepare("replace into `words` (`word`) values (?)");
-        foreach ($words as $word) {
-            $statement->execute([$word]);
+        try {
+            $this->handle->beginTransaction();
+
+            $statement = $this->handle->prepare("replace into `words` (`word`) values (?)");
+            foreach ($words as $word) {
+                $statement->execute([$word]);
+            }
+
+            $this->handle->commit();
+            $this->logger->log(LogLevel::SUCCESS, "Words successfully imported.");
+        } catch (\Exception $e) {
+            $this->handle->rollBack();
         }
-        $this->logger->log(LogLevel::SUCCESS, "Words successfully imported.");
+
     }
 }
