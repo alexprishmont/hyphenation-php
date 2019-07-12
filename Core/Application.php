@@ -57,7 +57,9 @@ class Application
     public function __destruct()
     {
         $this->getInstance('config')->write('DEFAULT_SOURCE', self::$settings['DEFAULT_SOURCE'], 'config');
+
         LoadTime::endMeasuring();
+
         $this->getInstance('logger')
             ->log(LogLevel::WARNING, "Script execution time {time} seconds.", ['time' => LoadTime::getTime()]);
         $this->getInstance('logger')
