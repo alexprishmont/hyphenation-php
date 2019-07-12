@@ -50,6 +50,11 @@ class Connection implements DatabaseInterface
             $this->options);
     }
 
+    public function getHandle(): object
+    {
+        return $this->handle;
+    }
+
     public function query(string $stmt, array $params = [])
     {
         $statement = $this->handle->prepare($stmt);

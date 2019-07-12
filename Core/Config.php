@@ -16,8 +16,11 @@ class Config
         return $this->settings = parse_ini_file($this->path);
     }
 
-    public function write(string $key, string $value): void
+    public function write(string $key, string $value, string $config): void
     {
+        $this->path = dirname(__FILE__, 2) . "/Config/".$config.".ini";
+        $this->settings = parse_ini_file($this->path);
+
         $this->settings[$key] = $value;
         $data = $this->refactorConfigArrayForSaving();
         $this->saveSettingsToIni($data);

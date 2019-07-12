@@ -8,5 +8,6 @@
   "config": "Core\\Config",
   "scan": "Core\\Scans\\Scan",
   "logger": "Core\\Log\\Logger",
-  "mysql": "Core\\Database\\Connection"
+  "mysql": "Core\\Database\\Connection",
+  "migration": "Core\\Database\\Migration"
 }

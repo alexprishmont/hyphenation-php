@@ -25,7 +25,8 @@ class Application
         "-email" => '[email]',
         "-reset" => 'cache',
         "-import" => 'patterns/words',
-        "-source" => 'file/database'
+        "-source" => 'file/database',
+        "-migrate" => '[migration file name]',
     ];
 
     const FILE_SOURCE = 'file';
@@ -55,6 +56,7 @@ class Application
 
     public function __destruct()
     {
+        $this->getInstance('config')->write('DEFAULT_SOURCE', self::$settings['DEFAULT_SOURCE'], 'config');
         LoadTime::endMeasuring();
         $this->getInstance('logger')
             ->log(LogLevel::WARNING, "Script execution time {time} seconds.", ['time' => LoadTime::getTime()]);
@@ -112,6 +114,11 @@ class Application
                     } else {
                         throw new InvalidFlagException("Your entered new source[{$target}] is invalid.");
                     }
+                    break;
+                }
+            case '-migrate':
+                {
+                    $this->getInstance('migration')->migrate($target);
                     break;
                 }
         }
