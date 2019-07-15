@@ -31,7 +31,7 @@ class Application
         "-file" => '["path to file"]',
         "-email" => '[email]',
         "-reset" => 'cache',
-        "-import" => 'patterns/words',
+        "-import" => 'patterns',
         "-source" => 'file/database',
         "-migrate" => '[migration file name]',
     ];

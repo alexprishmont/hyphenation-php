@@ -6,7 +6,7 @@
 `-file ["file location"]`<br/>
 `-email [email]`<br/>
 `-reset cache`<br/>
-`-import [patterns/words]`<br/>
+`-import [patterns]`<br/>
 `-source [file/database]`<br/>
 `-migrate [migration's file name]`
 
