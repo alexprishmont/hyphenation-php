@@ -15,12 +15,6 @@ use Core\Tools;
 class Hyphenation implements HyphenationInterface
 {
     private $word;
-    public $patterns = [];
-    private $validPatterns = [];
-    private $digitsInWord = [];
-    private $completedWordWithDigits;
-
-    // try to reduce vars number
 
     private $cache;
     private $db;
@@ -43,6 +37,8 @@ class Hyphenation implements HyphenationInterface
 
     public function hyphenate(string $word): string
     {
+        $this->word = $word;
+
         if ($this->cache->has($word)) {
             return (string)$this->cache->get($word);
         }
@@ -59,11 +55,14 @@ class Hyphenation implements HyphenationInterface
         $wordResult = "";
 
         if ($this->db->query("select id from patterns")->rowCount() == 0) {
-            throw new \Exception("There's no available patterns in database.\n Please import patterns.\n Use: php startup -import patterns");
+            throw new \Exception("There's no available patterns in database.\n 
+                                          Please import patterns.\n Use: php startup -import patterns");
         }
 
         $query = $this->db->query(
-            "select word, result from words inner join results on words.id = results.wordID where word = ?",
+            "select word, result from words 
+                inner join results on words.id = results.wordID 
+                where word = ?",
             [$word]
         );
 
@@ -75,9 +74,12 @@ class Hyphenation implements HyphenationInterface
             $this->db->query("insert into words (word) values(?)", [$word]);
             $wordResult = $this->getResult($word);
             $this->db
-                ->query("insert into results (wordID) select words.id from words where word = ?", [$word]);
+                ->query("insert into results (wordID) 
+                            select words.id from words where word = ?", [$word]);
             $this->db
-                ->query("update results inner join words on words.id = results.wordID set result = ? where word = ?",
+                ->query("update results 
+                            inner join words on words.id = results.wordID 
+                            set result = ? where word = ?",
                     [$wordResult, $word]
                 );
         }
@@ -89,40 +91,26 @@ class Hyphenation implements HyphenationInterface
 
     private function getResult(string $word): string
     {
-        $this->clearVariables();
+        $patterns = $this->getPatternsList();
+        $valid = $this->findValidPatterns($patterns);
 
-        if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
-            $this->patterns = $this->scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
-        } else if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
-            $this->patterns = $this->db->getPatterns();
-        }
-
-        $this->word = $word;
-
-        $this->findValidPatterns();
-        $this->pushDigitsToWord();
-        $this->completeWordWithSyllables();
-        $result = $this->addSyllableSymbols();
+        $result = $this->addSyllableSymbols(
+            $this->completeWordWithDigits(
+                $this->pushDigitsToWord($valid)
+            )
+        );
         $this->cache->set($word, $result);
         return $result;
     }
 
-    private function clearVariables(): void
+    private function addSyllableSymbols(string $completedWordWithDigits): string
     {
-        $this->word = null;
-        $this->completedWordWithDigits = null;
-        $this->validPatterns = [];
-        $this->digitsInWord = [];
-    }
-
-    private function addSyllableSymbols(): string
-    {
-        $result = $this->completedWordWithDigits;
-        for ($i = 0; $i < strlen($this->completedWordWithDigits); $i++) {
-            $char = $this->completedWordWithDigits[$i];
+        $result = $completedWordWithDigits;
+        for ($i = 0; $i < strlen($completedWordWithDigits); $i++) {
+            $char = $completedWordWithDigits[$i];
             if (is_numeric($char)) {
                 if ((int)$char % 2 > 0) {
-                    if ($i != strlen($this->completedWordWithDigits) - 1)
+                    if ($i != strlen($completedWordWithDigits) - 1)
                         $result = str_replace($char, '-', $result);
                     else
                         $result = str_replace($char, '', $result);
@@ -133,25 +121,29 @@ class Hyphenation implements HyphenationInterface
         return $result;
     }
 
-    private function completeWordWithSyllables(): void
+    private function completeWordWithDigits(array $digitsInWord = []): string
     {
+        $completedWordWithDigits = "";
         foreach (str_split($this->word) as $i => $char) {
-            $this->completedWordWithDigits .= $char;
-            if (isset($this->digitsInWord[$i]))
-                $this->completedWordWithDigits .= $this->digitsInWord[$i];
+            $completedWordWithDigits .= $char;
+            if (isset($digitsInWord[$i]))
+                $completedWordWithDigits .= $digitsInWord[$i];
         }
+        return $completedWordWithDigits;
     }
 
-    private function pushDigitsToWord(): void
+    private function pushDigitsToWord(array $validPatterns = []): array
     {
-        foreach ($this->validPatterns as $pattern) {
-            $digits_in_pattern = $this->extractDigitsFromWord($pattern);
-            foreach ($digits_in_pattern as $position => $digit) {
+        $digitsInWord = [];
+        foreach ($validPatterns as $pattern) {
+            $digitsInPattern = $this->extractDigitsFromWord($pattern);
+            foreach ($digitsInPattern as $position => $digit) {
                 $position = $position + strpos($this->word, $this->clearPatternString($pattern));
-                if (!isset($this->digits_in_word[$position]) || $this->digitsInWord[$position] < $digit)
-                    $this->digitsInWord[$position] = $digit;
+                if (!isset($digitsInWord[$position]) || $digitsInWord[$position] < $digit)
+                    $digitsInWord[$position] = $digit;
             }
         }
+        return $digitsInWord;
     }
 
     private function extractDigitsFromWord(string $pattern): array
@@ -178,7 +170,9 @@ class Hyphenation implements HyphenationInterface
 
     private function getUsedPatterns(string $word): void
     {
-        $sql = "select patterns.pattern, patterns.id from patterns inner join valid_patterns vp on vp.patternID = id inner join words w on w.word = ? and w.id = vp.wordID";
+        $sql = "select patterns.pattern, patterns.id from patterns 
+                inner join valid_patterns vp on vp.patternID = id 
+                inner join words w on w.word = ? and w.id = vp.wordID";
         $query = $this->db->query($sql, [$word]);
         if ($query->rowCount() > 0) {
             foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
@@ -189,9 +183,10 @@ class Hyphenation implements HyphenationInterface
         }
     }
 
-    private function findValidPatterns(): void
+    private function findValidPatterns(array $patterns): array
     {
-        foreach ($this->patterns as $pattern) {
+        $validPatterns = [];
+        foreach ($patterns as $pattern) {
             $cleanString = $this->clearPatternString($pattern);
             $position = strpos($this->word, $cleanString);
 
@@ -200,11 +195,31 @@ class Hyphenation implements HyphenationInterface
                 ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($cleanString)))
                 continue;
 
-            if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
-                $sql = "insert into valid_patterns (wordID, patternID) select w.id, p.id from words w inner join patterns p on p.pattern = ? and w.word = ?";
-                $this->db->query($sql, [$pattern, $this->word]);
-            }
-            $this->validPatterns[] = $pattern;
+            if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE)
+                $this->insertValidPatternIntoDB($pattern);
+
+            $validPatterns[] = $pattern;
         }
+        return $validPatterns;
     }
+
+    private function insertValidPatternIntoDB(string $pattern): void
+    {
+        $sql = "insert into valid_patterns (wordID, patternID) 
+                select w.id, p.id from words w 
+                inner join patterns p on p.pattern = ? and w.word = ?";
+        $this->db->query($sql, [$pattern, $this->word]);
+    }
+
+    private function getPatternsList(): array
+    {
+        $patterns = [];
+        if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
+            $patterns = $this->scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
+        } else if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
+            $patterns = $this->db->getPatterns();
+        }
+        return $patterns;
+    }
+
 }
