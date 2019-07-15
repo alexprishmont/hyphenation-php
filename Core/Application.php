@@ -156,7 +156,7 @@ class Application
     {
         $arguments = $this->argc;
 
-        if ($arguments <= 2 || ($arguments > 3 && $this->argv[1] != '-import')) {
+        if ($arguments <= 2 || $arguments > 3) {
             $this->printHelp();
             throw new InvalidFlagException("Your entered arguments count is not valid.");
         }
