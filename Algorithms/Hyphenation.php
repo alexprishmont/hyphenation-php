@@ -71,17 +71,25 @@ class Hyphenation implements HyphenationInterface
                 $wordResult = $data['result'];
             }
         } else {
-            $this->db->query("insert into words (word) values(?)", [$word]);
-            $wordResult = $this->getResult($word);
-            $this->db
-                ->query("insert into results (wordID) 
+            try {
+                $this->db->getHandle()->beginTransaction();
+
+                $this->db->query("insert into words (word) values(?)", [$word]);
+                $wordResult = $this->getResult($word);
+                $this->db
+                    ->query("insert into results (wordID) 
                             select words.id from words where word = ?", [$word]);
-            $this->db
-                ->query("update results 
+                $this->db
+                    ->query("update results 
                             inner join words on words.id = results.wordID 
                             set result = ? where word = ?",
-                    [$wordResult, $word]
-                );
+                        [$wordResult, $word]
+                    );
+
+                $this->db->getHandle()->commit();
+            } catch (\Exception $e) {
+                $this->db->getHandle()->rollBack();
+            }
         }
 
         $this->cache->set($word, $wordResult);
