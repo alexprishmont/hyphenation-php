@@ -110,17 +110,22 @@ class Application
                 $this->importFiles();
                 break;
             case '-source':
-                if ($target == self::DB_SOURCE || $target == self::FILE_SOURCE) {
-                    self::$settings['DEFAULT_SOURCE'] = $target;
-                    $this->logger
-                        ->log(LogLevel::SUCCESS, "You changed script's source to '{target}'", ['target' => $target]);
-                } else {
-                    throw new InvalidFlagException("Your entered new source[{$target}] is invalid.");
-                }
+                $this->changeSource($target);
                 break;
             case '-migrate':
                 $this->getInstance('migration')->migrate($target);
                 break;
+        }
+    }
+
+    private function changeSource($source): void
+    {
+        if ($source == self::DB_SOURCE || $source == self::FILE_SOURCE) {
+            self::$settings['DEFAULT_SOURCE'] = $source;
+            $this->logger
+                ->log(LogLevel::SUCCESS, "You changed script's source to '{target}'", ['target' => $source]);
+        } else {
+            throw new InvalidFlagException("Your entered new source[{$source}] is invalid.");
         }
     }
 
