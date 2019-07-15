@@ -108,29 +108,4 @@ class Connection implements DatabaseInterface
             $this->handle->rollBack();
         }
     }
-
-    public function importWords(string $source): void
-    {
-        $path = dirname(__FILE__, 3) . $source;
-        if (!file_exists($path))
-            throw new \Exception("Such words file [{$source}] does not exist.");
-
-        $words = file_get_contents($path);
-        $words = preg_split('/\s+/', $words);
-
-        try {
-            $this->handle->beginTransaction();
-
-            $statement = $this->handle->prepare("replace into `words` (`word`) values (?)");
-            foreach ($words as $word) {
-                $statement->execute([$word]);
-            }
-
-            $this->handle->commit();
-            $this->logger->log(LogLevel::SUCCESS, "Words successfully imported.");
-        } catch (\Exception $e) {
-            $this->handle->rollBack();
-        }
-
-    }
 }

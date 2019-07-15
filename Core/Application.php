@@ -133,11 +133,7 @@ class Application
     private function importFiles(): void
     {
         $source = $this->argv[2];
-        if ($source == 'words') {
-            $src = readline("\n Please enter source path to the words file: ");
-            $this->mysql->importWords($src);
-
-        } else if ($source == 'patterns') {
+        if ($source == 'patterns') {
             $this->logger
                 ->log(LogLevel::NOTICE,
                     "Patterns would be loaded from {src}!",
