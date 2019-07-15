@@ -1,8 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Core\Database;
 
-use Algorithms\Hyphenation;
 use Core\Application;
 use Core\Cache\FileCache;
 use Core\Database\Interfaces\DatabaseInterface;

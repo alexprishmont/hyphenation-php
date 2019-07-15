@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Core\DI;
 
@@ -7,7 +8,7 @@ use Core\DI\Interfaces\ContainerInterface;
 class Container implements ContainerInterface
 {
     private $instances = [];
-    
+
     public function get(string $name, array $parameters = [])
     {
         if (!isset($this->instances[$name]))
