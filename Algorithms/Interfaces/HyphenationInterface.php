@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Algorithms\Interfaces;
 
-interface AlgorithmInterface
+interface HyphenationInterface
 {
     public function hyphenate(string $word): string;
 }

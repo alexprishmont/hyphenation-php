@@ -69,7 +69,8 @@ class Connection implements DatabaseInterface
 
     private function loadPatternsToCache(): array
     {
-        $fetch = $this->handle->query("select * from `patterns`");
+        $fetch = $this->handle->query("select pattern from `patterns`");
+
         $fetch = $fetch->fetchAll(PDO::FETCH_ASSOC);
 
         $result = [];
@@ -82,8 +83,7 @@ class Connection implements DatabaseInterface
             if ($result !== $this->cache->get('patterns')) {
                 $this->cache->set('patterns', $result);
                 return $result;
-            }
-            else
+            } else
                 return $this->cache->get('patterns');
         } else {
             $this->cache->set('patterns', $result);
@@ -94,7 +94,6 @@ class Connection implements DatabaseInterface
     public function importPatterns(): void
     {
         $patterns = $this->scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
-
         try {
             $this->handle->beginTransaction();
 
@@ -108,7 +107,6 @@ class Connection implements DatabaseInterface
         } catch (\Exception $e) {
             $this->handle->rollBack();
         }
-
     }
 
     public function importWords(string $source): void

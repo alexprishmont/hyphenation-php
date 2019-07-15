@@ -7,11 +7,18 @@ use Core\DI\Container;
 use Core\DI\DependenciesLoader;
 use Core\Exceptions\InvalidFlagException;
 use Core\Log\LogLevel;
-use Validations\EmailValidation;
 
 class Application
 {
     private $container;
+
+    private $mysql;
+    private $cacheController;
+    private $exceptionHandler;
+    private $hyphenation;
+    private $stringHyphenation;
+    private $fileHyphenation;
+    private $logger;
 
     private $argv;
     private $argc;
@@ -19,9 +26,9 @@ class Application
     public static $settings;
 
     private const VALID_FLAGS = [
-        "-w" => '[word]',
-        "-s" => '["sentence"]',
-        "-f" => '["path to file"]',
+        "-word" => '[word]',
+        "-sentence" => '["sentence"]',
+        "-file" => '["path to file"]',
         "-email" => '[email]',
         "-reset" => 'cache',
         "-import" => 'patterns/words',
@@ -37,18 +44,26 @@ class Application
         $this->container = new Container();
         LoadTime::startMeasuring();
 
-        @set_exception_handler([
-            $this->getInstance("exceptionhandler"),
-            'exceptionHandlerFunction'
-        ]);
-
-        $this->setInstance("mysql");
-
         $this->setInstance("config");
         self::$settings = $this->getInstance("config")
             ->get("config");
 
+        $this->exceptionHandler = $this->getInstance("exceptionhandler");
+
+        @set_exception_handler([
+            $this->exceptionHandler,
+            'exceptionHandlerFunction'
+        ]);
+
+        $this->setInstance("mysql");
         $this->setInstance("cacheController");
+
+        $this->cacheController = $this->getInstance("cacheController");
+        $this->mysql = $this->getInstance("mysql");
+        $this->hyphenation = $this->getInstance("hyphenation");
+        $this->stringHyphenation = $this->getInstance("stringHyphenation");
+        $this->fileHyphenation = $this->getInstance("fileHyphenation");
+        $this->logger = $this->getInstance("logger");
 
         $this->argv = $argv;
         $this->argc = $argc;
@@ -60,10 +75,10 @@ class Application
 
         LoadTime::endMeasuring();
 
-        $this->getInstance('logger')
-            ->log(LogLevel::WARNING, "Script execution time {time} seconds.", ['time' => LoadTime::getTime()]);
-        $this->getInstance('logger')
-            ->log(LogLevel::WARNING, "Script used {memory} of memory.", ['memory' => Memory::get()]);
+        $this->logger
+            ->log(LogLevel::INFO, "Script execution time {time} seconds.", ['time' => LoadTime::getTime()]);
+        $this->logger
+            ->log(LogLevel::INFO, "Script used {memory} of memory.", ['memory' => Memory::get()]);
     }
 
     public function startup(): void
@@ -77,60 +92,42 @@ class Application
     {
         $target = $this->argv[2];
         switch ($this->argv[1]) {
-            case '-w':
-                {
-                    print($this->getInstance('hyphenation')->hyphenate($target) . PHP_EOL);
-                    break;
-                }
-            case '-s':
-                {
-                    print($this->getInstance('stringHyphenation')->hyphenate($target) . PHP_EOL);
-                    break;
-                }
-            case '-f':
-                {
-                    print($this->getInstance('fileHyphenation')->hyphenate($target) . PHP_EOL);
-                    break;
-                }
-            case '-email':
-                {
-                    print(EmailValidation::validate($target) ? "Email is valid." : "Email is not valid.");
-                    break;
-                }
+            case '-word':
+                print($this->hyphenation->hyphenate($target) . PHP_EOL);
+                break;
+            case '-sentence':
+                print($this->stringHyphenation->hyphenate($target) . PHP_EOL);
+                break;
+            case '-file':
+                print($this->fileHyphenation->hyphenate($target) . PHP_EOL);
+                break;
             case '-reset':
-                {
-                    if ($target == 'cache') {
-                        $this->resetCache();
-                    }
-                    break;
+                if ($target == 'cache') {
+                    $this->resetCache();
                 }
+                break;
             case '-import':
-                {
-                    $this->importFiles();
-                    break;
-                }
+                $this->importFiles();
+                break;
             case '-source':
-                {
-                    if ($target == self::DB_SOURCE || $target == self::FILE_SOURCE) {
-                        self::$settings['DEFAULT_SOURCE'] = $target;
-                    } else {
-                        throw new InvalidFlagException("Your entered new source[{$target}] is invalid.");
-                    }
-                    break;
+                if ($target == self::DB_SOURCE || $target == self::FILE_SOURCE) {
+                    self::$settings['DEFAULT_SOURCE'] = $target;
+                    $this->logger
+                        ->log(LogLevel::SUCCESS, "You changed script's source to '{target}'", ['target' => $target]);
+                } else {
+                    throw new InvalidFlagException("Your entered new source[{$target}] is invalid.");
                 }
+                break;
             case '-migrate':
-                {
-                    $this->getInstance('migration')->migrate($target);
-                    break;
-                }
+                $this->getInstance('migration')->migrate($target);
+                break;
         }
     }
 
     private function resetCache(): void
     {
-        $this->getInstance('cacheController')
-            ->clear();
-        $this->getInstance('logger')->log(LogLevel::SUCCESS, "Cache cleared.");
+        $this->cacheController->clear();
+        $this->logger->log(LogLevel::SUCCESS, "Cache cleared.");
     }
 
     private function importFiles(): void
@@ -138,19 +135,18 @@ class Application
         $source = $this->argv[2];
         if ($source == 'words') {
             $src = readline("\n Please enter source path to the words file: ");
-            $this->getInstance('mysql')->importWords($src);
+            $this->mysql->importWords($src);
 
         } else if ($source == 'patterns') {
-            $this->getInstance('logger')
-                ->log(LogLevel::WARNING,
+            $this->logger
+                ->log(LogLevel::NOTICE,
                     "Patterns would be loaded from {src}!",
                     ['src' => self::$settings['PATTERNS_SOURCE']]);
 
-            $this->getInstance('mysql')
-                ->importPatterns();
+            $this->mysql->importPatterns();
 
         } else {
-            $this->getInstance('logger')
+            $this->logger
                 ->log(LogLevel::ERROR, "Such source [{source}] not available.", ['source' => $source]);
         }
     }

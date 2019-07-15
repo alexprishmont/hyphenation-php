@@ -28,6 +28,46 @@ class Logger implements LoggerInterface
         return $this->config['LOG_VALID_PATTERNS'];
     }
 
+    public function alert($message, array $context = [])
+    {
+        return $this->processLog($message,
+            $context,
+            LogLevel::ALERT,
+            "[alert]",
+            LogLevel::ALERT_COLOR
+        );
+    }
+
+    public function notice($message, array $context = [])
+    {
+        return $this->processLog($message,
+            $context,
+            LogLevel::NOTICE,
+            "[notice]",
+            LogLevel::NOTICE_COLOR
+        );
+    }
+
+    public function emergency($message, array $context = array())
+    {
+        return $this->processLog($message,
+            $context,
+            LogLevel::EMERGENCY,
+            "[emergency]",
+            LogLevel::EMERGENCY_COLOR
+        );
+    }
+
+    public function info($message, array $context = array())
+    {
+        return $this->processLog($message,
+            $context,
+            LogLevel::INFO,
+            "[info]",
+            LogLevel::INFO_COLOR
+        );
+    }
+
     public function critical($message, array $context = [])
     {
         return $this->processLog($message,
@@ -140,7 +180,8 @@ class Logger implements LoggerInterface
     private function isLogLevelValid(string $level)
     {
         if ($level != LogLevel::ERROR && $level != LogLevel::SUCCESS && $level != LogLevel::CRITICAL &&
-            $level != LogLevel::DEBUG && $level != LogLevel::WARNING) {
+            $level != LogLevel::DEBUG && $level != LogLevel::WARNING && $level != LogLevel::ALERT &&
+            $level != LogLevel::EMERGENCY && $level != LogLevel::NOTICE && $level != LogLevel::INFO) {
             throw new LoggerException("Logger level {$level} does not exist.");
         }
     }

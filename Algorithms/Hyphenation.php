@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Algorithms;
 
-use Algorithms\Interfaces\AlgorithmInterface;
+use Algorithms\Interfaces\HyphenationInterface;
 use Core\Application;
 use Core\Cache\FileCache;
 use Core\Database\Connection;
@@ -12,7 +12,7 @@ use Core\Log\LogLevel;
 use Core\Scans\Scan;
 use Core\Tools;
 
-class Hyphenation implements AlgorithmInterface
+class Hyphenation implements HyphenationInterface
 {
     private $word;
     public $patterns = [];
@@ -20,21 +20,19 @@ class Hyphenation implements AlgorithmInterface
     private $digitsInWord = [];
     private $completedWordWithDigits;
 
+    // try to reduce vars number
+
     private $cache;
     private $db;
     private $logger;
+    private $scan;
 
     public function __construct(FileCache $cache, Connection $db, Scan $scan, Logger $log)
     {
         $this->db = $db;
         $this->cache = $cache;
         $this->logger = $log;
-
-        if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
-            $this->patterns = $scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
-        } else if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
-            $this->patterns = $db->getPatterns();
-        }
+        $this->scan = $scan;
 
         $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
             Tools::CACHE_DEFAULT_EXPIRATION,
@@ -45,34 +43,62 @@ class Hyphenation implements AlgorithmInterface
 
     public function hyphenate(string $word): string
     {
-        if (!$this->cache->has($word)) {
-            if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
-                $word_result = "";
-                $query = $this->db->query("select word from results where result_for = ? limit 1", [$word]);
-                if ($query->rowCount() > 0) {
-                    $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-                    foreach ($result as $data) {
-                        $word_result = $data['word'];
-                    }
-                    $this->cache->set($word, $word_result);
-                } else {
-                    $word_result = $this->getResult($word);
-                    $this->db->query("insert into results (word, result_for) values (?, ?)", [$word_result, $word]);
-                }
-                $this->getUsedPatterns($word);
-                return $word_result;
-            } else {
-                return $this->getResult($word);
-            }
-        } else {
+        if ($this->cache->has($word)) {
             return (string)$this->cache->get($word);
         }
+
+        if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
+            return $this->getResult($word);
+        }
+
+        return $this->getFromDatabase($word);
+    }
+
+    private function getFromDatabase(string $word): string
+    {
+        $wordResult = "";
+
+        if ($this->db->query("select id from patterns")->rowCount() == 0) {
+            throw new \Exception("There's no available patterns in database.\n Please import patterns.\n Use: php startup -import patterns");
+        }
+
+        $query = $this->db->query(
+            "select word, result from words inner join results on words.id = results.wordID where word = ?",
+            [$word]
+        );
+
+        if ($query->rowCount() > 0) {
+            foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
+                $wordResult = $data['result'];
+            }
+        } else {
+            $this->db->query("insert into words (word) values(?)", [$word]);
+            $wordResult = $this->getResult($word);
+            $this->db
+                ->query("insert into results (wordID) select words.id from words where word = ?", [$word]);
+            $this->db
+                ->query("update results inner join words on words.id = results.wordID set result = ? where word = ?",
+                    [$wordResult, $word]
+                );
+        }
+
+        $this->cache->set($word, $wordResult);
+        $this->getUsedPatterns($word);
+        return $wordResult;
     }
 
     private function getResult(string $word): string
     {
         $this->clearVariables();
+
+        if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
+            $this->patterns = $this->scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
+        } else if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
+            $this->patterns = $this->db->getPatterns();
+        }
+
         $this->word = $word;
+
         $this->findValidPatterns();
         $this->pushDigitsToWord();
         $this->completeWordWithSyllables();
@@ -112,7 +138,7 @@ class Hyphenation implements AlgorithmInterface
         foreach (str_split($this->word) as $i => $char) {
             $this->completedWordWithDigits .= $char;
             if (isset($this->digitsInWord[$i]))
-            $this->completedWordWithDigits .= $this->digitsInWord[$i];
+                $this->completedWordWithDigits .= $this->digitsInWord[$i];
         }
     }
 
@@ -152,11 +178,12 @@ class Hyphenation implements AlgorithmInterface
 
     private function getUsedPatterns(string $word): void
     {
-        $query = $this->db->query("select pattern from valid_patterns where valid_for = ?", [$word]);
+        $sql = "select patterns.pattern, patterns.id from patterns inner join valid_patterns vp on vp.patternID = id inner join words w on w.word = ? and w.id = vp.wordID";
+        $query = $this->db->query($sql, [$word]);
         if ($query->rowCount() > 0) {
             foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
                 $this->logger
-                    ->log(LogLevel::WARNING, "Pattern {pattern} used for word {word}",
+                    ->log(LogLevel::INFO, "Pattern {pattern} used for word {word}",
                         ['pattern' => $data['pattern'], 'word' => $word]);
             }
         }
@@ -174,8 +201,8 @@ class Hyphenation implements AlgorithmInterface
                 continue;
 
             if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
-                $this->db
-                    ->query('insert into valid_patterns (pattern, valid_for) values (?, ?)', [$pattern, $this->word]);
+                $sql = "insert into valid_patterns (wordID, patternID) select w.id, p.id from words w inner join patterns p on p.pattern = ? and w.word = ?";
+                $this->db->query($sql, [$pattern, $this->word]);
             }
             $this->validPatterns[] = $pattern;
         }

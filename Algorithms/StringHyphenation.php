@@ -3,15 +3,26 @@ declare(strict_types=1);
 
 namespace Algorithms;
 
-use Algorithms\Interfaces\AlgorithmInterface;
+use Algorithms\Interfaces\HyphenationInterface;
+use Core\Application;
+use Core\Cache\FileCache;
+use Core\Tools;
 
-class StringHyphenation implements AlgorithmInterface
+class StringHyphenation implements HyphenationInterface
 {
     private $algorithm;
+    private $cache;
 
-    public function __construct(Hyphenation $algorithm)
+    public function __construct(Hyphenation $algorithm, FileCache $cache)
     {
         $this->algorithm = $algorithm;
+        $this->cache = $cache;
+
+        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
+            Tools::CACHE_DEFAULT_EXPIRATION,
+            Tools::CACHE_DIR_MODE,
+            Tools::CACHE_FILE_MODE
+        );
     }
 
     public function hyphenate(string $string): string
@@ -19,22 +30,8 @@ class StringHyphenation implements AlgorithmInterface
         $words = $this->extractWordsFromString($string);
         $result = $string;
 
-        $imploded = implode(' ', $words);
-        $implodedResult = $this->algorithm->hyphenate($imploded);
-
-        $hyphendWords = preg_split('/(\s+)/', $implodedResult);
-
-        $fixed = [];
-        $i = 0;
-        foreach ($hyphendWords as $word) {
-            if (strpos($word, '-') === 0 || strpos($word, '-') === 0)
-                $word = str_replace('-', '', $word);
-            $fixed[$words[$i]] = $word;
-            $i++;
-        }
-
-        foreach ($fixed as $key => $value) {
-            $result = str_replace($key, $value, $result);
+        foreach($words as $word) {
+            $result = str_replace($word, $this->algorithm->hyphenate($word), $result);
         }
 
         return $result;
