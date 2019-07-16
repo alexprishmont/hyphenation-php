@@ -153,7 +153,6 @@ class Application
                     ['src' => self::$settings['PATTERNS_SOURCE']]);
 
             $this->mysql->importPatterns();
-
         } else {
             $this->logger
                 ->log(LogLevel::ERROR,
