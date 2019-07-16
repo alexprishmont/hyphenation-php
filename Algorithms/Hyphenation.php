@@ -66,30 +66,33 @@ class Hyphenation implements HyphenationInterface
             [$word]
         );
 
-        if ($query->rowCount() > 0) {
-            foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
+        if ($query->rowCount() != 0) {
+            foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data)
                 $wordResult = $data['result'];
+            if (!$this->cache->has($word)) {
+                $this->cache->set($word, $wordResult);
             }
-        } else {
-            try {
-                $this->db->getHandle()->beginTransaction();
+            return $wordResult;
+        }
 
-                $this->db->query("insert into words (word) values(?)", [$word]);
-                $wordResult = $this->getResult($word);
-                $this->db
-                    ->query("insert into results (wordID) 
-                            select words.id from words where word = ?", [$word]);
-                $this->db
-                    ->query("update results 
-                            inner join words on words.id = results.wordID 
-                            set result = ? where word = ?",
-                        [$wordResult, $word]
-                    );
+        try {
+            $this->db->getHandle()->beginTransaction();
 
-                $this->db->getHandle()->commit();
-            } catch (\Exception $e) {
-                $this->db->getHandle()->rollBack();
-            }
+            $this->db->query("insert into words (word) values(?)", [$word]);
+            $wordResult = $this->getResult($word);
+            $this->db
+                ->query("insert into results (wordID) 
+                        select words.id from words where word = ?", [$word]);
+            $this->db
+                ->query("update results 
+                        inner join words on words.id = results.wordID 
+                        set result = ? where word = ?",
+                    [$wordResult, $word]
+                );
+
+            $this->db->getHandle()->commit();
+        } catch (\Exception $e) {
+            $this->db->getHandle()->rollBack();
         }
 
         $this->cache->set($word, $wordResult);
