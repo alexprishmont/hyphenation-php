@@ -75,6 +75,15 @@ class Hyphenation implements HyphenationInterface
             return $wordResult;
         }
 
+        $wordResult = $this->insertWordIntoDatabase($word);
+        $this->cache->set($word, $wordResult);
+        $this->getUsedPatterns($word);
+        return $wordResult;
+    }
+
+    private function insertWordIntoDatabase(string $word): string
+    {
+        $wordResult = "";
         try {
             $this->db->getHandle()->beginTransaction();
 
@@ -94,9 +103,6 @@ class Hyphenation implements HyphenationInterface
         } catch (\Exception $e) {
             $this->db->getHandle()->rollBack();
         }
-
-        $this->cache->set($word, $wordResult);
-        $this->getUsedPatterns($word);
         return $wordResult;
     }
 
