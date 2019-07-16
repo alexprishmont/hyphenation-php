@@ -71,14 +71,21 @@ class Application
 
     public function __destruct()
     {
-        $this->getInstance('config')->write('DEFAULT_SOURCE', self::$settings['DEFAULT_SOURCE'], 'config');
+        $this->getInstance('config')
+            ->write('DEFAULT_SOURCE',
+                self::$settings['DEFAULT_SOURCE'],
+                'config');
 
         LoadTime::endMeasuring();
 
         $this->logger
-            ->log(LogLevel::INFO, "Script execution time {time} seconds.", ['time' => LoadTime::getTime()]);
+            ->log(LogLevel::INFO,
+                "Script execution time {time} seconds.",
+                ['time' => LoadTime::getTime()]);
         $this->logger
-            ->log(LogLevel::INFO, "Script used {memory} of memory.", ['memory' => Memory::get()]);
+            ->log(LogLevel::INFO,
+                "Script used {memory} of memory.",
+                ['memory' => Memory::get()]);
     }
 
     public function startup(): void
@@ -123,7 +130,9 @@ class Application
         if ($source == self::DB_SOURCE || $source == self::FILE_SOURCE) {
             self::$settings['DEFAULT_SOURCE'] = $source;
             $this->logger
-                ->log(LogLevel::SUCCESS, "You changed script's source to '{target}'", ['target' => $source]);
+                ->log(LogLevel::SUCCESS,
+                    "You changed script's source to '{target}'",
+                    ['target' => $source]);
         } else {
             throw new InvalidFlagException("Your entered new source[{$source}] is invalid.");
         }
@@ -148,7 +157,9 @@ class Application
 
         } else {
             $this->logger
-                ->log(LogLevel::ERROR, "Such source [{source}] not available.", ['source' => $source]);
+                ->log(LogLevel::ERROR,
+                    "Such source [{source}] not available.",
+                    ['source' => $source]);
         }
     }
 
