@@ -69,26 +69,19 @@ class Connection implements DatabaseInterface
 
     private function loadPatternsToCache(): array
     {
+        if ($this->cache->has("patterns")) {
+            return $this->cache->get("patterns");
+        }
+
         $fetch = $this->handle->query("select pattern from `patterns`");
-
         $fetch = $fetch->fetchAll(PDO::FETCH_ASSOC);
-
         $result = [];
 
         foreach ($fetch as $data) {
             $result[] = $data['pattern'];
         }
-
-        if ($this->cache->has('patterns')) {
-            if ($result !== $this->cache->get('patterns')) {
-                $this->cache->set('patterns', $result);
-                return $result;
-            } else
-                return $this->cache->get('patterns');
-        } else {
-            $this->cache->set('patterns', $result);
-            return $result;
-        }
+        $this->cache->set("patterns", $result);
+        return $result;
     }
 
     public function importPatterns(): void

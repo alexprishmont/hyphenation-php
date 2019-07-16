@@ -45,8 +45,7 @@ class Application
         LoadTime::startMeasuring();
 
         $this->setInstance("config");
-        self::$settings = $this->getInstance("config")
-            ->get("config");
+        self::$settings = $this->getInstance("config")->get("config");
 
         $this->exceptionHandler = $this->getInstance("exceptionhandler");
 
