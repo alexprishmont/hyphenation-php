@@ -67,8 +67,9 @@ class Hyphenation implements HyphenationInterface
         );
 
         if ($query->rowCount() != 0) {
-            foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data)
+            foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
                 $wordResult = $data['result'];
+            }
             if (!$this->cache->has($word)) {
                 $this->cache->set($word, $wordResult);
             }
@@ -102,6 +103,9 @@ class Hyphenation implements HyphenationInterface
             $this->db->getHandle()->commit();
         } catch (\Exception $e) {
             $this->db->getHandle()->rollBack();
+            $this->logger
+                ->log(LogLevel::ERROR,
+                    $e->getMessage());
         }
         return $wordResult;
     }
@@ -194,7 +198,8 @@ class Hyphenation implements HyphenationInterface
         if ($query->rowCount() > 0) {
             foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
                 $this->logger
-                    ->log(LogLevel::INFO, "Pattern {pattern} used for word {word}",
+                    ->log(LogLevel::INFO,
+                        "Pattern {pattern} used for word {word}",
                         ['pattern' => $data['pattern'], 'word' => $word]);
             }
         }

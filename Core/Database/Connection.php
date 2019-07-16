@@ -97,6 +97,9 @@ class Connection implements DatabaseInterface
             $this->logger->log(LogLevel::SUCCESS, "New patterns imported.");
         } catch (\Exception $e) {
             $this->handle->rollBack();
+            $this->logger
+                ->log(LogLevel::ERROR,
+                    $e->getMessage());
         }
     }
 }
