@@ -129,14 +129,14 @@ class Hyphenation implements HyphenationInterface
         $result = $completedWordWithDigits;
         for ($i = 0; $i < strlen($completedWordWithDigits); $i++) {
             $char = $completedWordWithDigits[$i];
-            if (is_numeric($char)) {
-                if ((int)$char % 2 > 0) {
-                    if ($i != strlen($completedWordWithDigits) - 1)
-                        $result = str_replace($char, '-', $result);
-                    else
-                        $result = str_replace($char, '', $result);
-                } else
-                    $result = str_replace($char, '', $result);
+
+            if (!is_numeric($char))
+                continue;
+
+            if ((int)$char % 2 > 0) {
+                $result = str_replace($char, '-', $result);
+            } else {
+                $result = str_replace($char, '', $result);
             }
         }
         return $result;
