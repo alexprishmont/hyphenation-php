@@ -88,7 +88,16 @@ class Connection implements DatabaseInterface
         try {
             $this->handle->beginTransaction();
 
-            $statement = $this->handle->prepare("replace into `patterns` (`pattern`) values (?)");
+            $this->handle->query("SET FOREIGN_KEY_CHECKS=0");
+
+            $this->handle->query("truncate table `valid_patterns`");
+            $this->handle->query("truncate table `words`");
+            $this->handle->query("truncate table `results`");
+            $this->handle->query("truncate table `patterns`");
+
+            $this->handle->query("SET FOREIGN_KEY_CHECKS=1");
+
+            $statement = $this->handle->prepare("insert into `patterns` (`pattern`) values (?)");
             foreach ($patterns as $pattern) {
                 $statement->execute([$pattern]);
             }
