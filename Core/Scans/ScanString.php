@@ -7,6 +7,7 @@ use Algorithms\StringHyphenation;
 use Core\Application;
 use Core\Cache\FileCache;
 use Core\Database\Connection;
+use Core\Exceptions\InvalidFlagException;
 use Core\Tools;
 
 class ScanString
@@ -30,6 +31,7 @@ class ScanString
 
     public function hyphenate(string $src): string
     {
+        $src = Application::$settings['INPUT_SRC'] . '/' . $src;
         if ($this->isFileExists($src)) {
             $result = "";
             if ($this->cache->has($src)) {
@@ -43,6 +45,8 @@ class ScanString
                 $this->cache->set($src, $result);
                 return $result;
             }
+        } else {
+            throw new InvalidFlagException("Your entered file does not exist. [{$src}]");
         }
     }
 
