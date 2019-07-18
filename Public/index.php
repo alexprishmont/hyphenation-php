@@ -24,11 +24,10 @@ if (isset($uri[2])) {
 switch ($uri[1]) {
     case 'pattern':
         $app->getInstance('patternController')
-            ->setId(null);
-        $app->getInstance('patternController')
             ->processRequest(
                 $app->getInstance('patternsAPI'),
-                $method
+                $method,
+                $id
             );
         break;
     case 'word':

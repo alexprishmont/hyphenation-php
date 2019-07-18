@@ -22,9 +22,9 @@ class Pattern extends Model
 
     public function readSingle(): void
     {
-        $sql = "SELECT pattern FROM `{$this->tableName}` WHERE `id` = :id LIMIT 0, 1";
+        $sql = "SELECT pattern FROM `{$this->tableName}` WHERE `id` = ? LIMIT 0, 1";
         $statement = $this->connectionHandle
-            ->query($sql, [':id', $this->id]);
+            ->query($sql, [$this->id]);
 
         $row = $statement->fetch(\PDO::FETCH_ASSOC);
         $this->pattern = $row['pattern'];
@@ -36,7 +36,9 @@ class Pattern extends Model
         $statement = $this->connectionHandle
             ->query($sql, [$this->pattern]);
 
-        return $statement;
+        if ($statement)
+            return true;
+        return false;
     }
 
     public function update(): bool
@@ -45,7 +47,9 @@ class Pattern extends Model
         $statement = $this->connectionHandle
             ->query($sql, [':pattern' => $this->pattern, ':id' => $this->id]);
 
-        return $statement;
+        if ($statement)
+            return true;
+        return false;
     }
 
     public function delete(): bool
@@ -54,6 +58,8 @@ class Pattern extends Model
         $statement = $this->connectionHandle
             ->query($sql, [$this->id]);
 
-        return $statement;
+        if ($statement)
+            return true;
+        return false;
     }
 }
