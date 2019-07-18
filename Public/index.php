@@ -16,7 +16,7 @@ $uri = explode('/', $uri);
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-$id = null;
+$id = 0;
 if (isset($uri[2])) {
     $id = (int)$uri[2];
 }
@@ -32,7 +32,12 @@ switch ($uri[1]) {
         break;
 
     case 'word':
-
+        $app->getInstance('wordController')
+            ->processRequest(
+                $app->getInstance('wordsAPI'),
+                $method,
+                $id
+            );
         break;
 
     default:
