@@ -37,7 +37,7 @@ class WordController extends Controller
 
                 break;
             case 'DELETE':
-
+                $response = $this->deleteWord();
                 break;
             case 'PUT':
 
@@ -52,17 +52,35 @@ class WordController extends Controller
         }
     }
 
-    private function updatePattern(): array
+    private function updateWord(): array
     {
 
     }
 
-    private function deletePattern(): array
+    private function deleteWord(): array
     {
-
+        if (!$this->word->find($this->id)) {
+            return $this->notFoundResponse();
+        }
+        
+        if ($this->word->delete($this->id)) {
+            return [
+                'status_code_header' => 'HTTP/1.1 200 OK',
+                'body' => json_encode(
+                    ["message" => "Word [id: {$this->id}] successfully deleted."]
+                )
+            ];
+        } else {
+            return [
+                'status_code_header' => 'HTTP/1.1 404 Not Found',
+                'body' => json_encode(
+                    ["message" => "Error while trying to delete word. [id: {$this->id}]"]
+                )
+            ];
+        }
     }
 
-    private function createPatternFromRequest(): array
+    private function createWordFromRequest(): array
     {
 
     }
