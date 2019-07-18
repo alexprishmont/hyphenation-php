@@ -12,6 +12,15 @@ class Pattern extends Model
     public $id;
     public $pattern;
 
+    public function find(): bool
+    {
+        $statement = $this->connectionHandle
+            ->query("SELECT id FROM patterns WHERE id = ?", [$this->id]);
+        if ($statement->rowCount() > 0)
+            return true;
+        return false;
+    }
+
     public function read(): object
     {
         $sql = "SELECT id, pattern FROM `{$this->tableName}` ORDER BY id DESC";

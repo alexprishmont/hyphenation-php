@@ -15,6 +15,11 @@ class Patterns implements APIInterface
         $this->pattern = $pattern;
     }
 
+    public function find(int $id) {
+        $this->pattern->id = $id;
+        return $this->pattern->find();
+    }
+
     public function read()
     {
         $statement = $this->pattern->read();
