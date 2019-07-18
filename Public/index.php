@@ -30,6 +30,7 @@ switch ($uri[1]) {
                 $id
             );
         break;
+
     case 'word':
 
         break;
