@@ -21,8 +21,14 @@ class PatternController extends Controller
                     $response['body'] = $pattern->read();
                     $response['status_code_header'] = 'HTTP/1.1 200 OK';
                 } else {
-                    $response['body'] = $pattern->readSingle($this->id);
-                    $response['status_code_header'] = 'HTTP/1.1 200 OK';
+                    if ($this->pattern->find($this->id)) {
+                        $response = [
+                            'status_code_header' => 'HTTP/1.1 200 OK',
+                            'body' => $this->pattern->readSingle($this->id)
+                        ];
+                    } else {
+                        $response = $this->notFoundResponse();
+                    }
                 }
                 break;
             case 'POST':

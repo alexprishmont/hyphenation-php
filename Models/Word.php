@@ -14,6 +14,15 @@ class Word extends Model
     public $word;
     public $hyphenatedWord;
 
+    public function find(): bool
+    {
+        $statement = $this->connectionHandle
+            ->query("SELECT id FROM {$this->tableName} WHERE id = ? LIMIT 0, 1", [$this->id]);
+        if ($statement->rowCount() > 0)
+            return true;
+        return false;
+    }
+
     public function read(): object
     {
         $sql = "SELECT word, result FROM {$this->tableName}

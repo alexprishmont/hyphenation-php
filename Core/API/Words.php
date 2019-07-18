@@ -15,6 +15,12 @@ class Words implements APIInterface
         $this->word = $word;
     }
 
+    public function find(int $id)
+    {
+        $this->word->id = $id;
+        return $this->word->find();
+    }
+
     public function read()
     {
         $statement = $this->word->read();
