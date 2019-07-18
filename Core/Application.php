@@ -22,6 +22,7 @@ class Application
 
     private $argv;
     private $argc;
+    private $api = false;
 
     public static $settings;
 
@@ -42,7 +43,9 @@ class Application
     public function __construct(array $argv, int $argc)
     {
         $this->container = new Container();
-        LoadTime::startMeasuring();
+
+        if (!$this->api)
+            LoadTime::startMeasuring();
 
         $this->setInstance("config");
         self::$settings = $this->getInstance("config")->get("config");
@@ -68,23 +71,41 @@ class Application
         $this->argc = $argc;
     }
 
+    public function api(bool $status): void
+    {
+        $this->api = $status;
+    }
+
     public function __destruct()
     {
         $this->getInstance('config')
             ->write('DEFAULT_SOURCE',
                 self::$settings['DEFAULT_SOURCE'],
                 'config');
+        if (!$this->api) {
+            LoadTime::endMeasuring();
 
-        LoadTime::endMeasuring();
+            $this->logger
+                ->log(LogLevel::INFO,
+                    "Script execution time {time} seconds.",
+                    ['time' => LoadTime::getTime()]);
+            $this->logger
+                ->log(LogLevel::INFO,
+                    "Script used {memory} of memory.",
+                    ['memory' => Memory::get()]);
+        }
+    }
 
-        $this->logger
-            ->log(LogLevel::INFO,
-                "Script execution time {time} seconds.",
-                ['time' => LoadTime::getTime()]);
-        $this->logger
-            ->log(LogLevel::INFO,
-                "Script used {memory} of memory.",
-                ['memory' => Memory::get()]);
+    public function getInstance(string $instance): object
+    {
+        return $this->container
+            ->get(DependenciesLoader::get()[$instance]);
+    }
+
+    public function setInstance(string $instance)
+    {
+        $this->container
+            ->set(DependenciesLoader::get()[$instance]);
     }
 
     public function startup(): void
@@ -197,15 +218,4 @@ class Application
         print(PHP_EOL);
     }
 
-    private function getInstance(string $instance): object
-    {
-        return $this->container
-            ->get(DependenciesLoader::get()[$instance]);
-    }
-
-    private function setInstance(string $instance)
-    {
-        $this->container
-            ->set(DependenciesLoader::get()[$instance]);
-    }
 }

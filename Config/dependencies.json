@@ -9,5 +9,8 @@
   "scan": "Core\\Scans\\Scan",
   "logger": "Core\\Log\\Logger",
   "mysql": "Core\\Database\\Connection",
-  "migration": "Core\\Database\\Migration"
+  "migration": "Core\\Database\\Migration",
+  "patternController": "Controllers\\PatternController",
+  "patternsAPI": "Core\\API\\Patterns",
+  "wordsAPI": "Core\\API\\Words"
 }

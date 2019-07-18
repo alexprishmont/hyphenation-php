@@ -7,9 +7,15 @@ class Autoloader
     public static function register()
     {
         spl_autoload_register(function ($class) {
-            $class_file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
-            if (file_exists($class_file)) {
-                require $class_file;
+            $classFile = $_SERVER['DOCUMENT_ROOT'] .
+                str_replace('\\', DIRECTORY_SEPARATOR, $class) .
+                '.php';
+
+            if (strpos($classFile, "/Public") !== false)
+                $classFile = str_replace('/Public', '/', $classFile);
+
+            if (file_exists($classFile)) {
+                require $classFile;
                 return true;
             }
         });
