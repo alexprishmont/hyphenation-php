@@ -99,7 +99,7 @@ class WordController extends Controller
                 'body' => json_encode(
                     [
                         "message" =>
-                        "Word successfully hyphenated & added. [Word: {$input['word']} / Result: {$hyphenated}]"
+                            "Word successfully hyphenated & added. [Word: {$input['word']} / Result: {$hyphenated}]"
                     ]
                 )
             ];
