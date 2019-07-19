@@ -11,6 +11,8 @@ use Core\Log\Logger;
 use Core\Log\LogLevel;
 use Core\Scans\Scan;
 use Core\Tools;
+use Models\Pattern;
+use Models\Word;
 
 class Hyphenation implements HyphenationInterface
 {
@@ -20,13 +22,22 @@ class Hyphenation implements HyphenationInterface
     private $db;
     private $logger;
     private $scan;
+    private $wordModel;
+    private $patternModel;
 
-    public function __construct(FileCache $cache, Connection $db, Scan $scan, Logger $log)
+    public function __construct(FileCache $cache,
+                                Connection $db,
+                                Scan $scan,
+                                Logger $log,
+                                Word $wordModel,
+                                Pattern $patternModel)
     {
         $this->db = $db;
         $this->cache = $cache;
         $this->logger = $log;
         $this->scan = $scan;
+        $this->wordModel = $wordModel;
+        $this->patternModel = $patternModel;
 
         $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
             Tools::CACHE_DEFAULT_EXPIRATION,
@@ -39,6 +50,10 @@ class Hyphenation implements HyphenationInterface
     {
         $this->word = $word;
 
+        if (Application::apiStatus()) {
+            return $this->getResult($word);
+        }
+
         if ($this->cache->has($word)) {
             return (string)$this->cache->get($word);
         }
@@ -50,26 +65,27 @@ class Hyphenation implements HyphenationInterface
         return $this->getFromDatabase($word);
     }
 
+    public function getValidPatternsForWord(string $word): array
+    {
+        $this->word = $word;
+        $valid = $this->findValidPatterns(
+            $this->getPatternsList()
+        );
+        return $valid;
+    }
+
     private function getFromDatabase(string $word): string
     {
-        $wordResult = "";
-
-        if ($this->db->query("select id from patterns")->rowCount() == 0) {
+        if ($this->patternModel->count() == 0) {
             throw new \Exception("There's no available patterns in database.\n 
                                           Please import patterns.\n Use: php startup -import patterns");
         }
 
-        $query = $this->db->query(
-            "select word, result from words 
-                inner join results on words.id = results.wordID 
-                where word = ?",
-            [$word]
-        );
+        $this->wordModel->word = $word;
+        $this->wordModel->readSingleByWord();
+        $wordResult = $this->wordModel->hyphenatedWord;
 
-        if ($query->rowCount() != 0) {
-            foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
-                $wordResult = $data['result'];
-            }
+        if ($wordResult !== "") {
             if (!$this->cache->has($word)) {
                 $this->cache->set($word, $wordResult);
             }
@@ -84,36 +100,18 @@ class Hyphenation implements HyphenationInterface
 
     private function insertWordIntoDatabase(string $word): string
     {
-        $wordResult = "";
-        try {
-            $this->db->getHandle()->beginTransaction();
-
-            $this->db->query("insert into words (word) values(?)", [$word]);
-            $wordResult = $this->getResult($word);
-            $this->db
-                ->query("insert into results (wordID) 
-                        select words.id from words where word = ?", [$word]);
-            $this->db
-                ->query("update results 
-                        inner join words on words.id = results.wordID 
-                        set result = ? where word = ?",
-                    [$wordResult, $word]
-                );
-
-            $this->db->getHandle()->commit();
-        } catch (\Exception $e) {
-            $this->db->getHandle()->rollBack();
-            $this->logger
-                ->log(LogLevel::ERROR,
-                    $e->getMessage());
-        }
-        return $wordResult;
+        $this->wordModel->word = $word;
+        $this->wordModel->hyphenatedWord = $this->getResult($word);
+        $this->wordModel->create();
+        return $this->wordModel->hyphenatedWord;
     }
 
     private function getResult(string $word): string
     {
         $patterns = $this->getPatternsList();
         $valid = $this->findValidPatterns($patterns);
+
+        $this->wordModel->usedPatterns = $valid;
 
         $result = $this->addSyllableSymbols(
             $this->completeWordWithDigits(
@@ -217,21 +215,11 @@ class Hyphenation implements HyphenationInterface
                 ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($cleanString)))
                 continue;
 
-            if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE)
-                $this->insertValidPatternIntoDB($pattern);
-
             $validPatterns[] = $pattern;
         }
         return $validPatterns;
     }
 
-    private function insertValidPatternIntoDB(string $pattern): void
-    {
-        $sql = "insert into valid_patterns (wordID, patternID) 
-                select w.id, p.id from words w 
-                inner join patterns p on p.pattern = ? and w.word = ?";
-        $this->db->query($sql, [$pattern, $this->word]);
-    }
 
     private function getPatternsList(): array
     {

@@ -10,9 +10,27 @@ class Word extends Model
     private $tableName = "words";
     private $resultTable = "results";
 
-    public $id;
-    public $word;
-    public $hyphenatedWord;
+    public $id = 0;
+    public $word = "";
+    public $hyphenatedWord = "";
+    public $usedPatterns = [];
+
+    public function readSingleByWord(): void
+    {
+        $sql = "SELECT * FROM {$this->tableName} 
+                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID 
+                WHERE word = ?";
+
+        $statement = $this->connectionHandle
+            ->query($sql, [$this->word]);
+
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
+        if ($row) {
+            $this->word = $row['word'];
+            $this->hyphenatedWord = $row['result'];
+            $this->id = $row['id'];
+        }
+    }
 
     public function find(): bool
     {
@@ -25,7 +43,7 @@ class Word extends Model
 
     public function read(): object
     {
-        $sql = "SELECT word, result FROM {$this->tableName}
+        $sql = "SELECT * FROM {$this->tableName}
                 INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
                 ORDER BY {$this->tableName}.id DESC";
         $statement = $this->connectionHandle
@@ -35,11 +53,11 @@ class Word extends Model
 
     public function readSingle(): void
     {
-        $sql = "SELECT word, result FROM {$this->tableName}
+        $sql = "SELECT * FROM {$this->tableName}
                 INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
-                WHERE id = :id LIMIT 0, 1";
+                WHERE {$this->tableName}.id = ? LIMIT 0, 1";
         $statement = $this->connectionHandle
-            ->query($sql, [':id', $this->id]);
+            ->query($sql, [$this->id]);
 
         $row = $statement->fetch(\PDO::FETCH_ASSOC);
         $this->word = $row['word'];
@@ -70,6 +88,11 @@ class Word extends Model
                     [$this->hyphenatedWord, $this->word]
                 );
 
+            foreach ($this->usedPatterns as $pattern) {
+                if ($this->commitValidPattern($pattern))
+                    continue;
+            }
+
             $this->connectionHandle
                 ->getHandle()
                 ->commit();
@@ -95,5 +118,17 @@ class Word extends Model
             ->query($sql, [$this->id]);
 
         return $statement;
+    }
+
+    private function commitValidPattern(string $pattern): bool
+    {
+        $sql = "insert into valid_patterns (wordID, patternID) 
+                select w.id, p.id from words w 
+                inner join patterns p on p.pattern = ? and w.word = ?";
+        $statement = $this->connectionHandle
+            ->query($sql, [$pattern, $this->word]);
+        if ($statement)
+            return true;
+        return false;
     }
 }

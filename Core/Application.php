@@ -22,7 +22,7 @@ class Application
 
     private $argv;
     private $argc;
-    private $api = false;
+    private static $api = false;
 
     public static $settings;
 
@@ -44,7 +44,7 @@ class Application
     {
         $this->container = new Container();
 
-        if (!$this->api)
+        if (!self::$api)
             LoadTime::startMeasuring();
 
         $this->setInstance("config");
@@ -71,9 +71,14 @@ class Application
         $this->argc = $argc;
     }
 
+    public static function apiStatus(): bool
+    {
+        return self::$api;
+    }
+
     public function api(bool $status): void
     {
-        $this->api = $status;
+        self::$api = $status;
     }
 
     public function __destruct()
@@ -82,7 +87,7 @@ class Application
             ->write('DEFAULT_SOURCE',
                 self::$settings['DEFAULT_SOURCE'],
                 'config');
-        if (!$this->api) {
+        if (!self::$api) {
             LoadTime::endMeasuring();
 
             $this->logger

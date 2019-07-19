@@ -15,10 +15,18 @@ class Pattern extends Model
     public function find(): bool
     {
         $statement = $this->connectionHandle
-            ->query("SELECT id FROM patterns WHERE id = ?", [$this->id]);
+            ->query("SELECT id FROM {$this->tableName} WHERE id = ?", [$this->id]);
         if ($statement->rowCount() > 0)
             return true;
         return false;
+    }
+
+    public function count(): int
+    {
+        $statement = $this->connectionHandle
+            ->getHandle()
+            ->query("SELECT id FROM {$this->tableName}");
+        return $statement->rowCount();
     }
 
     public function read(): object

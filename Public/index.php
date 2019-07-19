@@ -30,16 +30,15 @@ switch ($uri[1]) {
                 $id
             );
         break;
-
     case 'word':
         $app->getInstance('wordController')
             ->processRequest(
                 $app->getInstance('wordsAPI'),
                 $method,
-                $id
+                $id,
+                $app->getInstance('hyphenation')
             );
         break;
-
     default:
         http_response_code(404);
         exit();

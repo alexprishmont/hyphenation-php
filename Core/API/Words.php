@@ -61,6 +61,7 @@ class Words implements APIInterface
     {
         $this->word->word = $data['word'];
         $this->word->hyphenatedWord = $data['hyphenated'];
+        $this->word->usedPatterns = $data['usedPatterns'];
         return $this->word
             ->create();
     }
