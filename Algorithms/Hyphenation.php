@@ -189,17 +189,11 @@ class Hyphenation implements HyphenationInterface
 
     private function getUsedPatterns(string $word): void
     {
-        $sql = "select patterns.pattern, patterns.id from patterns 
-                inner join valid_patterns vp on vp.patternID = id 
-                inner join words w on w.word = ? and w.id = vp.wordID";
-        $query = $this->db->query($sql, [$word]);
-        if ($query->rowCount() > 0) {
-            foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $data) {
-                $this->logger
-                    ->log(LogLevel::INFO,
-                        "Pattern {pattern} used for word {word}",
-                        ['pattern' => $data['pattern'], 'word' => $word]);
-            }
+        foreach ($this->wordModel->usedPatterns as $pattern) {
+            $this->logger
+                ->log(LogLevel::INFO,
+                    "Pattern {pattern} used for word {word}",
+                    ['pattern' => $pattern, 'word' => $word]);
         }
     }
 
