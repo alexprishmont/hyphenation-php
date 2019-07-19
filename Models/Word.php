@@ -117,7 +117,9 @@ class Word extends Model
         $statement = $this->connectionHandle
             ->query($sql, [$this->id]);
 
-        return $statement;
+        if ($statement)
+            return true;
+        return false;
     }
 
     private function commitValidPattern(string $pattern): bool
