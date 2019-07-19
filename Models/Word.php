@@ -77,13 +77,13 @@ class Word extends Model
 
             $this->connectionHandle
                 ->query(
-                    "INSERT INTO {$this->resultTable} (wordID) SELECT words.id FROM {$this->tableName} WHERE word = ?",
+                    "INSERT INTO {$this->resultTable} (wordID) SELECT {$this->tableName}.id FROM {$this->tableName} WHERE word = ?",
                     [$this->word]);
 
             $this->connectionHandle
                 ->query(
                     "UPDATE {$this->resultTable} 
-                        INNER JOIN {$this->tableName} ON words.id = results.wordID 
+                        INNER JOIN {$this->tableName} ON {$this->tableName}.id = {$this->resultTable}.wordID 
                         SET result = ? WHERE word = ?",
                     [$this->hyphenatedWord, $this->word]
                 );
@@ -125,7 +125,7 @@ class Word extends Model
     private function commitValidPattern(string $pattern): bool
     {
         $sql = "insert into valid_patterns (wordID, patternID) 
-                select w.id, p.id from words w 
+                select w.id, p.id from {$this->tableName} w 
                 inner join patterns p on p.pattern = ? and w.word = ?";
         $statement = $this->connectionHandle
             ->query($sql, [$pattern, $this->word]);
