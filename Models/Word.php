@@ -42,7 +42,7 @@ class Word extends Model
     public function find(): bool
     {
         $statement = $this->connectionHandle
-            ->query("SELECT id FROM {$this->tableName} WHERE id = ? LIMIT 0, 1", [$this->id]);
+            ->query("SELECT id FROM {$this->tableName} WHERE id = {$this->id} LIMIT 0, 1");
         if ($statement->rowCount() > 0)
             return true;
         return false;
@@ -78,21 +78,19 @@ class Word extends Model
                 ->getHandle()
                 ->beginTransaction();
 
-            $sql = "INSERT INTO `{$this->tableName}` (`word`) VALUES (?)";
+            $sql = "INSERT INTO `{$this->tableName}` (`word`) VALUES ('{$this->word}')";
             $this->connectionHandle
-                ->query($sql, [$this->word]);
+                ->query($sql);
 
             $this->connectionHandle
                 ->query(
-                    "INSERT INTO {$this->resultTable} (wordID) SELECT {$this->tableName}.id FROM {$this->tableName} WHERE word = ?",
-                    [$this->word]);
+                    "INSERT INTO {$this->resultTable} (wordID) SELECT {$this->tableName}.id FROM {$this->tableName} WHERE word = '{$this->word}'");
 
             $this->connectionHandle
                 ->query(
                     "UPDATE {$this->resultTable} 
                         INNER JOIN {$this->tableName} ON {$this->tableName}.id = {$this->resultTable}.wordID 
-                        SET result = ? WHERE word = ?",
-                    [$this->hyphenatedWord, $this->word]
+                        SET result = '{$this->hyphenatedWord}' WHERE word = '{$this->word}'"
                 );
 
             foreach ($this->usedPatterns as $pattern) {
@@ -112,18 +110,18 @@ class Word extends Model
 
     public function update(): bool
     {
-        $sql = "UPDATE `{$this->tableName}` SET `word` = :word WHERE `id` = :id";
+        $sql = "UPDATE `{$this->tableName}` SET `word` = '{$this->word}' WHERE `id` = {$this->id}";
         $statement = $this->connectionHandle
-            ->query($sql, [':word' => $this->word, ':id' => $this->id]);
+            ->query($sql);
 
         return $statement;
     }
 
     public function delete(): bool
     {
-        $sql = "DELETE FROM `{$this->tableName}` WHERE `id` = ?";
+        $sql = "DELETE FROM `{$this->tableName}` WHERE `id` = {$this->id}";
         $statement = $this->connectionHandle
-            ->query($sql, [$this->id]);
+            ->query($sql);
 
         if ($statement)
             return true;
@@ -134,9 +132,9 @@ class Word extends Model
     {
         $sql = "insert into valid_patterns (wordID, patternID) 
                 select w.id, p.id from {$this->tableName} w 
-                inner join patterns p on p.pattern = ? and w.word = ?";
+                inner join patterns p on p.pattern = {$pattern} and w.word = {$this->word}";
         $statement = $this->connectionHandle
-            ->query($sql, [$pattern, $this->word]);
+            ->query($sql);
         if ($statement)
             return true;
         return false;

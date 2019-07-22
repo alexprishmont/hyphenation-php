@@ -14,9 +14,25 @@ class Pattern extends Model
 
     public function find(): bool
     {
+
         $statement = $this->connectionHandle
-            ->query("SELECT id FROM {$this->tableName} WHERE id = ?", [$this->id]);
+            ->getHandle()->prepare("SELECT id FROM {$this->tableName} WHERE id = {$this->id}");
+
+        $statement->execute();
+
         if ($statement->rowCount() > 0)
+            return true;
+        return false;
+    }
+
+    public function findByPattern(): bool
+    {
+        $sql = "SELECT id FROM {$this->tableName} WHERE pattern = '{$this->pattern}' LIMIT 0, 1";
+        $stmt = $this->connectionHandle
+            ->getHandle()->prepare($sql);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0)
             return true;
         return false;
     }
@@ -31,17 +47,21 @@ class Pattern extends Model
 
     public function read(): object
     {
-        $sql = "SELECT id, pattern FROM `{$this->tableName}` ORDER BY id DESC";
+        $sql = "SELECT id, pattern FROM {$this->tableName} ORDER BY id DESC";
         $statement = $this->connectionHandle
-            ->query($sql);
+            ->getHandle()->prepare($sql);
+
+        $statement->execute();
+
         return $statement;
     }
 
     public function readSingle(): void
     {
-        $sql = "SELECT pattern FROM `{$this->tableName}` WHERE `id` = ? LIMIT 0, 1";
+        $sql = "SELECT pattern FROM `{$this->tableName}` WHERE `id` = {$this->id} LIMIT 0, 1";
         $statement = $this->connectionHandle
-            ->query($sql, [$this->id]);
+            ->getHandle()->prepare($sql);
+        $statement->execute();
 
         $row = $statement->fetch(\PDO::FETCH_ASSOC);
         $this->pattern = $row['pattern'];
@@ -49,9 +69,10 @@ class Pattern extends Model
 
     public function create(): bool
     {
-        $sql = "INSERT INTO `{$this->tableName}` (`pattern`) VALUES (?)";
+        $sql = "INSERT INTO `{$this->tableName}` (`pattern`) VALUES ('{$this->pattern}')";
         $statement = $this->connectionHandle
-            ->query($sql, [$this->pattern]);
+            ->getHandle()->prepare($sql);
+        $statement->execute();
 
         if ($statement)
             return true;
@@ -60,9 +81,10 @@ class Pattern extends Model
 
     public function update(): bool
     {
-        $sql = "UPDATE `{$this->tableName}` SET `pattern` = :pattern WHERE `id` = :id";
+        $sql = "UPDATE `{$this->tableName}` SET `pattern` = '{$this->pattern}' WHERE `id` = {$this->id}";
         $statement = $this->connectionHandle
-            ->query($sql, [':pattern' => $this->pattern, ':id' => $this->id]);
+            ->getHandle()->prepare($sql);
+        $statement->execute();
 
         if ($statement)
             return true;
@@ -71,9 +93,10 @@ class Pattern extends Model
 
     public function delete(): bool
     {
-        $sql = "DELETE FROM `{$this->tableName}` WHERE `id` = ?";
+        $sql = "DELETE FROM `{$this->tableName}` WHERE `id` = {$this->id}";
         $statement = $this->connectionHandle
-            ->query($sql, [$this->id]);
+            ->getHandle()->prepare($sql);
+        $statement->execute();
 
         if ($statement)
             return true;

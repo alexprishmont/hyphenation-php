@@ -40,7 +40,7 @@ class View
     {
         header($response['status_code_header']);
         if ($response['body']) {
-            echo json_encode($response['body']);
+            self::renderJson($response['body']);
         }
     }
 }

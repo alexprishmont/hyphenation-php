@@ -47,7 +47,7 @@ class PatternController extends Controller
 
     public function createPattern(array $data)
     {
-        if (!$this->validateData($data)) {
+        if (!$this->validateData($data) || $this->patternService->findByPattern($data['pattern'])) {
             PatternsView::invalidData();
             return;
         }

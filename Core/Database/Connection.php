@@ -97,8 +97,9 @@ class Connection implements DatabaseInterface
 
             $this->handle->query("SET FOREIGN_KEY_CHECKS=1");
 
-            $statement = $this->handle->prepare("insert into `patterns` (`pattern`) values (?)");
+            $statement = $this->handle->prepare("insert into `patterns` (`pattern`) values (:pattern)");
             foreach ($patterns as $pattern) {
+                $statement->bindParam(':pattern', $pattern, PDO::PARAM_STR, 250);
                 $statement->execute([$pattern]);
             }
 

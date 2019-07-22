@@ -76,8 +76,8 @@ class WordController
         ];
 
         $this->wordService->create($creationData);
+        WordsView::createdResponse();
         WordsView::renderJson([
-            "message" => "Word creation successfully proceeded.",
             "result" => "Result for word {$data['word']}: {$creationData['hyphenated']}"
         ]);
     }

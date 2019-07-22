@@ -39,11 +39,17 @@ class Application
     const FILE_SOURCE = 'file';
     const DB_SOURCE = 'database';
 
+    private $appSource;
+
     public function __construct(array $argv, int $argc)
     {
+        $this->appSource = PHP_SAPI;
+
         $this->container = new Container();
 
-        LoadTime::startMeasuring();
+        if ($this->appSource !== 'cli-server') {
+            LoadTime::startMeasuring();
+        }
 
         $this->setInstance("config");
         self::$settings = $this->getInstance("config")->get("config");
@@ -76,16 +82,18 @@ class Application
                 self::$settings['DEFAULT_SOURCE'],
                 'config');
 
-        LoadTime::endMeasuring();
+        if ($this->appSource !== 'cli-server') {
+            LoadTime::endMeasuring();
 
-        $this->logger
-            ->log(LogLevel::INFO,
-                "Script execution time {time} seconds.",
-                ['time' => LoadTime::getTime()]);
-        $this->logger
-            ->log(LogLevel::INFO,
-                "Script used {memory} of memory.",
-                ['memory' => Memory::get()]);
+            $this->logger
+                ->log(LogLevel::INFO,
+                    "Script execution time {time} seconds.",
+                    ['time' => LoadTime::getTime()]);
+            $this->logger
+                ->log(LogLevel::INFO,
+                    "Script used {memory} of memory.",
+                    ['memory' => Memory::get()]);
+        }
     }
 
     public function getInstance(string $instance): object
