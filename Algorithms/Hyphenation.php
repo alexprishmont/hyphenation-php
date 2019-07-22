@@ -17,6 +17,7 @@ use Models\Word;
 class Hyphenation implements HyphenationInterface
 {
     private $word;
+    private $validPatterns = [];
 
     private $cache;
     private $db;
@@ -76,13 +77,11 @@ class Hyphenation implements HyphenationInterface
     {
         $this->word = $word;
         $patterns = $this->getPatternsList();
-        $valid = $this->findValidPatterns($patterns);
-
-        $this->wordModel->usedPatterns = $valid;
+        $this->validPatterns = $this->findValidPatterns($patterns);
 
         $result = $this->addSyllableSymbols(
             $this->completeWordWithDigits(
-                $this->pushDigitsToWord($valid)
+                $this->pushDigitsToWord($this->validPatterns)
             )
         );
         return $result;
@@ -95,11 +94,12 @@ class Hyphenation implements HyphenationInterface
                                           Please import patterns.\n Use: php startup -import patterns');
         }
 
-        $this->wordModel->word = $word;
-        $this->wordModel->readSingleByWord();
-        $wordResult = $this->wordModel->hyphenatedWord;
+        $wordResult = $this->wordModel
+            ->id(0)
+            ->word($word)
+            ->read()['result'];
 
-        if ($wordResult !== '') {
+        if ($wordResult !== null) {
             if (!$this->cache->has($word)) {
                 $this->cache->set($word, $wordResult);
             }
@@ -114,10 +114,14 @@ class Hyphenation implements HyphenationInterface
 
     private function insertWordIntoDatabase(string $word): string
     {
-        $this->wordModel->word = $word;
-        $this->wordModel->hyphenatedWord = $this->getResult($word);
-        $this->wordModel->create();
-        return $this->wordModel->hyphenatedWord;
+        $this->wordModel
+            ->word($word)
+            ->hyphenated($this->getResult($word))
+            ->patterns($this->validPatterns)
+            ->create();
+        return $this->wordModel
+            ->word($word)
+            ->read()['result'];
     }
 
     private function addSyllableSymbols(string $completedWordWithDigits): string
@@ -187,7 +191,7 @@ class Hyphenation implements HyphenationInterface
 
     private function getUsedPatterns(string $word): void
     {
-        foreach ($this->wordModel->usedPatterns as $pattern) {
+        foreach ($this->wordModel->usedPatterns() as $pattern) {
             $this->logger
                 ->log(LogLevel::INFO,
                     "Pattern {pattern} used for word {word}",

@@ -3,25 +3,33 @@ declare(strict_types=1);
 
 namespace Controllers;
 
-use Core\API\Patterns;
 use Core\Controller;
+use Models\Pattern;
 use Views\PatternsView;
 
 class PatternController extends Controller
 {
     private $patternService;
 
-    public function __construct(Patterns $patternAPI)
+    public function __construct(Pattern $pattern)
     {
-        $this->patternService = $patternAPI;
+        $this->patternService = $pattern;
     }
 
     public function showAllPatterns()
     {
         if ($this->patternService->count() > 0) {
-            return PatternsView::renderJson(
-                $this->patternService->read()
-            );
+            $patterns = $this->patternService->read();
+            $resultArray = [];
+            $resultArray['data'] = [];
+            while ($data = $patterns->fetch(\PDO::FETCH_ASSOC)) {
+                $item = [
+                    "id" => $data['id'],
+                    "pattern" => $data['pattern']
+                ];
+                array_push($resultArray['data'], $item);
+            }
+            return PatternsView::renderJson($resultArray);
         }
         return PatternsView::renderJson([
             "message" => "No patterns found in database."
@@ -31,14 +39,22 @@ class PatternController extends Controller
     public function showSinglePattern(int $id)
     {
         if ($this->patternService->count() > 0) {
-            if (!$this->patternService->find($id)) {
+            $check = $this->patternService
+                ->id($id)
+                ->find();
+            if (!$check) {
                 return PatternsView::renderJson([
                     "message" => "Pattern with id: {$id} not found"
                 ]);
             }
-            return PatternsView::renderJson(
-                $this->patternService->readSingle($id)
-            );
+            return PatternsView::renderJson([
+                "data" => [
+                    "id" => $id,
+                    "pattern" => $this->patternService
+                        ->id($id)
+                        ->read()
+                ]
+            ]);
         }
         return PatternsView::renderJson([
             "message" => "No patterns found in database."
@@ -47,21 +63,45 @@ class PatternController extends Controller
 
     public function createPattern(array $data)
     {
-        if (!$this->validateData($data) || $this->patternService->findByPattern($data['pattern'])) {
+        if (!$this->validateData($data)) {
             PatternsView::invalidData();
             return;
         }
-        $this->patternService->create($data);
+
+        $check = $this->patternService
+            ->pattern($data['pattern'])
+            ->find();
+
+        if ($check) {
+            PatternsView::invalidData();
+            return;
+        }
+        $this->patternService
+            ->pattern($data['pattern'])
+            ->create();
         PatternsView::createdResponse();
     }
 
     public function deletePattern(int $id)
     {
-        if (!isset($id) || !$this->patternService->find($id)) {
+        if (!isset($id)) {
             PatternsView::invalidData();
             return;
         }
-        $this->patternService->delete($id);
+
+        $check = $this->patternService
+            ->id($id)
+            ->find();
+
+        if (!$check) {
+            PatternsView::invalidData();
+            return;
+        }
+
+        $this->patternService
+            ->id($id)
+            ->delete();
+
         PatternsView::renderJson([
             "message" => "Pattern {$id} deleted."
         ]);
@@ -69,20 +109,26 @@ class PatternController extends Controller
 
     public function updatePattern(int $id, array $data)
     {
-        if (!isset($id) ||
-            !$this->validateData($data) ||
-            !$this->patternService->find($id)) {
+        if (!isset($id) || !$this->validateData($data)) {
             PatternsView::invalidData();
             return;
         }
-        $pattern = $data['pattern'];
+
+        $check = $this->patternService
+            ->id($id)
+            ->find();
+
+        if (!$check) {
+            PatternsView::invalidData();
+            return;
+        }
+
         $this->patternService
-            ->update([
-                "id" => $id,
-                "pattern" => $pattern
-            ]);
+            ->id($id)
+            ->pattern($data['pattern'])
+            ->update();
         PatternsView::renderJson([
-            "message" => "Pattern {$id} updated. New value: {$pattern}"
+            "message" => "Pattern {$id} updated. New value {$data['pattern']}"
         ]);
     }
 

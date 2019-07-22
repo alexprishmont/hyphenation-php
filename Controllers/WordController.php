@@ -5,8 +5,8 @@ namespace Controllers;
 
 
 use Algorithms\Hyphenation;
-use Core\API\Patterns;
-use Core\API\Words;
+use Models\Pattern;
+use Models\Word;
 use Views\WordsView;
 
 class WordController
@@ -15,9 +15,9 @@ class WordController
     private $algorithmService;
     private $patternService;
 
-    public function __construct(Words $word,
+    public function __construct(Word $word,
                                 Hyphenation $algorithm,
-                                Patterns $pattern)
+                                Pattern $pattern)
     {
         $this->wordService = $word;
         $this->algorithmService = $algorithm;
@@ -27,9 +27,18 @@ class WordController
     public function showAllWords()
     {
         if ($this->wordService->count() > 0) {
-            return WordsView::renderJson(
-                $this->wordService->read()
-            );
+            $words = $this->wordService->read();
+            $resultArray = [];
+            $resultArray['data'] = [];
+            while ($data = $words->fetch(\PDO::FETCH_ASSOC)) {
+                $item = [
+                    "id" => $data['id'],
+                    "pattern" => $data['word'],
+                    "hyphenated" => $data['result']
+                ];
+                array_push($resultArray['data'], $item);
+            }
+            return WordsView::renderJson($resultArray);
         }
         return WordsView::renderJson([
             "message" => "No words found in database."
@@ -39,14 +48,21 @@ class WordController
     public function showSingleWord(int $id)
     {
         if ($this->wordService->count() > 0) {
-            if (!$this->wordService->find($id)) {
+            $check = $this->wordService
+                ->id($id)
+                ->find();
+            if (!$check) {
                 return WordsView::renderJson([
                     "message" => "Word with id: {$id} not found"
                 ]);
             }
-            return WordsView::renderJson(
-                $this->wordService->readSingle($id)
-            );
+            return WordsView::renderJson([
+                "data" => [
+                    "id" => $id,
+                    "word" => $this->wordService->id($id)->read()['word'],
+                    "hyphenated" => $this->wordService->id($id)->read()['result']
+                ]
+            ]);
         }
         return WordsView::renderJson([
             "message" => "No words found in database."
@@ -67,29 +83,41 @@ class WordController
             return;
         }
 
-        $creationData = [
-            "word" => $data['word'],
-            "hyphenated" => $this->algorithmService
-                ->getResult($data['word']),
-            "usedPatterns" => $this->algorithmService
-                ->getValidPatternsForWord($data['word'])
-        ];
+        $check = $this->wordService
+            ->word($data['word'])
+            ->find();
 
-        $this->wordService->create($creationData);
-        WordsView::createdResponse();
-        WordsView::renderJson([
-            "result" => "Result for word {$data['word']}: {$creationData['hyphenated']}"
-        ]);
-    }
-
-    public function deleteWord(int $id)
-    {
-        if (!$this->wordService->find($id)) {
+        if ($check) {
             WordsView::invalidData();
             return;
         }
 
-        $this->wordService->delete($id);
+        $hyphen = $this->algorithmService->getResult($data['word']);
+        $usedPatterns = $this->algorithmService->getValidPatternsForWord($data['word']);
+
+        $this->wordService
+            ->word($data['word'])
+            ->hyphenated($hyphen)
+            ->patterns($usedPatterns)
+            ->create();
+        WordsView::createdResponse();
+    }
+
+    public function deleteWord(int $id)
+    {
+        $check = $this->wordService
+            ->id($id)
+            ->find();
+
+        if (!$check) {
+            WordsView::invalidData();
+            return;
+        }
+
+        $this->wordService
+            ->id($id)
+            ->delete();
+
         WordsView::renderJson([
             "message" => "Word with id: {$id} deleted."
         ]);

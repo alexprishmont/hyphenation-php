@@ -11,7 +11,5 @@
   "mysql": "Core\\Database\\Connection",
   "migration": "Core\\Database\\Migration",
   "patternController": "Controllers\\PatternController",
-  "wordController": "Controllers\\WordController",
-  "patternsAPI": "Core\\API\\Patterns",
-  "wordsAPI": "Core\\API\\Words"
+  "wordController": "Controllers\\WordController"
 }

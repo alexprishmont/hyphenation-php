@@ -7,13 +7,43 @@ use Core\Model;
 
 class Word extends Model
 {
-    private $tableName = "words";
-    private $resultTable = "results";
+    private $tableName = 'words';
+    private $resultTable = 'results';
 
-    public $id = 0;
-    public $word = "";
-    public $hyphenatedWord = "";
-    public $usedPatterns = [];
+    private $id;
+    private $word;
+    private $hyphenatedWord;
+    private $usedPatterns;
+
+
+    public function id(int $id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function patterns(array $patterns)
+    {
+        $this->usedPatterns = $patterns;
+        return $this;
+    }
+
+    public function word(string $word)
+    {
+        $this->word = $word;
+        return $this;
+    }
+
+    public function hyphenated(string $hyphen)
+    {
+        $this->hyphenatedWord = $hyphen;
+        return $this;
+    }
+
+    public function usedPatterns()
+    {
+        return $this->usedPatterns;
+    }
 
     public function count(): int
     {
@@ -41,34 +71,67 @@ class Word extends Model
 
     public function find(): bool
     {
-        $statement = $this->connectionHandle
-            ->query("SELECT id FROM {$this->tableName} WHERE id = {$this->id} LIMIT 0, 1");
-        if ($statement->rowCount() > 0)
-            return true;
+        if ($this->id !== null) {
+            $statement = $this->connectionHandle
+                ->query("SELECT id FROM {$this->tableName} WHERE id = {$this->id} LIMIT 0, 1");
+            if ($statement->rowCount() > 0)
+                return true;
+            return false;
+        } else if ($this->word !== null) {
+            $statement = $this->connectionHandle
+                ->getHandle()
+                ->prepare("SELECT id FROM {$this->tableName} WHERE word = '{$this->word}' LIMIT 0, 1");
+            $statement->execute();
+            if ($statement->rowCount() > 0) {
+                return true;
+            }
+            return false;
+        }
         return false;
     }
 
-    public function read(): object
+    public function read()
     {
+        if ($this->word !== null) {
+            $sql = "SELECT * FROM {$this->tableName}
+                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
+                WHERE {$this->tableName}.word = '{$this->word}' LIMIT 0, 1";
+            $statement = $this->connectionHandle
+                ->getHandle()
+                ->prepare($sql);
+            $statement->execute();
+            $row = $statement->fetch(\PDO::FETCH_ASSOC);
+            $this->word = $row['word'];
+            $this->hyphenatedWord = $row['result'];
+
+            return [
+                "word" => $this->word,
+                "result" => $this->hyphenatedWord
+            ];
+        } else if ($this->id !== null) {
+            $sql = "SELECT * FROM {$this->tableName}
+                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
+                WHERE {$this->tableName}.id = '{$this->id}' LIMIT 0, 1";
+            $statement = $this->connectionHandle
+                ->getHandle()
+                ->prepare($sql);
+            $statement->execute();
+            $row = $statement->fetch(\PDO::FETCH_ASSOC);
+            $this->word = $row['word'];
+            $this->hyphenatedWord = $row['result'];
+
+            return [
+                "word" => $this->word,
+                "result" => $this->hyphenatedWord
+            ];
+        }
+
         $sql = "SELECT * FROM {$this->tableName}
                 INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
                 ORDER BY {$this->tableName}.id DESC";
         $statement = $this->connectionHandle
             ->query($sql);
         return $statement;
-    }
-
-    public function readSingle(): void
-    {
-        $sql = "SELECT * FROM {$this->tableName}
-                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
-                WHERE {$this->tableName}.id = ? LIMIT 0, 1";
-        $statement = $this->connectionHandle
-            ->query($sql, [$this->id]);
-
-        $row = $statement->fetch(\PDO::FETCH_ASSOC);
-        $this->word = $row['word'];
-        $this->hyphenatedWord = $row['result'];
     }
 
     public function create(): bool
@@ -104,7 +167,6 @@ class Word extends Model
                 ->commit();
             return true;
         } catch (\Exception $e) {
-            echo json_encode($e);
             return false;
         }
     }

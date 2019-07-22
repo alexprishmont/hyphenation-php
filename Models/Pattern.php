@@ -9,31 +9,42 @@ class Pattern extends Model
 {
     private $tableName = "patterns";
 
-    public $id;
-    public $pattern;
+    private $id;
+    private $pattern;
+
+    public function id(int $id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function pattern(string $pattern)
+    {
+        $this->pattern = $pattern;
+        return $this;
+    }
 
     public function find(): bool
     {
+        if ($this->pattern === null && $this->id !== null) {
+            $statement = $this->connectionHandle
+                ->getHandle()->prepare("SELECT id FROM {$this->tableName} WHERE id = {$this->id}");
+
+            $statement->execute();
+
+            if ($statement->rowCount() > 0) {
+                return true;
+            }
+            return false;
+        }
 
         $statement = $this->connectionHandle
-            ->getHandle()->prepare("SELECT id FROM {$this->tableName} WHERE id = {$this->id}");
-
+            ->getHandle()
+            ->prepare("SELECT id FROM {$this->tableName} WHERE pattern = '{$this->pattern}'");
         $statement->execute();
-
-        if ($statement->rowCount() > 0)
+        if ($statement->rowCount() > 0) {
             return true;
-        return false;
-    }
-
-    public function findByPattern(): bool
-    {
-        $sql = "SELECT id FROM {$this->tableName} WHERE pattern = '{$this->pattern}' LIMIT 0, 1";
-        $stmt = $this->connectionHandle
-            ->getHandle()->prepare($sql);
-        $stmt->execute();
-
-        if ($stmt->rowCount() > 0)
-            return true;
+        }
         return false;
     }
 
@@ -45,19 +56,17 @@ class Pattern extends Model
         return $statement->rowCount();
     }
 
-    public function read(): object
+    public function read()
     {
-        $sql = "SELECT id, pattern FROM {$this->tableName} ORDER BY id DESC";
-        $statement = $this->connectionHandle
-            ->getHandle()->prepare($sql);
+        if ($this->id === null) {
+            $sql = "SELECT id, pattern FROM {$this->tableName} ORDER BY id DESC";
+            $statement = $this->connectionHandle
+                ->getHandle()->prepare($sql);
 
-        $statement->execute();
+            $statement->execute();
+            return $statement;
+        }
 
-        return $statement;
-    }
-
-    public function readSingle(): void
-    {
         $sql = "SELECT pattern FROM `{$this->tableName}` WHERE `id` = {$this->id} LIMIT 0, 1";
         $statement = $this->connectionHandle
             ->getHandle()->prepare($sql);
@@ -65,6 +74,7 @@ class Pattern extends Model
 
         $row = $statement->fetch(\PDO::FETCH_ASSOC);
         $this->pattern = $row['pattern'];
+        return $this->pattern;
     }
 
     public function create(): bool
