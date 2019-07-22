@@ -5,7 +5,7 @@ namespace Core\Router;
 
 use Core\Router\Interfaces\RouterInterface;
 
-class Router implements RouterInterface
+class Route implements RouterInterface
 {
     private static $routes = [];
     private static $pathNotFound = null;

@@ -104,6 +104,7 @@ class Word extends Model
                 ->commit();
             return true;
         } catch (\Exception $e) {
+            echo json_encode($e);
             return false;
         }
     }
@@ -132,7 +133,7 @@ class Word extends Model
     {
         $sql = "insert into valid_patterns (wordID, patternID) 
                 select w.id, p.id from {$this->tableName} w 
-                inner join patterns p on p.pattern = {$pattern} and w.word = {$this->word}";
+                inner join patterns p on p.pattern = '{$pattern}' and w.word = '{$this->word}'";
         $statement = $this->connectionHandle
             ->query($sql);
         if ($statement)

@@ -42,8 +42,10 @@ class Application
 
     public function __construct(array $argv, int $argc)
     {
-        $this->timing = new Timing;
-        $this->timing->start();
+        if (PHP_SAPI === 'cli') {
+            $this->timing = new Timing;
+            $this->timing->start();
+        }
 
         $this->container = new Container();
 
@@ -78,16 +80,18 @@ class Application
                 self::$settings['DEFAULT_SOURCE'],
                 'config');
 
-        $this->timing->stop();
+        if (PHP_SAPI === 'cli') {
+            $this->timing->stop();
 
-        $this->logger
-            ->log(LogLevel::INFO,
-                "Script execution time {time} seconds.",
-                ['time' => $this->timing->printTiming()]);
-        $this->logger
-            ->log(LogLevel::INFO,
-                "Script used {memory} of memory.",
-                ['memory' => Memory::get()]);
+            $this->logger
+                ->log(LogLevel::INFO,
+                    "Script execution time {time} seconds.",
+                    ['time' => $this->timing->printTiming()]);
+            $this->logger
+                ->log(LogLevel::INFO,
+                    "Script used {memory} of memory.",
+                    ['memory' => Memory::get()]);
+        }
     }
 
     public function getInstance(string $instance): object

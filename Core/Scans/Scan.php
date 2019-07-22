@@ -15,7 +15,11 @@ class Scan
     public function __construct(FileCache $cache)
     {
         $this->cache = $cache;
-        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings), Tools::CACHE_DEFAULT_EXPIRATION, Tools::CACHE_DIR_MODE, Tools::CACHE_FILE_MODE);
+        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
+            Tools::CACHE_DEFAULT_EXPIRATION,
+            Tools::CACHE_DIR_MODE,
+            Tools::CACHE_FILE_MODE
+        );
     }
 
     public function readDataFromFile(string $src): array
@@ -26,6 +30,7 @@ class Scan
             $file = new SplFileObject($src);
             $data = [];
             foreach ($file as $data_num => $data_c) {
+                $data_c = trim(preg_replace('/\s\s+/', ' ', $data_c));
                 $data[] = $data_c;
             }
             $this->cache->set("patterns", $data);

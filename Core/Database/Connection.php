@@ -99,6 +99,7 @@ class Connection implements DatabaseInterface
 
             $statement = $this->handle->prepare("insert into `patterns` (`pattern`) values (:pattern)");
             foreach ($patterns as $pattern) {
+                $pattern = trim(preg_replace('/\s\s+/', ' ', $pattern));
                 $statement->bindParam(':pattern', $pattern, PDO::PARAM_STR, 250);
                 $statement->execute([$pattern]);
             }
