@@ -15,9 +15,15 @@ class Patterns implements APIInterface
         $this->pattern = $pattern;
     }
 
-    public function find(int $id) {
+    public function find(int $id)
+    {
         $this->pattern->id = $id;
         return $this->pattern->find();
+    }
+
+    public function count()
+    {
+        return $this->pattern->count();
     }
 
     public function read()
@@ -38,7 +44,7 @@ class Patterns implements APIInterface
             ];
             array_push($patternArray['data'], $patternItem);
         }
-        return json_encode($patternArray);
+        return $patternArray;
     }
 
     public function create(array $data): bool
@@ -58,10 +64,10 @@ class Patterns implements APIInterface
         if ($this->pattern->pattern === null)
             return false;
 
-        return json_encode([
+        return [
             "id" => $this->pattern->id,
             "pattern" => $this->pattern->pattern
-        ]);
+        ];
     }
 
     public function update(array $data): bool

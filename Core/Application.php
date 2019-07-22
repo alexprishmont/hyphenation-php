@@ -22,7 +22,6 @@ class Application
 
     private $argv;
     private $argc;
-    private static $api = false;
 
     public static $settings;
 
@@ -44,8 +43,7 @@ class Application
     {
         $this->container = new Container();
 
-        if (!self::$api)
-            LoadTime::startMeasuring();
+        LoadTime::startMeasuring();
 
         $this->setInstance("config");
         self::$settings = $this->getInstance("config")->get("config");
@@ -71,34 +69,23 @@ class Application
         $this->argc = $argc;
     }
 
-    public static function apiStatus(): bool
-    {
-        return self::$api;
-    }
-
-    public function api(bool $status): void
-    {
-        self::$api = $status;
-    }
-
     public function __destruct()
     {
         $this->getInstance('config')
             ->write('DEFAULT_SOURCE',
                 self::$settings['DEFAULT_SOURCE'],
                 'config');
-        if (!self::$api) {
-            LoadTime::endMeasuring();
 
-            $this->logger
-                ->log(LogLevel::INFO,
-                    "Script execution time {time} seconds.",
-                    ['time' => LoadTime::getTime()]);
-            $this->logger
-                ->log(LogLevel::INFO,
-                    "Script used {memory} of memory.",
-                    ['memory' => Memory::get()]);
-        }
+        LoadTime::endMeasuring();
+
+        $this->logger
+            ->log(LogLevel::INFO,
+                "Script execution time {time} seconds.",
+                ['time' => LoadTime::getTime()]);
+        $this->logger
+            ->log(LogLevel::INFO,
+                "Script used {memory} of memory.",
+                ['memory' => Memory::get()]);
     }
 
     public function getInstance(string $instance): object

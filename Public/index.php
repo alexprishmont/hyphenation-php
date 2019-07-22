@@ -2,45 +2,78 @@
 require_once("../Core/Autoloader.php");
 Core\Autoloader::register();
 
+use Core\Router\Router;
+
 $app = new Core\Application([], 0);
-$app->api(true);
 
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+Router::add('/', function () {
+    // TODO: homepage
+});
 
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = explode('/', $uri);
+Router::add('/pattern', function () {
+    global $app;
+    $controller = $app->getInstance('patternController');
+    return $controller->showAllPatterns();
+});
 
-$method = $_SERVER['REQUEST_METHOD'];
+Router::add('/pattern/([0-9]*)', function ($id) {
+    global $app;
+    $controller = $app->getInstance('patternController');
+    return $controller->showSinglePattern($id);
+});
 
-$id = 0;
-if (isset($uri[2])) {
-    $id = (int)$uri[2];
-}
+Router::add('/pattern', function () {
+    $data = (array)json_decode(
+        file_get_contents("php://input"),
+        true
+    );
+    global $app;
+    $controller = $app->getInstance('patternController');
+    return $controller->createPattern($data);
+}, 'post');
 
-switch ($uri[1]) {
-    case 'pattern':
-        $app->getInstance('patternController')
-            ->processRequest(
-                $app->getInstance('patternsAPI'),
-                $method,
-                $id
-            );
-        break;
-    case 'word':
-        $app->getInstance('wordController')
-            ->processRequest(
-                $app->getInstance('wordsAPI'),
-                $method,
-                $id,
-                $app->getInstance('hyphenation')
-            );
-        break;
-    default:
-        http_response_code(404);
-        exit();
-        break;
-}
+Router::add('/pattern/([0-9]*)', function ($id) {
+    $data = (array)json_decode(
+        file_get_contents("php://input"),
+        true
+    );
+    global $app;
+    $controller = $app->getInstance('patternController');
+    return $controller->updatePattern($id, $data);
+}, 'put');
+
+Router::add('/pattern/([0-9]*)', function ($id) {
+    global $app;
+    $controller = $app->getInstance('patternController');
+    return $controller->deletePattern($id);
+}, 'delete');
+
+Router::add('/word', function () {
+    global $app;
+    $controller = $app->getInstance('wordController');
+    return $controller->showAllWords();
+});
+
+Router::add('/word/([0-9]*)', function ($id) {
+    global $app;
+    $controller = $app->getInstance('wordController');
+    return $controller->showSingleWord($id);
+});
+
+Router::add('/word', function () {
+    $data = (array)json_decode(
+        file_get_contents("php://input"),
+        true
+    );
+    global $app;
+    $controller = $app->getInstance('wordController');
+    return $controller->createWord($data);
+}, 'post');
+
+Router::add('/word/([0-9]*)', function ($id) {
+    global $app;
+    $controller = $app->getInstance('wordController');
+    return $controller->deleteWord($id);
+}, 'delete');
+
+Router::run('/');

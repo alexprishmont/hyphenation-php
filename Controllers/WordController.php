@@ -3,136 +3,103 @@ declare(strict_types=1);
 
 namespace Controllers;
 
+
 use Algorithms\Hyphenation;
+use Core\API\Patterns;
 use Core\API\Words;
-use Core\Controller;
+use Views\WordsView;
 
-class WordController extends Controller
+class WordController
 {
-    private $id;
-    private $word;
-    private $hyphenation;
+    private $wordService;
+    private $algorithmService;
+    private $patternService;
 
-    public function processRequest(Words $word, string $method, int $id, Hyphenation $hyphen)
+    public function __construct(Words $word,
+                                Hyphenation $algorithm,
+                                Patterns $pattern)
     {
-        $this->id = $id;
-        $this->word = $word;
-        $this->hyphenation = $hyphen;
-        switch ($method) {
-            case 'GET':
-                if ($this->id === 0) {
-                    $response = [
-                        'status_code_header' => 'HTTP/1.1 200 OK',
-                        'body' => $this->word->read()
-                    ];
-                } else {
-                    if ($this->word->find($this->id)) {
-                        $response = [
-                            'status_code_header' => 'HTTP/1.1 200 OK',
-                            'body' => $this->word->readSingle($this->id)
-                        ];
-                    } else {
-                        $response = $this->notFoundResponse();
-                    }
-                }
-                break;
-            case 'POST':
-                $response = $this->createWordFromRequest();
-                break;
-            case 'DELETE':
-                $response = $this->deleteWord();
-                break;
-            default:
-                $response = $this->notFoundResponse();
-                break;
-        }
-        header($response['status_code_header']);
-        if ($response['body']) {
-            echo $response['body'];
-        }
+        $this->wordService = $word;
+        $this->algorithmService = $algorithm;
+        $this->patternService = $pattern;
     }
 
-    private function deleteWord(): array
+    public function showAllWords()
     {
-        if (!$this->word->find($this->id)) {
-            return $this->notFoundResponse();
+        if ($this->wordService->count() > 0) {
+            return WordsView::renderJson(
+                $this->wordService->read()
+            );
         }
-
-        if ($this->word->delete($this->id)) {
-            return [
-                'status_code_header' => 'HTTP/1.1 200 OK',
-                'body' => json_encode(
-                    ["message" => "Word [id: {$this->id}] successfully deleted."]
-                )
-            ];
-        } else {
-            return [
-                'status_code_header' => 'HTTP/1.1 404 Not Found',
-                'body' => json_encode(
-                    ["message" => "Error while trying to delete word. [id: {$this->id}]"]
-                )
-            ];
-        }
+        return WordsView::renderJson([
+            "message" => "No words found in database."
+        ]);
     }
 
-    private function createWordFromRequest(): array
+    public function showSingleWord(int $id)
     {
-        $input = (array)json_decode(
-            file_get_contents("php://input"),
-            true
-        );
+        if ($this->wordService->count() > 0) {
+            if (!$this->wordService->find($id)) {
+                return WordsView::renderJson([
+                    "message" => "Word with id: {$id} not found"
+                ]);
+            }
+            return WordsView::renderJson(
+                $this->wordService->readSingle($id)
+            );
+        }
+        return WordsView::renderJson([
+            "message" => "No words found in database."
+        ]);
+    }
 
-        if (!$this->validateInput($input))
-            return $this->unprocessableEntityResponse();
+    public function createWord(array $data)
+    {
+        if ($this->patternService->count() === 0) {
+            WordsView::renderJson([
+                "message" => "Cannot add new word as there is no patterns list imported."
+            ]);
+            return;
+        }
 
-        $hyphenated = $this->hyphenation->hyphenate($input['word']);
+        if (!$this->validateData($data)) {
+            WordsView::invalidData();
+            return;
+        }
 
-        $data = [
-            "word" => $input['word'],
-            "hyphenated" => $hyphenated,
-            "usedPatterns" => $this->hyphenation->getValidPatternsForWord($input['word'])
+        $creationData = [
+            "word" => $data['word'],
+            "hyphenated" => $this->algorithmService
+                ->getResult($data['word']),
+            "usedPatterns" => $this->algorithmService
+                ->getValidPatternsForWord($data['word'])
         ];
 
-        if ($this->word->create($data)) {
-            return [
-                'status_code_header' => 'HTTP/1.1 201 CREATED',
-                'body' => json_encode(
-                    [
-                        "message" =>
-                            "Word successfully hyphenated & added. [Word: {$input['word']} / Result: {$hyphenated}]"
-                    ]
-                )
-            ];
+        $this->wordService->create($creationData);
+        WordsView::renderJson([
+            "message" => "Word creation successfully proceeded.",
+            "result" => "Result for word {$data['word']}: {$creationData['hyphenated']}"
+        ]);
+    }
+
+    public function deleteWord(int $id)
+    {
+        if (!$this->wordService->find($id)) {
+            WordsView::invalidData();
+            return;
         }
-        return $this->notFoundResponse();
+
+        $this->wordService->delete($id);
+        WordsView::renderJson([
+            "message" => "Word with id: {$id} deleted."
+        ]);
     }
 
-    private function validateInput(array $data): bool
+    private function validateData(array $data): bool
     {
-        if (isset($data['word']))
-            return true;
-        return false;
-    }
-
-    private function unprocessableEntityResponse(): array
-    {
-        return [
-            'status_code_header' => 'HTTP/1.1 422 Unprocessable Entity',
-            'body' => json_encode([
-                "message" => "Wrong input."
-            ])
-        ];
-    }
-
-    private function notFoundResponse(): array
-    {
-        $response['status_code_header'] = 'HTTP/1.1 404 Not Found';
-        $response['body'] = null;
-        return [
-            'status_code_header' => 'HTTP/1.1 404 Not Found',
-            'body' => json_encode(
-                ["message" => "Such response method not found."]
-            )
-        ];
+        if (!isset($data['word'])) {
+            return false;
+        }
+        return true;
     }
 }

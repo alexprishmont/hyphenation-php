@@ -5,154 +5,92 @@ namespace Controllers;
 
 use Core\API\Patterns;
 use Core\Controller;
+use Views\PatternsView;
 
 class PatternController extends Controller
 {
-    private $id;
-    private $pattern;
+    private $patternService;
 
-    public function processRequest(Patterns $pattern, string $method, int $id)
+    public function __construct(Patterns $patternAPI)
     {
-        $this->id = $id;
-        $this->pattern = $pattern;
-        switch ($method) {
-            case 'GET':
-                if ($this->id === 0) {
-                    $response['body'] = $pattern->read();
-                    $response['status_code_header'] = 'HTTP/1.1 200 OK';
-                } else {
-                    if ($this->pattern->find($this->id)) {
-                        $response = [
-                            'status_code_header' => 'HTTP/1.1 200 OK',
-                            'body' => $this->pattern->readSingle($this->id)
-                        ];
-                    } else {
-                        $response = $this->notFoundResponse();
-                    }
-                }
-                break;
-            case 'POST':
-                $response = $this->createPatternFromRequest();
-                break;
-            case 'DELETE':
-                $response = $this->deletePattern();
-                break;
-            case 'PUT':
-                $response = $this->updatePattern();
-                break;
-            default:
-                $response = $this->notFoundResponse();
-                break;
-        }
-        header($response['status_code_header']);
-        if ($response['body']) {
-            echo $response['body'];
-        }
+        $this->patternService = $patternAPI;
     }
 
-    private function updatePattern(): array
+    public function showAllPatterns()
     {
-        $input = (array)json_decode(
-            file_get_contents('php://input'),
-            true
-        );
-
-        if (!$this->validateInputForUpdate($input)) {
-            return $this->unprocessableEntityResponse();
+        if ($this->patternService->count() > 0) {
+            return PatternsView::renderJson(
+                $this->patternService->read()
+            );
         }
-        $this->id = $input['id'];
-
-        if (!$this->pattern->find($this->id)) {
-            return $this->notFoundResponse();
-        }
-
-        $this->pattern->update($input);
-        return [
-            'status_code_header' => 'HTTP/1.1 200 OK',
-            'body' => json_encode(
-                ["message" => "Pattern [id: {$this->id}] successfully updated."]
-            )
-        ];
+        return PatternsView::renderJson([
+            "message" => "No patterns found in database."
+        ]);
     }
 
-    private function deletePattern(): array
+    public function showSinglePattern(int $id)
     {
-        if (!$this->pattern->find($this->id)) {
-            return $this->notFoundResponse();
+        if ($this->patternService->count() > 0) {
+            if (!$this->patternService->find($id)) {
+                return PatternsView::renderJson([
+                    "message" => "Pattern with id: {$id} not found"
+                ]);
+            }
+            return PatternsView::renderJson(
+                $this->patternService->readSingle($id)
+            );
         }
-
-        if ($this->pattern->delete($this->id))
-            return [
-                'status_code_header' => 'HTTP/1.1 200 OK',
-                'body' => json_encode(
-                    ["message" => "Pattern [id: {$this->id}] deleted."]
-                )
-            ];
-        else
-            return [
-                'status_code_header' => 'HTTP/1.1 404 Not Found',
-                'body' => json_encode(
-                    ["message" => "Error while trying to delete pattern. [id: {$this->id}]"]
-                )
-            ];
+        return PatternsView::renderJson([
+            "message" => "No patterns found in database."
+        ]);
     }
 
-    private function createPatternFromRequest(): array
+    public function createPattern(array $data)
     {
-        $input = (array)json_decode(
-            file_get_contents('php://input'),
-            true
-        );
-
-        if (!$this->validateInputForCreation($input)) {
-            return $this->unprocessableEntityResponse();
+        if (!$this->validateData($data)) {
+            PatternsView::invalidData();
+            return;
         }
-
-        $this->pattern->create($input);
-
-        $response = [
-            'status_code_header' => 'HTTP/1.1 201 CREATED',
-            'body' => json_encode(
-                ["message" => "New pattern successfully created."]
-            )
-        ];
-        return $response;
+        $this->patternService->create($data);
+        PatternsView::createdResponse();
     }
 
-    private function validateInputForUpdate(array $data): bool
+    public function deletePattern(int $id)
     {
-        if (!isset($data['pattern']) || !isset($data['id']))
-            return false;
-        return true;
+        if (!isset($id) || !$this->patternService->find($id)) {
+            PatternsView::invalidData();
+            return;
+        }
+        $this->patternService->delete($id);
+        PatternsView::renderJson([
+            "message" => "Pattern {$id} deleted."
+        ]);
     }
 
-    private function validateInputForCreation(array $data): bool
+    public function updatePattern(int $id, array $data)
+    {
+        if (!isset($id) ||
+            !$this->validateData($data) ||
+            !$this->patternService->find($id)) {
+            PatternsView::invalidData();
+            return;
+        }
+        $pattern = $data['pattern'];
+        $this->patternService
+            ->update([
+                "id" => $id,
+                "pattern" => $pattern
+            ]);
+        PatternsView::renderJson([
+            "message" => "Pattern {$id} updated. New value: {$pattern}"
+        ]);
+    }
+
+    private function validateData(array $data): bool
     {
         if (!isset($data['pattern'])) {
             return false;
         }
         return true;
-    }
-
-    private function unprocessableEntityResponse(): array
-    {
-        return [
-            'status_code_header' => 'HTTP/1.1 422 Unprocessable Entity',
-            'body' => json_encode([
-                "message" => "Wrong input."
-            ])
-        ];
-    }
-
-    private function notFoundResponse(): array
-    {
-        $response['status_code_header'] = 'HTTP/1.1 404 Not Found';
-        $response['body'] = null;
-        return [
-            'status_code_header' => 'HTTP/1.1 404 Not Found',
-            'body' => json_encode(
-                ["message" => "Such response method not found."]
-            )
-        ];
     }
 }

@@ -50,16 +50,14 @@ class Hyphenation implements HyphenationInterface
     {
         $this->word = $word;
 
-        if (Application::apiStatus()) {
-            return $this->getResult($word);
-        }
-
         if ($this->cache->has($word)) {
             return (string)$this->cache->get($word);
         }
 
-        if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
-            return $this->getResult($word);
+        if (Application::$settings['DEFAULT_SOURCE'] === Application::FILE_SOURCE) {
+            $result = $this->getResult($word);
+            $this->cache->set($word, $result);
+            return $result;
         }
 
         return $this->getFromDatabase($word);
@@ -74,18 +72,34 @@ class Hyphenation implements HyphenationInterface
         return $valid;
     }
 
+    public function getResult(string $word): string
+    {
+        $this->word = $word;
+        $patterns = $this->getPatternsList();
+        $valid = $this->findValidPatterns($patterns);
+
+        $this->wordModel->usedPatterns = $valid;
+
+        $result = $this->addSyllableSymbols(
+            $this->completeWordWithDigits(
+                $this->pushDigitsToWord($valid)
+            )
+        );
+        return $result;
+    }
+
     private function getFromDatabase(string $word): string
     {
-        if ($this->patternModel->count() == 0) {
-            throw new \Exception("There's no available patterns in database.\n 
-                                          Please import patterns.\n Use: php startup -import patterns");
+        if ($this->patternModel->count() === 0) {
+            throw new \Exception('There is no available patterns in database.\n 
+                                          Please import patterns.\n Use: php startup -import patterns');
         }
 
         $this->wordModel->word = $word;
         $this->wordModel->readSingleByWord();
         $wordResult = $this->wordModel->hyphenatedWord;
 
-        if ($wordResult !== "") {
+        if ($wordResult !== '') {
             if (!$this->cache->has($word)) {
                 $this->cache->set($word, $wordResult);
             }
@@ -104,22 +118,6 @@ class Hyphenation implements HyphenationInterface
         $this->wordModel->hyphenatedWord = $this->getResult($word);
         $this->wordModel->create();
         return $this->wordModel->hyphenatedWord;
-    }
-
-    private function getResult(string $word): string
-    {
-        $patterns = $this->getPatternsList();
-        $valid = $this->findValidPatterns($patterns);
-
-        $this->wordModel->usedPatterns = $valid;
-
-        $result = $this->addSyllableSymbols(
-            $this->completeWordWithDigits(
-                $this->pushDigitsToWord($valid)
-            )
-        );
-        $this->cache->set($word, $result);
-        return $result;
     }
 
     private function addSyllableSymbols(string $completedWordWithDigits): string

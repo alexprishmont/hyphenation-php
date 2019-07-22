@@ -21,6 +21,11 @@ class Words implements APIInterface
         return $this->word->find();
     }
 
+    public function count()
+    {
+        return $this->word->count();
+    }
+
     public function read()
     {
         $statement = $this->word->read();
@@ -39,7 +44,7 @@ class Words implements APIInterface
             ];
             array_push($wordArray['data'], $wordItem);
         }
-        return json_encode($wordArray);
+        return $wordArray;
     }
 
     public function readSingle(int $id)
@@ -50,11 +55,11 @@ class Words implements APIInterface
         if ($this->word->word === null || $this->word->hyphenatedWord === null)
             return false;
 
-        return json_encode([
+        return [
             'id' => $id,
             'word' => $this->word->word,
             'hyphenated' => $this->word->hyphenatedWord
-        ]);
+        ];
     }
 
     public function create(array $data): bool

@@ -12,7 +12,7 @@ class Tools
     {
         $replace = [];
         foreach ($context as $key => $val) {
-            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString')))
+            if (self::isB($val))
                 $replace['{'.$key.'}'] = $val;
         }
         return strtr($message, $replace);
@@ -24,5 +24,10 @@ class Tools
         assert(file_exists($cachePath));
         assert(is_writable($cachePath));
         return $cachePath;
+    }
+
+    private static function isB($val): bool
+    {
+        return !is_array($val) && (!is_object($val) || method_exists($val, '__toString'));
     }
 }

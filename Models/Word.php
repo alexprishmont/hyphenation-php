@@ -15,6 +15,13 @@ class Word extends Model
     public $hyphenatedWord = "";
     public $usedPatterns = [];
 
+    public function count(): int
+    {
+        $sql = "SELECT id FROM words";
+        $stmt = $this->connectionHandle->query($sql);
+        return $stmt->rowCount();
+    }
+
     public function readSingleByWord(): void
     {
         $sql = "SELECT * FROM {$this->tableName} 
@@ -89,8 +96,9 @@ class Word extends Model
                 );
 
             foreach ($this->usedPatterns as $pattern) {
-                if ($this->commitValidPattern($pattern))
+                if ($this->commitValidPattern($pattern)) {
                     continue;
+                }
             }
 
             $this->connectionHandle
