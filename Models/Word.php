@@ -72,58 +72,27 @@ class Word extends Model
     public function find(): bool
     {
         if ($this->id !== null) {
-            $statement = $this->connectionHandle
-                ->query("SELECT id FROM {$this->tableName} WHERE id = {$this->id} LIMIT 0, 1");
-            if ($statement->rowCount() > 0)
-                return true;
-            return false;
+            $sql = "SELECT id FROM {$this->tableName} WHERE id = {$this->id} LIMIT 0, 1";
         } else if ($this->word !== null) {
-            $statement = $this->connectionHandle
-                ->getHandle()
-                ->prepare("SELECT id FROM {$this->tableName} WHERE word = '{$this->word}' LIMIT 0, 1");
-            $statement->execute();
-            if ($statement->rowCount() > 0) {
-                return true;
-            }
-            return false;
+            $sql = "SELECT id FROM {$this->tableName} WHERE word = '{$this->word}' LIMIT 0, 1";
+        }
+
+        $statement = $this->connectionHandle
+            ->getHandle()
+            ->prepare($sql);
+
+        $statement->execute();
+
+        if ($statement->rowCount() > 0) {
+            return true;
         }
         return false;
     }
 
     public function read()
     {
-        if ($this->word !== null) {
-            $sql = "SELECT * FROM {$this->tableName}
-                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
-                WHERE {$this->tableName}.word = '{$this->word}' LIMIT 0, 1";
-            $statement = $this->connectionHandle
-                ->getHandle()
-                ->prepare($sql);
-            $statement->execute();
-            $row = $statement->fetch(\PDO::FETCH_ASSOC);
-            $this->word = $row['word'];
-            $this->hyphenatedWord = $row['result'];
-
-            return [
-                "word" => $this->word,
-                "result" => $this->hyphenatedWord
-            ];
-        } else if ($this->id !== null) {
-            $sql = "SELECT * FROM {$this->tableName}
-                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
-                WHERE {$this->tableName}.id = '{$this->id}' LIMIT 0, 1";
-            $statement = $this->connectionHandle
-                ->getHandle()
-                ->prepare($sql);
-            $statement->execute();
-            $row = $statement->fetch(\PDO::FETCH_ASSOC);
-            $this->word = $row['word'];
-            $this->hyphenatedWord = $row['result'];
-
-            return [
-                "word" => $this->word,
-                "result" => $this->hyphenatedWord
-            ];
+        if ($this->id !== null || $this->word !== null) {
+            return $this->getByWordOrID();
         }
 
         $sql = "SELECT * FROM {$this->tableName}
@@ -202,4 +171,36 @@ class Word extends Model
             return true;
         return false;
     }
+
+    private function getByWordOrID()
+    {
+        $sql = $this->getSQLForReading();
+        $statement = $this->connectionHandle
+            ->getHandle()
+            ->prepare($sql);
+        $statement->execute();
+        $row = $statement->fetch(\PDO::FETCH_ASSOC);
+        $this->word = $row['word'];
+        $this->hyphenatedWord = $row['result'];
+        return [
+            "word" => $this->word,
+            "result" => $this->hyphenatedWord
+        ];
+    }
+
+    private function getSQLForReading()
+    {
+        if ($this->word !== null) {
+            $sql = "SELECT * FROM {$this->tableName}
+                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
+                WHERE {$this->tableName}.word = '{$this->word}' LIMIT 0, 1";
+        } else if ($this->id !== null) {
+            $sql = "SELECT * FROM {$this->tableName}
+                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
+                WHERE {$this->tableName}.id = '{$this->id}' LIMIT 0, 1";
+        }
+
+        return $sql;
+    }
+
 }

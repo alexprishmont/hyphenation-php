@@ -23,11 +23,12 @@ class PatternController extends Controller
             $resultArray = [];
             $resultArray['data'] = [];
             while ($data = $patterns->fetch(\PDO::FETCH_ASSOC)) {
-                $item = [
-                    "id" => $data['id'],
-                    "pattern" => $data['pattern']
-                ];
-                array_push($resultArray['data'], $item);
+                array_push($resultArray['data'],
+                    [
+                        "id" => $data['id'],
+                        "pattern" => $data['pattern']
+                    ]
+                );
             }
             return PatternsView::renderJson($resultArray);
         }

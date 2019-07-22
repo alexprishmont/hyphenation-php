@@ -31,12 +31,13 @@ class WordController
             $resultArray = [];
             $resultArray['data'] = [];
             while ($data = $words->fetch(\PDO::FETCH_ASSOC)) {
-                $item = [
-                    "id" => $data['id'],
-                    "pattern" => $data['word'],
-                    "hyphenated" => $data['result']
-                ];
-                array_push($resultArray['data'], $item);
+                array_push($resultArray['data'],
+                    [
+                        "id" => $data['id'],
+                        "pattern" => $data['word'],
+                        "hyphenated" => $data['result']
+                    ]
+                );
             }
             return WordsView::renderJson($resultArray);
         }
