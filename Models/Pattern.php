@@ -27,21 +27,25 @@ class Pattern extends Model
     public function find(): bool
     {
         if ($this->pattern === null && $this->id !== null) {
-            $statement = $this->connectionHandle
-                ->getHandle()->prepare("SELECT id FROM {$this->tableName} WHERE id = {$this->id}");
-
-            $statement->execute();
+            $statement = $this->builder
+                ->table($this->tableName)
+                ->select(["id"])
+                ->from($this->tableName)
+                ->where(["id" => $this->id])
+                ->execute();
 
             if ($statement->rowCount() > 0) {
                 return true;
             }
             return false;
         }
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->select(['id'])
+            ->from($this->tableName)
+            ->where(['pattern' => $this->pattern])
+            ->execute();
 
-        $statement = $this->connectionHandle
-            ->getHandle()
-            ->prepare("SELECT id FROM {$this->tableName} WHERE pattern = '{$this->pattern}'");
-        $statement->execute();
         if ($statement->rowCount() > 0) {
             return true;
         }
@@ -50,27 +54,33 @@ class Pattern extends Model
 
     public function count(): int
     {
-        $statement = $this->connectionHandle
-            ->getHandle()
-            ->query("SELECT id FROM {$this->tableName}");
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->select(['id'])
+            ->from($this->tableName)
+            ->execute();
         return $statement->rowCount();
     }
 
     public function read()
     {
         if ($this->id === null) {
-            $sql = "SELECT id, pattern FROM {$this->tableName} ORDER BY id DESC";
-            $statement = $this->connectionHandle
-                ->getHandle()->prepare($sql);
-
-            $statement->execute();
+             $statement = $this->builder
+                 ->table($this->tableName)
+                 ->select(['id', 'pattern'])
+                 ->from($this->tableName)
+                 ->order('id', 'desc')
+                 ->execute();
             return $statement;
         }
 
-        $sql = "SELECT pattern FROM `{$this->tableName}` WHERE `id` = {$this->id} LIMIT 0, 1";
-        $statement = $this->connectionHandle
-            ->getHandle()->prepare($sql);
-        $statement->execute();
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->select(['pattern'])
+            ->from($this->tableName)
+            ->where(['id' => $this->id])
+            ->limit(['0', '1'])
+            ->execute();
 
         $row = $statement->fetch(\PDO::FETCH_ASSOC);
         $this->pattern = $row['pattern'];
@@ -79,10 +89,11 @@ class Pattern extends Model
 
     public function create(): bool
     {
-        $sql = "INSERT INTO `{$this->tableName}` (`pattern`) VALUES ('{$this->pattern}')";
-        $statement = $this->connectionHandle
-            ->getHandle()->prepare($sql);
-        $statement->execute();
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->insert(['pattern'])
+            ->values([$this->pattern])
+            ->execute();
 
         if ($statement)
             return true;
@@ -91,10 +102,12 @@ class Pattern extends Model
 
     public function update(): bool
     {
-        $sql = "UPDATE `{$this->tableName}` SET `pattern` = '{$this->pattern}' WHERE `id` = {$this->id}";
-        $statement = $this->connectionHandle
-            ->getHandle()->prepare($sql);
-        $statement->execute();
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->update()
+            ->set(['pattern' => $this->pattern])
+            ->where(['id' => $this->id])
+            ->execute();
 
         if ($statement)
             return true;
@@ -103,10 +116,11 @@ class Pattern extends Model
 
     public function delete(): bool
     {
-        $sql = "DELETE FROM `{$this->tableName}` WHERE `id` = {$this->id}";
-        $statement = $this->connectionHandle
-            ->getHandle()->prepare($sql);
-        $statement->execute();
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->delete()
+            ->where(['id' => $this->id])
+            ->execute();
 
         if ($statement)
             return true;

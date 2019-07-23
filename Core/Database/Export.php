@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace Core\Database;
 
-use Core\Application;
 use Core\Cache\FileCache;
-use Core\Tools;
+use Core\Database\Interfaces\ExportInterface;
 
-class Export
+class Export implements ExportInterface
 {
     private $connection;
     private $cache;

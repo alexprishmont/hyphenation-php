@@ -6,11 +6,10 @@ namespace Core\Scans;
 use Algorithms\StringHyphenation;
 use Core\Application;
 use Core\Cache\FileCache;
-use Core\Database\Connection;
 use Core\Exceptions\InvalidFlagException;
-use Core\Tools;
+use Core\Scans\Interfaces\StringScanInterface;
 
-class ScanString
+class ScanString implements StringScanInterface
 {
     private $algorithm;
     private $cache;

@@ -47,26 +47,21 @@ class Word extends Model
 
     public function count(): int
     {
-        $sql = "SELECT id FROM words";
-        $stmt = $this->connectionHandle
-            ->getHandle()
-            ->query($sql);
+        $stmt = $this->builder
+            ->table($this->tableName)
+            ->select(['id'])
+            ->from($this->tableName)
+            ->execute();
         return $stmt->rowCount();
     }
 
     public function find(): bool
     {
         if ($this->id !== null) {
-            $sql = "SELECT id FROM {$this->tableName} WHERE id = {$this->id} LIMIT 0, 1";
+            $statement = $this->findById();
         } else if ($this->word !== null) {
-            $sql = "SELECT id FROM {$this->tableName} WHERE word = '{$this->word}' LIMIT 0, 1";
+            $statement = $this->findByWord();
         }
-
-        $statement = $this->connectionHandle
-            ->getHandle()
-            ->prepare($sql);
-
-        $statement->execute();
 
         if ($statement->rowCount() > 0) {
             return true;
@@ -79,13 +74,15 @@ class Word extends Model
         if ($this->id !== null || $this->word !== null) {
             return $this->getByWordOrID();
         }
-
-        $sql = "SELECT * FROM {$this->tableName}
-                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
-                ORDER BY {$this->tableName}.id DESC";
-        $statement = $this->connectionHandle
-            ->getHandle()
-            ->query($sql);
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->select(['*'])
+            ->from()
+            ->inner()
+            ->join($this->resultTable)
+            ->on(['results.wordID' => 'words.id'])
+            ->order('words.id', 'desc')
+            ->execute();
         return $statement;
     }
 
@@ -96,23 +93,32 @@ class Word extends Model
                 ->getHandle()
                 ->beginTransaction();
 
-            $sql = "INSERT INTO `{$this->tableName}` (`word`) VALUES ('{$this->word}')";
-            $this->connectionHandle
-                ->getHandle()
-                ->query($sql);
+            $this->builder
+                ->table($this->tableName)
+                ->insert(['word'])
+                ->values([$this->word])
+                ->execute();
 
-            $this->connectionHandle
-                ->getHandle()
-                ->query(
-                    "INSERT INTO {$this->resultTable} (wordID) SELECT {$this->tableName}.id FROM {$this->tableName} WHERE word = '{$this->word}'");
 
-            $this->connectionHandle
-                ->getHandle()
-                ->query(
-                    "UPDATE {$this->resultTable} 
-                        INNER JOIN {$this->tableName} ON {$this->tableName}.id = {$this->resultTable}.wordID 
-                        SET result = '{$this->hyphenatedWord}' WHERE word = '{$this->word}'"
-                );
+            $selectID = $this->tableName . '.id';
+            $this->builder
+                ->table($this->resultTable)
+                ->insert(['wordID'])
+                ->select([$selectID])
+                ->from($this->tableName)
+                ->where(['word' => $this->word])
+                ->execute();
+
+            $this->builder
+                ->table($this->resultTable)
+                ->update()
+                ->inner()
+                ->join($this->tableName)
+                ->on(['words.id' => 'results.wordID'])
+                ->set(['result' => $this->hyphenatedWord])
+                ->where(['word' => $this->word])
+                ->execute();
+
 
             foreach ($this->usedPatterns as $pattern) {
                 if ($this->commitValidPattern($pattern)) {
@@ -124,27 +130,21 @@ class Word extends Model
                 ->getHandle()
                 ->commit();
             return true;
-        } catch (\Exception $e) {
+        } catch (\PDOException $e) {
+            $this->connectionHandle
+                ->getHandle()
+                ->rollBack();
             return false;
         }
     }
 
-    public function update(): bool
-    {
-        $sql = "UPDATE `{$this->tableName}` SET `word` = '{$this->word}' WHERE `id` = {$this->id}";
-        $statement = $this->connectionHandle
-            ->getHandle()
-            ->query($sql);
-
-        return $statement;
-    }
-
     public function delete(): bool
     {
-        $sql = "DELETE FROM `{$this->tableName}` WHERE `id` = {$this->id}";
-        $statement = $this->connectionHandle
-            ->getHandle()
-            ->query($sql);
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->delete()
+            ->where(['id' => $this->id])
+            ->execute();
 
         if ($statement)
             return true;
@@ -153,12 +153,19 @@ class Word extends Model
 
     private function commitValidPattern(string $pattern): bool
     {
-        $sql = "insert into valid_patterns (wordID, patternID) 
-                select w.id, p.id from {$this->tableName} w 
-                inner join patterns p on p.pattern = '{$pattern}' and w.word = '{$this->word}'";
-        $statement = $this->connectionHandle
-            ->getHandle()
-            ->query($sql);
+        $statement = $this->builder
+            ->table('valid_patterns')
+            ->insert(['wordID', 'patternID'])
+            ->select(['words.id', 'patterns.id'])
+            ->from($this->tableName)
+            ->inner()
+            ->join('patterns')
+            ->on([
+                'patterns.pattern' => "'$pattern'",
+                'words.word' => "'$this->word'"
+            ])
+            ->execute();
+
         if ($statement)
             return true;
         return false;
@@ -166,11 +173,7 @@ class Word extends Model
 
     private function getByWordOrID()
     {
-        $sql = $this->getSQLForReading();
-        $statement = $this->connectionHandle
-            ->getHandle()
-            ->prepare($sql);
-        $statement->execute();
+        $statement = $this->getStatement();
         $row = $statement->fetch(\PDO::FETCH_ASSOC);
         $this->word = $row['word'];
         $this->hyphenatedWord = $row['result'];
@@ -180,19 +183,57 @@ class Word extends Model
         ];
     }
 
-    private function getSQLForReading()
+    private function getStatement()
     {
         if ($this->word !== null) {
-            $sql = "SELECT * FROM {$this->tableName}
-                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
-                WHERE {$this->tableName}.word = '{$this->word}' LIMIT 0, 1";
+            $stmt = $this->builder
+                ->table($this->tableName)
+                ->select(['*'])
+                ->from($this->tableName)
+                ->inner()
+                ->join($this->resultTable)
+                ->on(['results.wordID' => 'words.id'])
+                ->where(['words.word' => $this->word])
+                ->limit(['0', '1'])
+                ->execute();
+            return $stmt;
         } else if ($this->id !== null) {
-            $sql = "SELECT * FROM {$this->tableName}
-                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
-                WHERE {$this->tableName}.id = '{$this->id}' LIMIT 0, 1";
+            $stmt = $this->builder
+                ->table($this->tableName)
+                ->select(['*'])
+                ->from($this->tableName)
+                ->inner()
+                ->join($this->resultTable)
+                ->on(['results.wordID' => 'words.id'])
+                ->where(['words.id' => $this->id])
+                ->limit(['0', '1'])
+                ->execute();
+            return $stmt;
         }
+    }
 
-        return $sql;
+    private function findById()
+    {
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->select(['id'])
+            ->from($this->tableName)
+            ->where(['id' => $this->id])
+            ->limit(['0', '1'])
+            ->execute();
+        return $statement;
+    }
+
+    private function findByWord()
+    {
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->select(['id'])
+            ->from($this->tableName)
+            ->where(['word' => $this->word])
+            ->limit(['0', '1'])
+            ->execute();
+        return $statement;
     }
 
 }

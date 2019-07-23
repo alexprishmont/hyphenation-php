@@ -11,5 +11,6 @@
   "import": "Core\\Database\\Import",
   "migration": "Core\\Database\\Migration",
   "patternController": "Controllers\\PatternController",
-  "wordController": "Controllers\\WordController"
+  "wordController": "Controllers\\WordController",
+  "queryBuilder": "Core\\Database\\QueryBuilder"
 }

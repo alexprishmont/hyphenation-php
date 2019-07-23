@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace Algorithms;
 
 use Algorithms\Interfaces\HyphenationInterface;
-use Core\Application;
 use Core\Cache\FileCache;
-use Core\Tools;
 
 class StringHyphenation implements HyphenationInterface
 {

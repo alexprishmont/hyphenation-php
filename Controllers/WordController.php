@@ -96,12 +96,17 @@ class WordController
         $hyphen = $this->algorithmService->getResult($data['word']);
         $usedPatterns = $this->algorithmService->getValidPatternsForWord($data['word']);
 
-        $this->wordService
+        $check = $this->wordService
             ->word($data['word'])
             ->hyphenated($hyphen)
             ->patterns($usedPatterns)
             ->create();
-        WordsView::createdResponse();
+
+        if ($check) {
+            WordsView::createdResponse();
+        } else {
+            echo WordsView::renderJson(["message" => "Something went wrong..."]);
+        }
     }
 
     public function deleteWord(int $id)

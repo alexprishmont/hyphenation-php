@@ -5,10 +5,10 @@ namespace Core\Scans;
 
 use Core\Application;
 use Core\Cache\FileCache;
-use Core\Tools;
+use Core\Scans\Interfaces\ScanInterface;
 use SplFileObject;
 
-class Scan
+class Scan implements ScanInterface
 {
     private $cache;
 

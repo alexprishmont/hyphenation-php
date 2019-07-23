@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core;
 
+use Core\Database\QueryBuilder;
 use Core\DI\Container;
 use Core\DI\DependenciesLoader;
 use Core\Exceptions\InvalidFlagException;
@@ -54,10 +55,10 @@ class Application
 
         $this->exceptionHandler = $this->getInstance("exceptionhandler");
 
-        @set_exception_handler([
+/*        @set_exception_handler([
             $this->exceptionHandler,
             'exceptionHandlerFunction'
-        ]);
+        ]);*/
 
         $this->setInstance("cacheController");
 

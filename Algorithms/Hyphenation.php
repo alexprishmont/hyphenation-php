@@ -10,7 +10,6 @@ use Core\Database\Export;
 use Core\Log\Logger;
 use Core\Log\LogLevel;
 use Core\Scans\Scan;
-use Core\Tools;
 use Models\Pattern;
 use Models\Word;
 
