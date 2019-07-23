@@ -37,8 +37,7 @@ class QueryBuilder implements BuilderInterface
     {
         $this->queryCondition .= "SELECT ";
         foreach ($columns as $column) {
-            $key = array_search($column, $columns);
-            if ($key !== sizeof($columns) - 1) {
+            if ($this->checkKeyPosition($columns, $column)) {
                 $this->queryCondition .= "{$column}, ";
                 continue;
             }
@@ -65,8 +64,7 @@ class QueryBuilder implements BuilderInterface
         $this->queryCondition .= " WHERE ";
         foreach ($columns as $key => $value) {
             $keysArray = array_keys($columns);
-            $keyPosition = array_search($key, $keysArray);
-            if ($keyPosition !== sizeof($keysArray) - 1) {
+            if ($this->checkKeyPosition($keysArray, $key)) {
                 $this->queryCondition .= "{$key} = {$value} AND ";
                 continue;
             }
@@ -89,8 +87,7 @@ class QueryBuilder implements BuilderInterface
         $this->queryCondition .= " INSERT INTO {$this->table} (";
 
         foreach ($values as $value) {
-            $valuePosition = array_search($value, $values);
-            if ($valuePosition !== sizeof($values) - 1) {
+            if ($this->checkKeyPosition($values, $value)) {
                 $this->queryCondition .= "{$value}, ";
                 continue;
             }
@@ -103,8 +100,7 @@ class QueryBuilder implements BuilderInterface
     {
         $this->queryCondition .= " VALUES (";
         foreach ($values as $value) {
-            $valuePosition = array_search($value, $values);
-            if ($valuePosition !== sizeof($values) - 1) {
+            if ($this->checkKeyPosition($values, $value)) {
                 $this->queryCondition .= "'{$value}', ";
                 continue;
             }
@@ -124,8 +120,7 @@ class QueryBuilder implements BuilderInterface
         $this->queryCondition .= " SET ";
         foreach ($values as $key => $value) {
             $keysArray = array_keys($values);
-            $keyPosition = array_search($key, $keysArray);
-            if ($keyPosition !== sizeof($keysArray) - 1) {
+            if ($this->checkKeyPosition($keysArray, $key)) {
                 $this->queryCondition .= "{$key} = '{$value}', ";
                 continue;
             }
@@ -138,8 +133,7 @@ class QueryBuilder implements BuilderInterface
     {
         $this->queryCondition .= " LIMIT ";
         foreach ($limits as $limit) {
-            $position = array_search($limit, $limits);
-            if ($position !== sizeof($limits) - 1) {
+            if ($this->checkKeyPosition($limits, $limit)) {
                 $this->queryCondition .= "{$limit}, ";
                 continue;
             }
@@ -171,8 +165,7 @@ class QueryBuilder implements BuilderInterface
         $this->queryCondition .= "ON ";
         foreach ($params as $key => $value) {
             $keyArray = array_keys($params);
-            $keyPosition = array_search($key, $keyArray);
-            if ($keyPosition !== sizeof($params) - 1) {
+            if ($this->checkKeyPosition($keyArray, $key)) {
                 $this->queryCondition .= "{$key} = {$value} AND ";
                 continue;
             }
@@ -193,5 +186,15 @@ class QueryBuilder implements BuilderInterface
     {
         $this->table = null;
         $this->queryCondition = null;
+    }
+
+
+    private function checkKeyPosition(array $values, $value)
+    {
+        $key = array_search($value, $values);
+        if ($key !== sizeof($values) - 1) {
+            return true;
+        }
+        return false;
     }
 }

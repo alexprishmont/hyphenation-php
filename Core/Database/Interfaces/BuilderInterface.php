@@ -17,4 +17,22 @@ interface BuilderInterface
     public function order(string $column, string $type);
 
     public function insert(array $values);
+
+    public function values(array $values);
+
+    public function update();
+
+    public function set(array $values);
+
+    public function limit(array $limits);
+
+    public function delete();
+
+    public function inner();
+
+    public function join(string $table);
+
+    public function on(array $params);
+
+    public function execute();
 }
