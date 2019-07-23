@@ -48,25 +48,10 @@ class Word extends Model
     public function count(): int
     {
         $sql = "SELECT id FROM words";
-        $stmt = $this->connectionHandle->query($sql);
+        $stmt = $this->connectionHandle
+            ->getHandle()
+            ->query($sql);
         return $stmt->rowCount();
-    }
-
-    public function readSingleByWord(): void
-    {
-        $sql = "SELECT * FROM {$this->tableName} 
-                INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID 
-                WHERE word = ?";
-
-        $statement = $this->connectionHandle
-            ->query($sql, [$this->word]);
-
-        $row = $statement->fetch(\PDO::FETCH_ASSOC);
-        if ($row) {
-            $this->word = $row['word'];
-            $this->hyphenatedWord = $row['result'];
-            $this->id = $row['id'];
-        }
     }
 
     public function find(): bool
@@ -99,6 +84,7 @@ class Word extends Model
                 INNER JOIN {$this->resultTable} ON {$this->tableName}.id = {$this->resultTable}.wordID
                 ORDER BY {$this->tableName}.id DESC";
         $statement = $this->connectionHandle
+            ->getHandle()
             ->query($sql);
         return $statement;
     }
@@ -112,13 +98,16 @@ class Word extends Model
 
             $sql = "INSERT INTO `{$this->tableName}` (`word`) VALUES ('{$this->word}')";
             $this->connectionHandle
+                ->getHandle()
                 ->query($sql);
 
             $this->connectionHandle
+                ->getHandle()
                 ->query(
                     "INSERT INTO {$this->resultTable} (wordID) SELECT {$this->tableName}.id FROM {$this->tableName} WHERE word = '{$this->word}'");
 
             $this->connectionHandle
+                ->getHandle()
                 ->query(
                     "UPDATE {$this->resultTable} 
                         INNER JOIN {$this->tableName} ON {$this->tableName}.id = {$this->resultTable}.wordID 
@@ -144,6 +133,7 @@ class Word extends Model
     {
         $sql = "UPDATE `{$this->tableName}` SET `word` = '{$this->word}' WHERE `id` = {$this->id}";
         $statement = $this->connectionHandle
+            ->getHandle()
             ->query($sql);
 
         return $statement;
@@ -153,6 +143,7 @@ class Word extends Model
     {
         $sql = "DELETE FROM `{$this->tableName}` WHERE `id` = {$this->id}";
         $statement = $this->connectionHandle
+            ->getHandle()
             ->query($sql);
 
         if ($statement)
@@ -166,6 +157,7 @@ class Word extends Model
                 select w.id, p.id from {$this->tableName} w 
                 inner join patterns p on p.pattern = '{$pattern}' and w.word = '{$this->word}'";
         $statement = $this->connectionHandle
+            ->getHandle()
             ->query($sql);
         if ($statement)
             return true;

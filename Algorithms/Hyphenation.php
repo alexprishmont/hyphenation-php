@@ -6,7 +6,7 @@ namespace Algorithms;
 use Algorithms\Interfaces\HyphenationInterface;
 use Core\Application;
 use Core\Cache\FileCache;
-use Core\Database\Connection;
+use Core\Database\Export;
 use Core\Log\Logger;
 use Core\Log\LogLevel;
 use Core\Scans\Scan;
@@ -20,25 +20,25 @@ class Hyphenation implements HyphenationInterface
     private $validPatterns = [];
 
     private $cache;
-    private $db;
+    private $export;
     private $logger;
     private $scan;
     private $wordModel;
     private $patternModel;
 
     public function __construct(FileCache $cache,
-                                Connection $db,
                                 Scan $scan,
                                 Logger $log,
                                 Word $wordModel,
-                                Pattern $patternModel)
+                                Pattern $patternModel,
+                                Export $export)
     {
-        $this->db = $db;
         $this->cache = $cache;
         $this->logger = $log;
         $this->scan = $scan;
         $this->wordModel = $wordModel;
         $this->patternModel = $patternModel;
+        $this->export = $export;
 
         $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
             Tools::CACHE_DEFAULT_EXPIRATION,
@@ -223,7 +223,7 @@ class Hyphenation implements HyphenationInterface
         if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
             $patterns = $this->scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
         } else if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
-            $patterns = $this->db->getPatterns();
+            $patterns = $this->export->extractPatternsFromDatabase();
         }
         return $patterns;
     }

@@ -14,13 +14,11 @@ class ScanString
 {
     private $algorithm;
     private $cache;
-    private $db;
 
-    public function __construct(StringHyphenation $stringAlgorithm, FileCache $cache, Connection $db)
+    public function __construct(StringHyphenation $stringAlgorithm, FileCache $cache)
     {
         $this->algorithm = $stringAlgorithm;
         $this->cache = $cache;
-        $this->db = $db;
 
         $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
             Tools::CACHE_DEFAULT_EXPIRATION,

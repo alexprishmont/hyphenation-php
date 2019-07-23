@@ -12,7 +12,7 @@ class Application
 {
     private $container;
 
-    private $mysql;
+    private $import;
     private $cacheController;
     private $exceptionHandler;
     private $hyphenation;
@@ -59,11 +59,10 @@ class Application
             'exceptionHandlerFunction'
         ]);
 
-        $this->setInstance("mysql");
         $this->setInstance("cacheController");
 
         $this->cacheController = $this->getInstance("cacheController");
-        $this->mysql = $this->getInstance("mysql");
+        $this->import = $this->getInstance("import");
         $this->hyphenation = $this->getInstance("hyphenation");
         $this->stringHyphenation = $this->getInstance("stringHyphenation");
         $this->fileHyphenation = $this->getInstance("fileHyphenation");
@@ -171,7 +170,12 @@ class Application
                     "Patterns would be loaded from {src}!",
                     ['src' => self::$settings['PATTERNS_SOURCE']]);
 
-            $this->mysql->importPatterns();
+            $patterns = $this->getInstance('scan')
+                ->readDataFromFile(self::$settings['PATTERNS_SOURCE']);
+
+            $this->import
+                ->patterns($patterns)
+                ->importPatterns();
         } else {
             $this->logger
                 ->log(LogLevel::ERROR,

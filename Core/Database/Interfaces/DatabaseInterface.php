@@ -1,7 +1,10 @@
 <?php
+
 namespace Core\Database\Interfaces;
 
 interface DatabaseInterface
 {
-    public function query(string $query, array $params = []);
+    public static function getInstanceOf();
+
+    public function getHandle();
 }

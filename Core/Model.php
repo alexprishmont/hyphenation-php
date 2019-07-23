@@ -2,14 +2,14 @@
 
 namespace Core;
 
-use Core\Database\Connection;
+use Core\Database\Singleton;
 
 class Model
 {
     protected $connectionHandle;
 
-    public function __construct(Connection $db)
+    public function __construct()
     {
-        $this->connectionHandle = $db;
+        $this->connectionHandle = Singleton::getInstanceOf();
     }
 }

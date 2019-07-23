@@ -8,7 +8,7 @@
   "config": "Core\\Config",
   "scan": "Core\\Scans\\Scan",
   "logger": "Core\\Log\\Logger",
-  "mysql": "Core\\Database\\Connection",
+  "import": "Core\\Database\\Import",
   "migration": "Core\\Database\\Migration",
   "patternController": "Controllers\\PatternController",
   "wordController": "Controllers\\WordController"
