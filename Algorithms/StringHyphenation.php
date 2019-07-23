@@ -13,16 +13,10 @@ class StringHyphenation implements HyphenationInterface
     private $algorithm;
     private $cache;
 
-    public function __construct(Hyphenation $algorithm, FileCache $cache)
+    public function __construct(Hyphenation $algorithm)
     {
         $this->algorithm = $algorithm;
-        $this->cache = $cache;
-
-        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
-            Tools::CACHE_DEFAULT_EXPIRATION,
-            Tools::CACHE_DIR_MODE,
-            Tools::CACHE_FILE_MODE
-        );
+        $this->cache = FileCache::getInstanceOf();
     }
 
     public function hyphenate(string $string): string

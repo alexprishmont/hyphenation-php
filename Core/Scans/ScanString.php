@@ -15,16 +15,10 @@ class ScanString
     private $algorithm;
     private $cache;
 
-    public function __construct(StringHyphenation $stringAlgorithm, FileCache $cache)
+    public function __construct(StringHyphenation $stringAlgorithm)
     {
         $this->algorithm = $stringAlgorithm;
-        $this->cache = $cache;
-
-        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
-            Tools::CACHE_DEFAULT_EXPIRATION,
-            Tools::CACHE_DIR_MODE,
-            Tools::CACHE_FILE_MODE
-        );
+        $this->cache = FileCache::getInstanceOf();
     }
 
     public function hyphenate(string $src): string

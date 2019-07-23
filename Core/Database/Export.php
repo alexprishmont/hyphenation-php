@@ -12,16 +12,11 @@ class Export
     private $connection;
     private $cache;
 
-    public function __construct(FileCache $cache)
+    public function __construct()
     {
         $this->connection = Singleton::getInstanceOf();
-        $this->cache = $cache;
+        $this->cache = FileCache::getInstanceOf();
 
-        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
-            Tools::CACHE_DEFAULT_EXPIRATION,
-            Tools::CACHE_DIR_MODE,
-            Tools::CACHE_FILE_MODE
-        );
     }
 
     public function extractPatternsFromDatabase()

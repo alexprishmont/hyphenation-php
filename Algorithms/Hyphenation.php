@@ -26,25 +26,20 @@ class Hyphenation implements HyphenationInterface
     private $wordModel;
     private $patternModel;
 
-    public function __construct(FileCache $cache,
-                                Scan $scan,
+    public function __construct(Scan $scan,
                                 Logger $log,
                                 Word $wordModel,
                                 Pattern $patternModel,
                                 Export $export)
     {
-        $this->cache = $cache;
+        $this->cache = FileCache::getInstanceOf();
         $this->logger = $log;
         $this->scan = $scan;
         $this->wordModel = $wordModel;
         $this->patternModel = $patternModel;
         $this->export = $export;
 
-        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
-            Tools::CACHE_DEFAULT_EXPIRATION,
-            Tools::CACHE_DIR_MODE,
-            Tools::CACHE_FILE_MODE
-        );
+
     }
 
     public function hyphenate(string $word): string

@@ -12,14 +12,9 @@ class Scan
 {
     private $cache;
 
-    public function __construct(FileCache $cache)
+    public function __construct()
     {
-        $this->cache = $cache;
-        $this->cache->setup(Tools::getDefaultCachePath(Application::$settings),
-            Tools::CACHE_DEFAULT_EXPIRATION,
-            Tools::CACHE_DIR_MODE,
-            Tools::CACHE_FILE_MODE
-        );
+        $this->cache = FileCache::getInstanceOf();
     }
 
     public function readDataFromFile(string $src): array

@@ -2,8 +2,10 @@
 
 namespace Core\Cache;
 
+use Core\Application;
 use Core\Cache\Interfaces\CacheInterface;
 use Core\Exceptions\InvalidArgumentException;
+use Core\Tools;
 use DateInterval;
 
 class FileCache implements CacheInterface
@@ -14,8 +16,9 @@ class FileCache implements CacheInterface
     private $dirMode;
     private $defaultTTL;
     private $fileMode;
+    private static $instance;
 
-    public function setup($cachePath, $defaultTTL, $dirMode = 0775, $fileMode = 0664)
+    public function __construct($cachePath, $defaultTTL, $dirMode = 0775, $fileMode = 0664)
     {
         $this->defaultTTL = $defaultTTL;
         $this->dirMode = $dirMode;
@@ -33,6 +36,17 @@ class FileCache implements CacheInterface
             throw new InvalidArgumentException("Cache path is not writable: {$cachePath}");
 
         $this->cachePath = $path;
+    }
+
+    public static function getInstanceOf()
+    {
+        if (!self::$instance) {
+            self::$instance = new FileCache(Tools::getDefaultCachePath(Application::$settings),
+                Tools::CACHE_DEFAULT_EXPIRATION,
+                Tools::CACHE_DIR_MODE,
+                Tools::CACHE_FILE_MODE);
+        }
+        return self::$instance;
     }
 
     public function get($key, $default = null)
