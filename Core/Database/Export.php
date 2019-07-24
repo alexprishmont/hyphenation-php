@@ -10,12 +10,20 @@ class Export implements ExportInterface
 {
     private $connection;
     private $cache;
+    private static $instance;
 
     public function __construct()
     {
         $this->connection = Singleton::getInstanceOf();
         $this->cache = FileCache::getInstanceOf();
+    }
 
+    public static function getInstanceOf()
+    {
+        if (!self::$instance) {
+            self::$instance = new Export();
+        }
+        return self::$instance;
     }
 
     public function extractPatternsFromDatabase()

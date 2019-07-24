@@ -11,7 +11,7 @@ class StringHyphenation implements HyphenationInterface
     private $algorithm;
     private $cache;
 
-    public function __construct(Hyphenation $algorithm)
+    public function __construct(Proxy $algorithm)
     {
         $this->algorithm = $algorithm;
         $this->cache = FileCache::getInstanceOf();

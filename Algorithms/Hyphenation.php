@@ -4,73 +4,35 @@ declare(strict_types=1);
 namespace Algorithms;
 
 use Algorithms\Interfaces\HyphenationInterface;
-use Core\Application;
-use Core\Cache\FileCache;
-use Core\Database\Export;
-use Core\Log\Logger;
-use Core\Log\LogLevel;
-use Core\Scans\Scan;
-use Models\Pattern;
-use Models\Word;
 
 class Hyphenation implements HyphenationInterface
 {
     private $word;
     private $validPatterns = [];
+    private $patterns = [];
 
-    private $cache;
-    private $export;
-    private $logger;
-    private $scan;
-    private $wordModel;
-    private $patternModel;
-
-    public function __construct(Scan $scan,
-                                Logger $log,
-                                Word $wordModel,
-                                Pattern $patternModel,
-                                Export $export)
+    public function __construct(array $patternsList)
     {
-        $this->cache = FileCache::getInstanceOf();
-        $this->logger = $log;
-        $this->scan = $scan;
-        $this->wordModel = $wordModel;
-        $this->patternModel = $patternModel;
-        $this->export = $export;
-
-
+        $this->patterns = $patternsList;
     }
 
     public function hyphenate(string $word): string
     {
         $this->word = $word;
-
-        if ($this->cache->has($word)) {
-            return (string)$this->cache->get($word);
-        }
-
-        if (Application::$settings['DEFAULT_SOURCE'] === Application::FILE_SOURCE) {
-            $result = $this->getResult($word);
-            $this->cache->set($word, $result);
-            return $result;
-        }
-
-        return $this->getFromDatabase($word);
+        return $this->getResult($word);
     }
 
     public function getValidPatternsForWord(string $word): array
     {
         $this->word = $word;
-        $valid = $this->findValidPatterns(
-            $this->getPatternsList()
-        );
+        $valid = $this->findValidPatterns($this->patterns);
         return $valid;
     }
 
     public function getResult(string $word): string
     {
         $this->word = $word;
-        $patterns = $this->getPatternsList();
+        $patterns = $this->patterns;
         $this->validPatterns = $this->findValidPatterns($patterns);
 
         $result = $this->addSyllableSymbols(
@@ -79,43 +41,6 @@ class Hyphenation implements HyphenationInterface
             )
         );
         return $result;
-    }
-
-    private function getFromDatabase(string $word): string
-    {
-        if ($this->patternModel->count() === 0) {
-            throw new \Exception('There is no available patterns in database.\n 
-                                          Please import patterns.\n Use: php startup -import patterns');
-        }
-
-        $wordResult = $this->wordModel
-            ->id(0)
-            ->word($word)
-            ->read()['result'];
-
-        if ($wordResult !== null) {
-            if (!$this->cache->has($word)) {
-                $this->cache->set($word, $wordResult);
-            }
-            return $wordResult;
-        }
-
-        $wordResult = $this->insertWordIntoDatabase($word);
-        $this->cache->set($word, $wordResult);
-        $this->getUsedPatterns($word);
-        return $wordResult;
-    }
-
-    private function insertWordIntoDatabase(string $word): string
-    {
-        $this->wordModel
-            ->word($word)
-            ->hyphenated($this->getResult($word))
-            ->patterns($this->validPatterns)
-            ->create();
-        return $this->wordModel
-            ->word($word)
-            ->read()['result'];
     }
 
     private function addSyllableSymbols(string $completedWordWithDigits): string
@@ -183,16 +108,6 @@ class Hyphenation implements HyphenationInterface
         return trim(preg_replace("/\s+/", " ", $cleanString));
     }
 
-    private function getUsedPatterns(string $word): void
-    {
-        foreach ($this->wordModel->usedPatterns() as $pattern) {
-            $this->logger
-                ->log(LogLevel::INFO,
-                    "Pattern {pattern} used for word {word}",
-                    ['pattern' => $pattern, 'word' => $word]);
-        }
-    }
-
     private function findValidPatterns(array $patterns): array
     {
         $validPatterns = [];
@@ -209,17 +124,4 @@ class Hyphenation implements HyphenationInterface
         }
         return $validPatterns;
     }
-
-
-    private function getPatternsList(): array
-    {
-        $patterns = [];
-        if (Application::$settings['DEFAULT_SOURCE'] == Application::FILE_SOURCE) {
-            $patterns = $this->scan->readDataFromFile(Application::$settings['PATTERNS_SOURCE']);
-        } else if (Application::$settings['DEFAULT_SOURCE'] == Application::DB_SOURCE) {
-            $patterns = $this->export->extractPatternsFromDatabase();
-        }
-        return $patterns;
-    }
-
 }

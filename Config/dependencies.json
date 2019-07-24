@@ -12,5 +12,6 @@
   "migration": "Core\\Database\\Migration",
   "patternController": "Controllers\\PatternController",
   "wordController": "Controllers\\WordController",
-  "queryBuilder": "Core\\Database\\QueryBuilder"
+  "queryBuilder": "Core\\Database\\QueryBuilder",
+  "proxy": "Algorithms\\Proxy"
 }
