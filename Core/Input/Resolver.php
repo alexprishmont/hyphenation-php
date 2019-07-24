@@ -13,6 +13,15 @@ class Resolver implements ResolverInterface
 {
     private static $objectName;
 
+    private const ALLOWED_OBJECTS = [
+        '-word' => 'proxy',
+        '-sentence' => 'stringHyphenation',
+        '-file' => 'fileHyphenation',
+        '-reset' => 'cacheController',
+        '-import' => 'import',
+        '-migrate' => 'migration'
+    ];
+
     public static function resolve(string $flag)
     {
         if (!Validator::validateFlag($flag)) {
@@ -67,25 +76,10 @@ class Resolver implements ResolverInterface
 
     private static function getObjectName(string $method): string
     {
-        switch ($method) {
-            case '-word':
-                return 'proxy';
-                break;
-            case '-sentence':
-                return 'stringHyphenation';
-                break;
-            case '-file':
-                return 'fileHyphenation';
-                break;
-            case '-reset':
-                return 'cacheController';
-                break;
-            case '-import':
-                return 'import';
-                break;
-            case '-migrate':
-                return 'migration';
-                break;
+        foreach (self::ALLOWED_OBJECTS as $key => $value) {
+            if ($key === $method) {
+                return $value;
+            }
         }
     }
 }
