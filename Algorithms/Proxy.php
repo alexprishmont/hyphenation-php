@@ -49,13 +49,13 @@ class Proxy implements HyphenationInterface
         $hyphenation = new Hyphenation($this->getPatterns());
         $result = $hyphenation->hyphenate($word);
 
-        $this->cache->set($word, $result);
         $this->wordModel
             ->word($word)
             ->hyphenated($result)
             ->patterns($hyphenation->getValidPatternsForWord($word))
             ->create();
 
+        $this->cache->set($word, $result);
         return $result;
     }
 

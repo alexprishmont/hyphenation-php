@@ -1,7 +1,7 @@
 {
   "hyphenation": "Algorithms\\Hyphenation",
   "stringHyphenation": "Algorithms\\StringHyphenation",
-  "fileHyphenation": "Core\\Scans\\ScanString",
+  "fileHyphenation": "Algorithms\\FileHyphenation",
   "exceptionhandler": "Core\\Exceptions\\ExceptionHandler",
   "cache": "Core\\Cache\\FileCache",
   "cacheController": "Core\\Cache\\Cache",

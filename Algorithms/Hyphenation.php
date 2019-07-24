@@ -66,8 +66,9 @@ class Hyphenation implements HyphenationInterface
         $completedWordWithDigits = "";
         foreach (str_split($this->word) as $i => $char) {
             $completedWordWithDigits .= $char;
-            if (isset($digitsInWord[$i]))
+            if (isset($digitsInWord[$i])) {
                 $completedWordWithDigits .= $digitsInWord[$i];
+            }
         }
         return $completedWordWithDigits;
     }

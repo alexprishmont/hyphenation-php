@@ -35,7 +35,7 @@ class QueryBuilder implements BuilderInterface
 
     public function select(array $columns)
     {
-        $this->queryCondition .= 'SELECT ';
+        $this->queryCondition .= ' SELECT ';
         foreach ($columns as $column) {
             if ($this->checkKeyPosition($columns, $column)) {
                 $this->queryCondition .= $column . ', ';
@@ -162,7 +162,7 @@ class QueryBuilder implements BuilderInterface
 
     public function on(array $params)
     {
-        $this->queryCondition .= 'ON ';
+        $this->queryCondition .= ' ON ';
         foreach ($params as $key => $value) {
             $keyArray = array_keys($params);
             if ($this->checkKeyPosition($keyArray, $key)) {

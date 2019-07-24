@@ -4,17 +4,13 @@ declare(strict_types=1);
 namespace Algorithms;
 
 use Algorithms\Interfaces\HyphenationInterface;
-use Core\Cache\FileCache;
-
 class StringHyphenation implements HyphenationInterface
 {
     private $algorithm;
-    private $cache;
 
     public function __construct(Proxy $algorithm)
     {
         $this->algorithm = $algorithm;
-        $this->cache = FileCache::getInstanceOf();
     }
 
     public function hyphenate(string $string): string
