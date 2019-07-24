@@ -31,10 +31,10 @@ class Application
 
         $this->container = new Container();
 
-        $this->setInstance("config");
-        self::$settings = $this->getInstance("config")->get("config");
+        $this->setInstance('config');
+        self::$settings = $this->getInstance('config')->get('config');
 
-        $this->exceptionHandler = $this->getInstance("exceptionhandler");
+        $this->exceptionHandler = $this->getInstance('exceptionhandler');
 
         @set_exception_handler([
             $this->exceptionHandler,
@@ -59,11 +59,11 @@ class Application
 
             $this->logger
                 ->log(LogLevel::INFO,
-                    "Script execution time {time} seconds.",
+                    'Script execution time {time} seconds.',
                     ['time' => $this->timing->printTiming()]);
             $this->logger
                 ->log(LogLevel::INFO,
-                    "Script used {memory} of memory.",
+                    'Script used {memory} of memory.',
                     ['memory' => Memory::get()]);
         }
     }

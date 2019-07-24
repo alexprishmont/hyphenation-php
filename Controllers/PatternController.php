@@ -25,15 +25,15 @@ class PatternController extends Controller
             while ($data = $patterns->fetch(\PDO::FETCH_ASSOC)) {
                 array_push($resultArray['data'],
                     [
-                        "id" => $data['id'],
-                        "pattern" => $data['pattern']
+                        'id' => $data['id'],
+                        'pattern' => $data['pattern']
                     ]
                 );
             }
             return PatternsView::renderJson($resultArray);
         }
         return PatternsView::renderJson([
-            "message" => "No patterns found in database."
+            'message' => 'No patterns found in database.'
         ]);
     }
 
@@ -45,20 +45,20 @@ class PatternController extends Controller
                 ->find();
             if (!$check) {
                 return PatternsView::renderJson([
-                    "message" => "Pattern with id: {$id} not found"
+                    'message' => 'Pattern with id: ' . $id . ' not found'
                 ]);
             }
             return PatternsView::renderJson([
-                "data" => [
-                    "id" => $id,
-                    "pattern" => $this->patternService
+                'data' => [
+                    'id' => $id,
+                    'pattern' => $this->patternService
                         ->id($id)
                         ->read()
                 ]
             ]);
         }
         return PatternsView::renderJson([
-            "message" => "No patterns found in database."
+            'message' => 'No patterns found in database.'
         ]);
     }
 
@@ -104,7 +104,7 @@ class PatternController extends Controller
             ->delete();
 
         PatternsView::renderJson([
-            "message" => "Pattern {$id} deleted."
+            'message' => 'Pattern ' . $id . ' deleted.'
         ]);
     }
 
@@ -129,7 +129,7 @@ class PatternController extends Controller
             ->pattern($data['pattern'])
             ->update();
         PatternsView::renderJson([
-            "message" => "Pattern {$id} updated. New value {$data['pattern']}"
+            'message' => 'Pattern ' . $id . ' updated. New value ' . $data['pattern']
         ]);
     }
 

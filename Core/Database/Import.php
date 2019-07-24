@@ -56,27 +56,27 @@ class Import implements ImportInterface
     {
         $this->connection
             ->getHandle()
-            ->query("SET FOREIGN_KEY_CHECKS=0");
+            ->query('SET FOREIGN_KEY_CHECKS=0');
 
         $this->connection
             ->getHandle()
-            ->query("TRUNCATE TABLE `valid_patterns`");
+            ->query('TRUNCATE TABLE `valid_patterns`');
 
         $this->connection
             ->getHandle()
-            ->query("TRUNCATE TABLE `words`");
+            ->query('TRUNCATE TABLE `words`');
 
         $this->connection
             ->getHandle()
-            ->query("TRUNCATE TABLE `results`");
+            ->query('TRUNCATE TABLE `results`');
 
         $this->connection
             ->getHandle()
-            ->query("TRUNCATE TABLE `patterns`");
+            ->query('TRUNCATE TABLE `patterns`');
 
         $this->connection
             ->getHandle()
-            ->query("SET FOREIGN_KEY_CHECKS=1");
+            ->query('SET FOREIGN_KEY_CHECKS=1');
 
     }
 

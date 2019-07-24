@@ -9,13 +9,13 @@ use Core\Input\Interfaces\ValidatorInterface;
 class Validator implements ValidatorInterface
 {
     private const VALID_FLAGS = [
-        "-word" => '[word]',
-        "-sentence" => '["sentence"]',
-        "-file" => '["path to file"]',
-        "-email" => '[email]',
-        "-reset" => 'cache',
-        "-import" => 'patterns',
-        "-migrate" => '[migration file name]',
+        '-word' => '[word]',
+        '-sentence' => '["sentence"]',
+        '-file' => '["path to file"]',
+        '-email' => '[email]',
+        '-reset' => 'cache',
+        '-import' => 'patterns',
+        '-migrate' => '[migration file name]',
     ];
 
     public static function validateFlag(string $data): bool
@@ -45,6 +45,13 @@ class Validator implements ValidatorInterface
                 if ($target !== 'cache') {
                     throw new InvalidFlagException(
                         'You can reset only cache. php ' . $input[0] . ' ' . $input[1] . ' cache'
+                    );
+                }
+                break;
+            case '-import':
+                if ($target !== 'patterns') {
+                    throw new InvalidFlagException(
+                        'You can only import patterns. php ' . $input[0] . ' ' . $input[1] . ' patterns'
                     );
                 }
                 break;

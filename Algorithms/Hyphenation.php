@@ -79,8 +79,9 @@ class Hyphenation implements HyphenationInterface
             $digitsInPattern = $this->extractDigitsFromWord($pattern);
             foreach ($digitsInPattern as $position => $digit) {
                 $position = $position + strpos($this->word, $this->clearPatternString($pattern));
-                if (!isset($digitsInWord[$position]) || $digitsInWord[$position] < $digit)
+                if (!isset($digitsInWord[$position]) || $digitsInWord[$position] < $digit) {
                     $digitsInWord[$position] = $digit;
+                }
             }
         }
         return $digitsInWord;
@@ -117,9 +118,9 @@ class Hyphenation implements HyphenationInterface
 
             if ($position === false ||
                 ($pattern[0] == '.' && $position !== 0) ||
-                ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($cleanString)))
+                ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($cleanString))) {
                 continue;
-
+            }
             $validPatterns[] = $pattern;
         }
         return $validPatterns;

@@ -13,9 +13,9 @@ class Singleton implements DatabaseInterface
 
     public function __construct()
     {
-        $dsn = "mysql:host=" . DatabaseSettings::get()['host'] .
-            ";dbname=" . DatabaseSettings::get()['database'] .
-            ";charset=" . DatabaseSettings::get()['charset'];
+        $dsn = 'mysql:host=' . DatabaseSettings::get()['host'] .
+            ';dbname=' . DatabaseSettings::get()['database'] .
+            ';charset=' . DatabaseSettings::get()['charset'];
 
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

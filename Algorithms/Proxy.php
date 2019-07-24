@@ -7,6 +7,8 @@ use Algorithms\Interfaces\HyphenationInterface;
 use Core\Application;
 use Core\Cache\FileCache;
 use Core\Database\Export;
+use Core\Log\Logger;
+use Core\Log\LogLevel;
 use Core\Scans\Scan;
 use Models\Pattern;
 use Models\Word;

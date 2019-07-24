@@ -36,7 +36,7 @@ class Container implements ContainerInterface
         $reflector = new ReflectionClass($object);
 
         if (!$reflector->isInstantiable()) {
-            throw new Exception("Class {$object} is not instantiable");
+            throw new Exception('Class ' . $object . ' is not instantiable');
         }
 
         $constructor = $reflector->getConstructor();
@@ -57,17 +57,18 @@ class Container implements ContainerInterface
 
         foreach ($parameters as $parameter) {
             $dependency = $parameter->getClass();
-            if ($dependency === null) {
-                if ($parameter->isDefaultValueAvailable()) {
-                    $dependencies[] = $parameter->getDefaultValue();
-                } else {
-                    throw new Exception('Cannot resolve class ' . $parameter->name . ' dependencies.');
-                }
-            } else {
+            if ($dependency !== null) {
                 $dependencies[] = $this->get($dependency->name);
+                continue;
             }
-        }
 
+            if ($parameter->isDefaultValueAvailable()) {
+                $dependencies[] = $parameter->getDefaultValue();
+                continue;
+            }
+            
+            throw new Exception('Cannot resolve class ' . $parameter->name . ' dependencies.');
+        }
         return $dependencies;
     }
 }

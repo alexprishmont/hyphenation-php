@@ -8,11 +8,11 @@ class View
 {
     public static function renderJson(array $data)
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Content-Type: application/json; charset=UTF-8");
-        header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
-        header("Access-Control-Max-Age: 3600");
-        header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=UTF-8');
+        header('Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE');
+        header('Access-Control-Max-Age: 3600');
+        header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
         return print(json_encode($data));
     }
 
@@ -21,7 +21,7 @@ class View
         self::renderHTTPException([
             'status_code_header' => 'HTTP/1.1 422 Unprocessable Entity',
             'body' => [
-                "message" => "Wrong input."
+                'message' => 'Wrong input.'
             ]
         ]);
     }
@@ -31,7 +31,7 @@ class View
         self::renderHTTPException([
             'status_code_header' => 'HTTP/1.1 201 CREATED',
             'body' => [
-                "message" => "Creation successfully proceeded."
+                'message' => 'Creation successfully proceeded.'
             ]
         ]);
     }

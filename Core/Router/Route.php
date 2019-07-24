@@ -76,7 +76,10 @@ class Route implements RouterInterface
         return $parsedUrl['path'];
     }
 
-    private static function noRouteMatchFoundResponse(bool $routeMatchFound, bool $pathMatchFound, string $path, string $method): void
+    private static function noRouteMatchFoundResponse(bool $routeMatchFound,
+                                                      bool $pathMatchFound,
+                                                      string $path,
+                                                      string $method): void
     {
         if (!$routeMatchFound) {
             if ($pathMatchFound) {

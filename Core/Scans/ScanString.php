@@ -37,7 +37,7 @@ class ScanString implements StringScanInterface
                 return $result;
             }
         } else {
-            throw new InvalidFlagException("Your entered file does not exist. [{$src}]");
+            throw new InvalidFlagException('Your entered file does not exist. [' . $src . ']');
         }
     }
 

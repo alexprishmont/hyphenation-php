@@ -28,8 +28,8 @@ class Export implements ExportInterface
 
     public function extractPatternsFromDatabase()
     {
-        if ($this->cache->has("patterns")) {
-            return $this->cache->get("patterns");
+        if ($this->cache->has('patterns')) {
+            return $this->cache->get('patterns');
         }
 
         $fetch = $this->connection
@@ -42,7 +42,7 @@ class Export implements ExportInterface
             $result[] = $data['pattern'];
         }
 
-        $this->cache->set("patterns", $result);
+        $this->cache->set('patterns', $result);
         return $result;
     }
 }

@@ -15,7 +15,7 @@ class Logger implements LoggerInterface
 
     public function __construct(Config $config)
     {
-        $this->config = $config->get("logger");
+        $this->config = $config->get('logger');
     }
 
     public function getLoggerStatus(): bool
@@ -33,7 +33,7 @@ class Logger implements LoggerInterface
         return $this->processLog($message,
             $context,
             LogLevel::ALERT,
-            "[alert]",
+            '[alert]',
             LogLevel::ALERT_COLOR
         );
     }
@@ -43,7 +43,7 @@ class Logger implements LoggerInterface
         return $this->processLog($message,
             $context,
             LogLevel::NOTICE,
-            "[notice]",
+            '[notice]',
             LogLevel::NOTICE_COLOR
         );
     }
@@ -53,7 +53,7 @@ class Logger implements LoggerInterface
         return $this->processLog($message,
             $context,
             LogLevel::EMERGENCY,
-            "[emergency]",
+            '[emergency]',
             LogLevel::EMERGENCY_COLOR
         );
     }
@@ -63,7 +63,7 @@ class Logger implements LoggerInterface
         return $this->processLog($message,
             $context,
             LogLevel::INFO,
-            "[info]",
+            '[info]',
             LogLevel::INFO_COLOR
         );
     }
@@ -73,7 +73,7 @@ class Logger implements LoggerInterface
         return $this->processLog($message,
             $context,
             LogLevel::CRITICAL,
-            "[critical]",
+            '[critical]',
             LogLevel::CRITICAL_COLOR
         );
     }
@@ -83,7 +83,7 @@ class Logger implements LoggerInterface
         return $this->processLog($message,
             $context,
             LogLevel::ERROR,
-            "[error]",
+            '[error]',
             LogLevel::ERROR_COLOR
         );
     }
@@ -93,7 +93,7 @@ class Logger implements LoggerInterface
         return $this->processLog($message,
             $context,
             LogLevel::WARNING,
-            "[warning]",
+            '[warning]',
             LogLevel::WARNING_COLOR
         );
     }
@@ -103,7 +103,7 @@ class Logger implements LoggerInterface
         return $this->processLog($message,
             $context,
             LogLevel::SUCCESS,
-            "[success]",
+            '[success]',
             LogLevel::SUCCESS_COLOR
         );
     }
@@ -113,7 +113,7 @@ class Logger implements LoggerInterface
         return $this->processLog($message,
             $context,
             LogLevel::DEBUG,
-            "[debug]",
+            '[debug]',
             LogLevel::DEBUG_COLOR
         );
     }
@@ -144,20 +144,20 @@ class Logger implements LoggerInterface
             );
             print($finalLog);
         }
-        return $this->writeLog($log, $priority, $priorityMessage);
+        return $this->writeLog($log, $priorityMessage);
     }
 
-    private function writeLog(string $log, string $priority, string $priorityMsg)
+    private function writeLog(string $log, string $priorityMsg)
     {
         $date = new DateTime('now', new DateTimeZone($this->config['DATE_TIMEZONE']));
-        $logName = $date->format("Y-m-d");
+        $logName = $date->format('Y-m-d');
 
         $dir = dirname(__FILE__, 3) . $this->config['LOG_DIR'];
 
         $date = $date->format($this->config['DATE_FORMAT']);
         $data = $date . ' ' . $priorityMsg . ': ' . print_r($log, true) . PHP_EOL;
 
-        $logFile = sprintf("%s/%s.%s",
+        $logFile = sprintf('%s/%s.%s',
             $dir, $logName,
             $this->config['LOG_EXT']
         );
@@ -166,7 +166,7 @@ class Logger implements LoggerInterface
             mkdir($dir, 0700);
 
         if (!file_exists($logFile)) {
-            $log = fopen($logFile, "w");
+            $log = fopen($logFile, 'w');
             fwrite($log, $data);
             fclose($log);
         } else {
@@ -182,7 +182,7 @@ class Logger implements LoggerInterface
         if ($level != LogLevel::ERROR && $level != LogLevel::SUCCESS && $level != LogLevel::CRITICAL &&
             $level != LogLevel::DEBUG && $level != LogLevel::WARNING && $level != LogLevel::ALERT &&
             $level != LogLevel::EMERGENCY && $level != LogLevel::NOTICE && $level != LogLevel::INFO) {
-            throw new LoggerException("Logger level {$level} does not exist.");
+            throw new LoggerException('Logger level ' . $level . ' does not exist.');
         }
     }
 }

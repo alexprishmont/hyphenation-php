@@ -12,13 +12,13 @@ class Config
 
     public function get(string $configFile)
     {
-        $this->path = dirname(__FILE__, 2) . "/Config/".$configFile.".ini";
+        $this->path = dirname(__FILE__, 2) . '/Config/' . $configFile . '.ini';
         return $this->settings = parse_ini_file($this->path);
     }
 
     public function write(string $key, string $value, string $config): void
     {
-        $this->path = dirname(__FILE__, 2) . "/Config/".$config.".ini";
+        $this->path = dirname(__FILE__, 2) . '/Config/' . $config . '.ini';
         $this->settings = parse_ini_file($this->path);
 
         $this->settings[$key] = $value;
@@ -62,7 +62,7 @@ class Config
         $maxRetries = 100;
 
         if (!$file)
-            throw new InvalidArgumentException("Wrong config file name!");
+            throw new InvalidArgumentException('Wrong config file name!');
 
         do {
             if ($retries > 0)
@@ -72,7 +72,7 @@ class Config
         } while (!flock($file, LOCK_EX) && $retries <= $maxRetries);
 
         if ($retries == $maxRetries)
-            throw new InvalidArgumentException("Max retries count reached! Cannot rewrite config file");
+            throw new InvalidArgumentException('Max retries count reached! Cannot rewrite config file');
 
         fwrite($file, implode(PHP_EOL, $data) . PHP_EOL);
         flock($file, LOCK_UN);

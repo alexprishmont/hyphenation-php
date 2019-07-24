@@ -35,13 +35,13 @@ class QueryBuilder implements BuilderInterface
 
     public function select(array $columns)
     {
-        $this->queryCondition .= "SELECT ";
+        $this->queryCondition .= 'SELECT ';
         foreach ($columns as $column) {
             if ($this->checkKeyPosition($columns, $column)) {
-                $this->queryCondition .= "{$column}, ";
+                $this->queryCondition .= $column . ', ';
                 continue;
             }
-            $this->queryCondition .= "{$column} ";
+            $this->queryCondition .= $column . ' ';
         }
         return $this;
     }
@@ -49,9 +49,9 @@ class QueryBuilder implements BuilderInterface
     public function from(string $from = null)
     {
         if ($from !== null) {
-            $this->queryCondition .= "FROM {$from}";
+            $this->queryCondition .= 'FROM ' . $from;
         } else {
-            $this->queryCondition .= "FROM {$this->table}";
+            $this->queryCondition .= 'FROM ' . $this->table;
         }
         return $this;
     }
@@ -59,13 +59,13 @@ class QueryBuilder implements BuilderInterface
     public function where(array $columns)
     {
         if ($this->queryCondition === null) {
-            throw new \Exception("Cannot use 'where' as there's no full builded query.");
+            throw new \Exception('Cannot use `where` as theres no full built query.');
         }
-        $this->queryCondition .= " WHERE ";
+        $this->queryCondition .= ' WHERE ';
         foreach ($columns as $key => $value) {
             $keysArray = array_keys($columns);
             if ($this->checkKeyPosition($keysArray, $key)) {
-                $this->queryCondition .= "{$key} = {$value} AND ";
+                $this->queryCondition .= $key . ' = ' . $value . ' AND ';
                 continue;
             }
             $this->queryCondition .= "{$key} = '{$value}'";
@@ -76,7 +76,7 @@ class QueryBuilder implements BuilderInterface
     public function order(string $column, string $type)
     {
         if ($this->queryCondition === null) {
-            throw new \Exception("Cannot use 'order' as there's no full built query.");
+            throw new \Exception('Cannot use `order` as theres no full built query.');
         }
         $this->queryCondition .= " ORDER BY {$column} " . strtoupper($type);
         return $this;
@@ -84,21 +84,21 @@ class QueryBuilder implements BuilderInterface
 
     public function insert(array $values)
     {
-        $this->queryCondition .= " INSERT INTO {$this->table} (";
+        $this->queryCondition .= ' INSERT INTO ' . $this->table . ' (';
 
         foreach ($values as $value) {
             if ($this->checkKeyPosition($values, $value)) {
-                $this->queryCondition .= "{$value}, ";
+                $this->queryCondition .= $value . ', ';
                 continue;
             }
-            $this->queryCondition .= "{$value})";
+            $this->queryCondition .= $value . ')';
         }
         return $this;
     }
 
     public function values(array $values)
     {
-        $this->queryCondition .= " VALUES (";
+        $this->queryCondition .= ' VALUES (';
         foreach ($values as $value) {
             if ($this->checkKeyPosition($values, $value)) {
                 $this->queryCondition .= "'{$value}', ";
@@ -111,13 +111,13 @@ class QueryBuilder implements BuilderInterface
 
     public function update()
     {
-        $this->queryCondition .= "UPDATE {$this->table}";
+        $this->queryCondition .= 'UPDATE ' . $this->table;
         return $this;
     }
 
     public function set(array $values)
     {
-        $this->queryCondition .= " SET ";
+        $this->queryCondition .= ' SET ';
         foreach ($values as $key => $value) {
             $keysArray = array_keys($values);
             if ($this->checkKeyPosition($keysArray, $key)) {
@@ -131,45 +131,45 @@ class QueryBuilder implements BuilderInterface
 
     public function limit(array $limits)
     {
-        $this->queryCondition .= " LIMIT ";
+        $this->queryCondition .= ' LIMIT ';
         foreach ($limits as $limit) {
             if ($this->checkKeyPosition($limits, $limit)) {
-                $this->queryCondition .= "{$limit}, ";
+                $this->queryCondition .= $limit . ', ';
                 continue;
             }
-            $this->queryCondition .= "{$limit}";
+            $this->queryCondition .= $limit;
         }
         return $this;
     }
 
     public function delete()
     {
-        $this->queryCondition .= "DELETE FROM {$this->table} ";
+        $this->queryCondition .= 'DELETE FROM ' . $this->table;
         return $this;
     }
 
     public function inner()
     {
-        $this->queryCondition .= " INNER";
+        $this->queryCondition .= ' INNER';
         return $this;
     }
 
     public function join(string $table)
     {
-        $this->queryCondition .= " JOIN {$table} ";
+        $this->queryCondition .= ' JOIN ' . $table;
         return $this;
     }
 
     public function on(array $params)
     {
-        $this->queryCondition .= "ON ";
+        $this->queryCondition .= 'ON ';
         foreach ($params as $key => $value) {
             $keyArray = array_keys($params);
             if ($this->checkKeyPosition($keyArray, $key)) {
-                $this->queryCondition .= "{$key} = {$value} AND ";
+                $this->queryCondition .= $key . ' = ' . $value . ' AND ';
                 continue;
             }
-            $this->queryCondition .= "{$key} = {$value}";
+            $this->queryCondition .= $key . ' = ' . $value;
         }
         return $this;
     }

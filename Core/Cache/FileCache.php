@@ -30,10 +30,10 @@ class FileCache implements CacheInterface
         $path = realpath($cachePath);
 
         if ($path === false)
-            throw new InvalidArgumentException("Cache path does not exist: {$cachePath}");
+            throw new InvalidArgumentException('Cache path does not exist: ' . $cachePath);
 
         if (!is_writable($path . DIRECTORY_SEPARATOR))
-            throw new InvalidArgumentException("Cache path is not writable: {$cachePath}");
+            throw new InvalidArgumentException('Cache path is not writable: ' . $cachePath);
 
         $this->cachePath = $path;
     }
@@ -95,23 +95,27 @@ class FileCache implements CacheInterface
 
         $tempPath = $this->cachePath . DIRECTORY_SEPARATOR . uniqid('', true);
 
-        if (is_int($ttl))
+        if (is_int($ttl)) {
             $expiresAt = $this->getTime() + $ttl;
-        elseif ($ttl instanceof DateInterval)
-            $expiresAt = date_create_from_format("U", $this->getTime())->add($ttl)->getTimestamp();
-        elseif ($ttl === null)
+        } elseif ($ttl instanceof DateInterval) {
+            $expiresAt = date_create_from_format('U', $this->getTime())->add($ttl)->getTimestamp();
+        } elseif ($ttl === null) {
             $expiresAt = $this->getTime() + $this->defaultTTL;
-        else
-            throw new InvalidArgumentException("invalid TTL: " . print_r($ttl, true));
+        } else {
+            throw new InvalidArgumentException('invalid TTL: ' . print_r($ttl, true));
+        }
 
-        if (@file_put_contents($tempPath, serialize($value)) == false)
+        if (@file_put_contents($tempPath, serialize($value)) == false) {
             return false;
+        }
 
-        if (@chmod($tempPath, $this->fileMode) === false)
+        if (@chmod($tempPath, $this->fileMode) === false) {
             return false;
+        }
 
-        if (@touch($tempPath, $expiresAt) && @rename($tempPath, $path))
+        if (@touch($tempPath, $expiresAt) && @rename($tempPath, $path)) {
             return true;
+        }
 
         @unlink($tempPath);
         return false;
@@ -131,8 +135,9 @@ class FileCache implements CacheInterface
         $paths = $this->listPaths();
 
         foreach ($paths as $path) {
-            if (!unlink($path))
+            if (!unlink($path)) {
                 $success = false;
+            }
         }
 
         return $success;
@@ -140,27 +145,31 @@ class FileCache implements CacheInterface
 
     public function getMultiple($keys, $default = null)
     {
-        if (!is_array($keys) && !$keys instanceof \Traversable)
-            throw new InvalidArgumentException("Keys must be either of type array or Traversable");
+        if (!is_array($keys) && !$keys instanceof \Traversable) {
+            throw new InvalidArgumentException('Keys must be either of type array or Traversable');
+        }
 
         $values = [];
 
-        foreach ($keys as $key)
+        foreach ($keys as $key) {
             $values[$key] = $this->get($key) ?: $default;
+        }
 
         return $values;
     }
 
     public function setMultiple($values, $ttl = null)
     {
-        if (!is_array($values) && !$values instanceof \Traversable)
-            throw new InvalidArgumentException("Keys must be either of type array or Traversable");
+        if (!is_array($values) && !$values instanceof \Traversable) {
+            throw new InvalidArgumentException('Keys must be either of type array or Traversable');
+        }
 
         $ok = true;
 
         foreach ($values as $key => $value) {
-            if (is_int($key))
+            if (is_int($key)) {
                 $key = (string)$key;
+            }
 
             $this->validateKey($key);
             $ok = $this->set($key, $value, $ttl) && $ok;
@@ -171,8 +180,9 @@ class FileCache implements CacheInterface
 
     public function deleteMultiple($keys)
     {
-        if (!is_array($keys) && !$keys instanceof \Traversable)
-            throw new InvalidArgumentException("Keys must be either of type array or Traversable");
+        if (!is_array($keys) && !$keys instanceof \Traversable) {
+            throw new InvalidArgumentException('Keys must be either of type array or Traversable');
+        }
 
         $ok = true;
 
@@ -213,17 +223,20 @@ class FileCache implements CacheInterface
     {
         if (!is_string($key)) {
             $type = is_object($key) ? get_class($key) : gettype($key);
-            throw new InvalidArgumentException("invalid key type: {$type} given");
+            throw new InvalidArgumentException('Invalid key type: ' . $type . ' given');
         }
 
-        if ($key === "")
-            throw new InvalidArgumentException("invalid key: empty string given");
+        if ($key === "") {
+            throw new InvalidArgumentException('Invalid key: empty string given');
+        }
 
-        if ($key === null)
-            throw new InvalidArgumentException("invalid key: null given");
+        if ($key === null) {
+            throw new InvalidArgumentException('Invalid key: null given');
+        }
 
-        if (preg_match(self::PSR16_RESERVED, $key, $match) === 1)
-            throw new InvalidArgumentException("invalid character in key: {$match[0]}");
+        if (preg_match(self::PSR16_RESERVED, $key, $match) === 1) {
+            throw new InvalidArgumentException('Invalid character in key: ' . $match[0]);
+        }
     }
 
     private function listPaths()
@@ -236,9 +249,9 @@ class FileCache implements CacheInterface
         $iterator = new \RecursiveIteratorIterator($iterator);
 
         foreach ($iterator as $path) {
-            if (is_dir($path))
+            if (is_dir($path)) {
                 continue;
-
+            }
             yield $path;
         }
     }
@@ -247,8 +260,9 @@ class FileCache implements CacheInterface
     {
         $parent_path = dirname($path);
 
-        if (!file_exists($parent_path))
+        if (!file_exists($parent_path)) {
             $this->mkdir($parent_path);
+        }
 
         mkdir($path);
         chmod($path, $this->dirMode);

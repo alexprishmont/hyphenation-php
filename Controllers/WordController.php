@@ -33,16 +33,16 @@ class WordController
             while ($data = $words->fetch(\PDO::FETCH_ASSOC)) {
                 array_push($resultArray['data'],
                     [
-                        "id" => $data['id'],
-                        "pattern" => $data['word'],
-                        "hyphenated" => $data['result']
+                        'id' => $data['id'],
+                        'pattern' => $data['word'],
+                        'hyphenated' => $data['result']
                     ]
                 );
             }
             return WordsView::renderJson($resultArray);
         }
         return WordsView::renderJson([
-            "message" => "No words found in database."
+            'message' => 'No words found in database.'
         ]);
     }
 
@@ -54,19 +54,19 @@ class WordController
                 ->find();
             if (!$check) {
                 return WordsView::renderJson([
-                    "message" => "Word with id: {$id} not found"
+                    'message' => 'Word with id: ' . $id . ' not found'
                 ]);
             }
             return WordsView::renderJson([
-                "data" => [
-                    "id" => $id,
-                    "word" => $this->wordService->id($id)->read()['word'],
-                    "hyphenated" => $this->wordService->id($id)->read()['result']
+                'data' => [
+                    'id' => $id,
+                    'word' => $this->wordService->id($id)->read()['word'],
+                    'hyphenated' => $this->wordService->id($id)->read()['result']
                 ]
             ]);
         }
         return WordsView::renderJson([
-            "message" => "No words found in database."
+            'message' => 'No words found in database.'
         ]);
     }
 
@@ -74,7 +74,7 @@ class WordController
     {
         if ($this->patternService->count() === 0) {
             WordsView::renderJson([
-                "message" => "Cannot add new word as there is no patterns list imported."
+                'message' => 'Cannot add new word as there is no patterns list imported.'
             ]);
             return;
         }
@@ -104,9 +104,9 @@ class WordController
 
         if ($check) {
             WordsView::createdResponse();
-        } else {
-            echo WordsView::renderJson(["message" => "Something went wrong..."]);
+            return;
         }
+        echo WordsView::renderJson(['message' => 'Something went wrong...']);
     }
 
     public function deleteWord(int $id)
@@ -125,7 +125,7 @@ class WordController
             ->delete();
 
         WordsView::renderJson([
-            "message" => "Word with id: {$id} deleted."
+            'message' => 'Word with id: ' . $id . ' deleted.'
         ]);
     }
 

@@ -65,12 +65,12 @@ class Pattern extends Model
     public function read()
     {
         if ($this->id === null) {
-             $statement = $this->builder
-                 ->table($this->tableName)
-                 ->select(['id', 'pattern'])
-                 ->from($this->tableName)
-                 ->order('id', 'desc')
-                 ->execute();
+            $statement = $this->builder
+                ->table($this->tableName)
+                ->select(['id', 'pattern'])
+                ->from($this->tableName)
+                ->order('id', 'desc')
+                ->execute();
             return $statement;
         }
 
