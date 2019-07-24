@@ -81,7 +81,7 @@ class Word extends Model
             ->inner()
             ->join($this->resultTable)
             ->on(['results.wordID' => 'words.id'])
-            ->order('words.id', 'desc')
+            ->order('words.id', 'asc')
             ->execute();
         return $statement;
     }

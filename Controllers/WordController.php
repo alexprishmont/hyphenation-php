@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace Controllers;
 
-
-use Algorithms\Hyphenation;
+use Algorithms\Proxy;
 use Models\Pattern;
 use Models\Word;
 use Views\WordsView;
@@ -16,7 +15,7 @@ class WordController
     private $patternService;
 
     public function __construct(Word $word,
-                                Hyphenation $algorithm,
+                                Proxy $algorithm,
                                 Pattern $pattern)
     {
         $this->wordService = $word;
@@ -93,16 +92,9 @@ class WordController
             return;
         }
 
-        $hyphen = $this->algorithmService->getResult($data['word']);
-        $usedPatterns = $this->algorithmService->getValidPatternsForWord($data['word']);
+        $check = $this->algorithmService->hyphenate($data['word']);
 
-        $check = $this->wordService
-            ->word($data['word'])
-            ->hyphenated($hyphen)
-            ->patterns($usedPatterns)
-            ->create();
-
-        if ($check) {
+        if ($check !== null) {
             WordsView::createdResponse();
             return;
         }
