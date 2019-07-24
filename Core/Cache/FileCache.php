@@ -23,16 +23,19 @@ class FileCache implements CacheInterface
         $this->dirMode = $dirMode;
         $this->fileMode = $fileMode;
 
-        if (!file_exists($cachePath) && file_exists(dirname($cachePath)))
+        if (!file_exists($cachePath) && file_exists(dirname($cachePath))) {
             $this->mkdir($cachePath);
+        }
 
         $path = realpath($cachePath);
 
-        if ($path === false)
+        if ($path === false) {
             throw new InvalidArgumentException('Cache path does not exist: ' . $cachePath);
+        }
 
-        if (!is_writable($path . DIRECTORY_SEPARATOR))
+        if (!is_writable($path . DIRECTORY_SEPARATOR)) {
             throw new InvalidArgumentException('Cache path is not writable: ' . $cachePath);
+        }
 
         $this->cachePath = $path;
     }
@@ -53,8 +56,9 @@ class FileCache implements CacheInterface
         $path = $this->getPath($key);
         $expiresAt = filemtime($path);
 
-        if ($expiresAt === false)
+        if ($expiresAt === false) {
             return $default;
+        }
 
         if ($this->getTime() >= $expiresAt) {
             unlink($path);
@@ -63,16 +67,19 @@ class FileCache implements CacheInterface
 
         $data = file_get_contents($path);
 
-        if ($data === false)
+        if ($data === false) {
             return $default;
+        }
 
-        if ($data === 'b:0;')
+        if ($data === 'b:0;') {
             return $default;
+        }
 
         $value = unserialize($data);
 
-        if ($value === false)
+        if ($value === false) {
             return $default;
+        }
 
         return $value;
     }
