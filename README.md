@@ -7,7 +7,6 @@
 `-email [email]`<br/>
 `-reset cache`<br/>
 `-import [patterns]`<br/>
-`-source [file/database]`<br/>
 `-migrate [migration's file name]`
 
 Visma internship @summer 2019
