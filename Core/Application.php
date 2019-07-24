@@ -18,11 +18,10 @@ class Application
     private $timing;
 
     private $input;
-    private $argc;
 
     public static $settings;
 
-    public function __construct(array $argv, int $argc)
+    public function __construct(array $input)
     {
         if (PHP_SAPI === 'cli') {
             $this->timing = new Timing;
@@ -43,8 +42,7 @@ class Application
 
         $this->logger = $this->getInstance('logger');
 
-        $this->input = $argv;
-        $this->argc = $argc;
+        $this->input = $input;
     }
 
     public function __destruct()
