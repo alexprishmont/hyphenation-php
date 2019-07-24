@@ -41,9 +41,12 @@ class Proxy implements HyphenationInterface
             ->find();
 
         if ($dbCheck) {
-            return $this->wordModel
+            $result = $this->wordModel
                 ->word($word)
                 ->read()['result'];
+
+            $this->cache->set($word, $result);
+            return $result;
         }
 
         $hyphenation = new Hyphenation($this->getPatterns());

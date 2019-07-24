@@ -19,17 +19,7 @@ class PatternController extends Controller
     public function showAllPatterns()
     {
         if ($this->patternService->count() > 0) {
-            $patterns = $this->patternService->read();
-            $resultArray = [];
-            $resultArray['data'] = [];
-            while ($data = $patterns->fetch(\PDO::FETCH_ASSOC)) {
-                array_push($resultArray['data'],
-                    [
-                        'id' => $data['id'],
-                        'pattern' => $data['pattern']
-                    ]
-                );
-            }
+            $resultArray = $this->patternService->getAll();
             return PatternsView::renderJson($resultArray);
         }
         return PatternsView::renderJson([

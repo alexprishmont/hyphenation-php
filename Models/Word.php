@@ -69,6 +69,23 @@ class Word extends Model
         return false;
     }
 
+    public function getAll(): array
+    {
+        $words = $this->read();
+        $resultArray = [];
+        $resultArray['data'] = [];
+        while ($data = $words->fetch(\PDO::FETCH_ASSOC)) {
+            array_push($resultArray['data'],
+                [
+                    'id' => $data['id'],
+                    'pattern' => $data['word'],
+                    'hyphenated' => $data['result']
+                ]
+            );
+        }
+        return $resultArray;
+    }
+
     public function read()
     {
         if ($this->id !== null || $this->word !== null) {

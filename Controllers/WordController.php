@@ -26,18 +26,7 @@ class WordController
     public function showAllWords()
     {
         if ($this->wordService->count() > 0) {
-            $words = $this->wordService->read();
-            $resultArray = [];
-            $resultArray['data'] = [];
-            while ($data = $words->fetch(\PDO::FETCH_ASSOC)) {
-                array_push($resultArray['data'],
-                    [
-                        'id' => $data['id'],
-                        'pattern' => $data['word'],
-                        'hyphenated' => $data['result']
-                    ]
-                );
-            }
+            $resultArray = $this->wordService->getAll();
             return WordsView::renderJson($resultArray);
         }
         return WordsView::renderJson([

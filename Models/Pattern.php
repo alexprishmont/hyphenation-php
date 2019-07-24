@@ -52,6 +52,22 @@ class Pattern extends Model
         return false;
     }
 
+    public function getAll(): array
+    {
+        $patterns = $this->read();
+        $resultArray = [];
+        $resultArray['data'] = [];
+        while ($data = $patterns->fetch(\PDO::FETCH_ASSOC)) {
+            array_push($resultArray['data'],
+                [
+                    'id' => $data['id'],
+                    'pattern' => $data['pattern']
+                ]
+            );
+        }
+        return $resultArray;
+    }
+
     public function count(): int
     {
         $statement = $this->builder

@@ -6,7 +6,6 @@ use Core\Application;
 use Core\Cache\Interfaces\CacheInterface;
 use Core\Exceptions\InvalidArgumentException;
 use Core\Tools;
-use DateInterval;
 
 class FileCache implements CacheInterface
 {
@@ -52,17 +51,17 @@ class FileCache implements CacheInterface
     public function get($key, $default = null)
     {
         $path = $this->getPath($key);
-        $expiresAt = @filemtime($path);
+        $expiresAt = filemtime($path);
 
         if ($expiresAt === false)
             return $default;
 
         if ($this->getTime() >= $expiresAt) {
-            @unlink($path);
+            unlink($path);
             return $default;
         }
 
-        $data = @file_get_contents($path);
+        $data = file_get_contents($path);
 
         if ($data === false)
             return $default;
@@ -70,7 +69,7 @@ class FileCache implements CacheInterface
         if ($data === 'b:0;')
             return $default;
 
-        $value = @unserialize($data);
+        $value = unserialize($data);
 
         if ($value === false)
             return $default;
@@ -84,40 +83,41 @@ class FileCache implements CacheInterface
         return @filemtime($path);
     }
 
-    public function set($key, $value, $ttl = null)
+    public function set($key, $value, int $ttl = 0)
     {
         $path = $this->getPath($key);
 
         $dir = dirname($path);
 
-        if (!file_exists($dir))
+        if (!file_exists($dir)) {
             $this->mkdir($dir);
+        }
 
         $tempPath = $this->cachePath . DIRECTORY_SEPARATOR . uniqid('', true);
 
-        if (is_int($ttl)) {
-            $expiresAt = $this->getTime() + $ttl;
-        } elseif ($ttl instanceof DateInterval) {
-            $expiresAt = date_create_from_format('U', $this->getTime())->add($ttl)->getTimestamp();
-        } elseif ($ttl === null) {
+        if ($ttl === 0) {
             $expiresAt = $this->getTime() + $this->defaultTTL;
         } else {
-            throw new InvalidArgumentException('invalid TTL: ' . print_r($ttl, true));
+            $expiresAt = $this->getTime() + $ttl;
         }
 
-        if (@file_put_contents($tempPath, serialize($value)) == false) {
+        if (!isset($expiresAt)) {
+            throw new InvalidArgumentException('Invalid TTL: ' . print_r($ttl, true));
+        }
+
+        if (file_put_contents($tempPath, serialize($value)) == false) {
             return false;
         }
 
-        if (@chmod($tempPath, $this->fileMode) === false) {
+        if (chmod($tempPath, $this->fileMode) === false) {
             return false;
         }
 
-        if (@touch($tempPath, $expiresAt) && @rename($tempPath, $path)) {
+        if (touch($tempPath, $expiresAt) && rename($tempPath, $path)) {
             return true;
         }
 
-        @unlink($tempPath);
+        unlink($tempPath);
         return false;
     }
 
@@ -158,7 +158,7 @@ class FileCache implements CacheInterface
         return $values;
     }
 
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple($values, int $ttl = 0)
     {
         if (!is_array($values) && !$values instanceof \Traversable) {
             throw new InvalidArgumentException('Keys must be either of type array or Traversable');

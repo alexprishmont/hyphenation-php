@@ -35,7 +35,7 @@ class Application
 
         $this->exceptionHandler = $this->getInstance('exceptionhandler');
 
-        @set_exception_handler([
+        set_exception_handler([
             $this->exceptionHandler,
             'exceptionHandlerFunction'
         ]);
