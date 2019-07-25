@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core\Database;
 
 
+use Core\Cache\FileCache;
 use Core\Database\Interfaces\ImportInterface;
 use PDO;
 
@@ -12,10 +13,12 @@ class Import implements ImportInterface
 
     private $patterns = [];
     private $connection;
+    private $cache;
 
     public function __construct()
     {
         $this->connection = Singleton::getInstanceOf();
+        $this->cache = FileCache::getInstanceOf();
     }
 
     public function patterns(array $patterns)
@@ -41,6 +44,12 @@ class Import implements ImportInterface
                 $statement->bindParam(':pattern', $pattern, PDO::PARAM_STR, 250);
                 $statement->execute([$pattern]);
             }
+
+            if ($this->cache->has('patterns')) {
+                $this->cache->delete('patterns');
+            }
+
+            $this->cache->set('patterns', $this->patterns);
 
             $this->connection
                 ->getHandle()
