@@ -4,5 +4,5 @@ require_once("Core/Autoloader.php");
 
 Core\Autoloader::register();
 
-$app = new Core\Application($argv);
-$app->startup();
+$app = new Core\Application;
+$app->startup($argv);

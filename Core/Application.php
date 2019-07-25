@@ -17,18 +17,16 @@ class Application
     private $logger;
     private $timing;
 
-    private $input;
-
     public static $settings;
 
-    public function __construct(array $input)
+    public function __construct()
     {
         if (PHP_SAPI === 'cli') {
             $this->timing = new Timing;
             $this->timing->start();
         }
 
-        $this->container = new Container();
+        $this->container = new Container;
 
         $this->setInstance('config');
         self::$settings = $this->getInstance('config')->get('config');
@@ -41,8 +39,6 @@ class Application
         ]);
 
         $this->logger = $this->getInstance('logger');
-
-        $this->input = $input;
     }
 
     public function __destruct()
@@ -78,11 +74,11 @@ class Application
             ->set(DependenciesLoader::get()[$instance]);
     }
 
-    public function startup()
+    public function startup(array $input)
     {
-        Validator::validateInput($this->input);
-        $object = Resolver::resolve($this->input[1]);
-        $target = $this->input[2];
+        Validator::validateInput($input);
+        $object = Resolver::resolve($input[1]);
+        $target = $input[2];
         $result = Resolver::callMethod($object, $target);
         $this->logger
             ->log(LogLevel::SUCCESS, $result);
