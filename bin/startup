@@ -1,8 +1,6 @@
 #!/usr/bin/php
 <?php
-require_once("Core/Autoloader.php");
-
-Core\Autoloader::register();
+$loader = require 'vendor/autoload.php';
 
 $app = new Core\Application;
 $app->startup($argv);

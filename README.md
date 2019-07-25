@@ -1,5 +1,5 @@
 # Hyphenation PHP script
-##### Usage `php startup [flag] [target]`
+##### Usage `php bin/startup [flag] [target]`
 ###### Flags: <br/>
 `-word [word]`<br/> 
 `-sentence ["sentence"]`<br/>

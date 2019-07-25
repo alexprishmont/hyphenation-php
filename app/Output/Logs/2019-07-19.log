@@ -1,0 +1,272 @@
+2019-07-19 08:19:41 [notice]: Patterns would be loaded from tex-hyphenation-patterns.txt!
+2019-07-19 08:19:42 [success]: New patterns imported.
+2019-07-19 08:19:42 [info]: Script execution time 0.58905100822449 seconds.
+2019-07-19 08:19:42 [info]: Script used 2 mb of memory.
+2019-07-19 08:20:16 [info]: Pattern .mis1
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern 1tra
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern 2is.
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern 2n1s2
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern 2st.
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern 4te.
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern 5mi.
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern a2n
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern m2is
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern n2sl
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern s1l2
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern s3lat
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Pattern st4r
+ used for word mistranslate
+2019-07-19 08:20:16 [info]: Script execution time 0.036167144775391 seconds.
+2019-07-19 08:20:16 [info]: Script used 2 mb of memory.
+2019-07-19 08:21:07 [error]: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'id' in field list is ambiguous
+2019-07-19 08:21:50 [error]: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'id' in where clause is ambiguous
+2019-07-19 08:22:11 [error]: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'id' in where clause is ambiguous
+2019-07-19 08:44:36 [error]: SQLSTATE[23000]: Integrity constraint violation: 1052 Column 'id' in where clause is ambiguous
+2019-07-19 09:04:04 [info]: Pattern 1fo
+ used for word forever
+2019-07-19 09:04:04 [info]: Pattern 2re.
+ used for word forever
+2019-07-19 09:04:04 [info]: Pattern 4ve.
+ used for word forever
+2019-07-19 09:04:04 [info]: Pattern ev1er
+ used for word forever
+2019-07-19 09:04:04 [info]: Pattern fo2r
+ used for word forever
+2019-07-19 09:04:04 [info]: Pattern r5ev5er.
+ used for word forever
+2019-07-19 09:04:04 [info]: Pattern rev2
+ used for word forever
+2019-07-19 09:09:21 [error]: array_push() expects parameter 1 to be array, null given
+2019-07-19 09:09:29 [error]: array_push() expects parameter 1 to be array, null given
+2019-07-19 09:12:35 [notice]: Patterns would be loaded from tex-hyphenation-patterns.txt!
+2019-07-19 09:12:35 [success]: New patterns imported.
+2019-07-19 09:12:35 [info]: Script execution time 0.61355400085449 seconds.
+2019-07-19 09:12:35 [info]: Script used 2 mb of memory.
+2019-07-19 09:13:53 [notice]: Patterns would be loaded from tex-hyphenation-patterns.txt!
+2019-07-19 09:13:54 [success]: New patterns imported.
+2019-07-19 09:13:54 [info]: Script execution time 0.61405301094055 seconds.
+2019-07-19 09:13:54 [info]: Script used 2 mb of memory.
+2019-07-19 09:58:18 [info]: Script execution time 0.0086479187011719 seconds.
+2019-07-19 09:58:18 [info]: Script used 2 mb of memory.
+2019-07-19 09:58:33 [info]: Script execution time 0.0075409412384033 seconds.
+2019-07-19 09:58:33 [info]: Script used 2 mb of memory.
+2019-07-19 09:58:40 [error]: Return value of Algorithms\Hyphenation::getFromDatabase() must be of the type string, null returned
+2019-07-19 09:58:40 [info]: Script execution time 0.012075901031494 seconds.
+2019-07-19 09:58:40 [info]: Script used 2 mb of memory.
+2019-07-19 09:59:35 [success]: Cache cleared.
+2019-07-19 09:59:35 [info]: Script execution time 0.011641025543213 seconds.
+2019-07-19 09:59:35 [info]: Script used 2 mb of memory.
+2019-07-19 09:59:36 [error]: Return value of Algorithms\Hyphenation::getFromDatabase() must be of the type string, null returned
+2019-07-19 09:59:36 [info]: Script execution time 0.01258111000061 seconds.
+2019-07-19 09:59:36 [info]: Script used 2 mb of memory.
+2019-07-19 09:59:38 [error]: Return value of Algorithms\Hyphenation::getFromDatabase() must be of the type string, null returned
+2019-07-19 09:59:38 [info]: Script execution time 0.012407064437866 seconds.
+2019-07-19 09:59:38 [info]: Script used 2 mb of memory.
+2019-07-19 09:59:57 [info]: Script execution time 0.0076091289520264 seconds.
+2019-07-19 09:59:57 [info]: Script used 2 mb of memory.
+2019-07-19 09:59:59 [info]: Script execution time 0.0082740783691406 seconds.
+2019-07-19 09:59:59 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:04 [info]: Script execution time 0.0073409080505371 seconds.
+2019-07-19 10:00:04 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:11 [success]: Cache cleared.
+2019-07-19 10:00:11 [info]: Script execution time 0.010345935821533 seconds.
+2019-07-19 10:00:11 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:17 [error]: Return value of Algorithms\Hyphenation::getFromDatabase() must be of the type string, null returned
+2019-07-19 10:00:17 [info]: Script execution time 0.012757062911987 seconds.
+2019-07-19 10:00:17 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:43 [info]: Script execution time 0.0075380802154541 seconds.
+2019-07-19 10:00:43 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:46 [info]: Script execution time 0.0071299076080322 seconds.
+2019-07-19 10:00:46 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:47 [info]: Script execution time 0.0073931217193604 seconds.
+2019-07-19 10:00:47 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:54 [info]: Script execution time 0.0068891048431396 seconds.
+2019-07-19 10:00:54 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:54 [info]: Script execution time 0.0071780681610107 seconds.
+2019-07-19 10:00:54 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:56 [success]: Cache cleared.
+2019-07-19 10:00:56 [info]: Script execution time 0.0098061561584473 seconds.
+2019-07-19 10:00:56 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:57 [error]: Return value of Algorithms\Hyphenation::getFromDatabase() must be of the type string, null returned
+2019-07-19 10:00:57 [info]: Script execution time 0.017092943191528 seconds.
+2019-07-19 10:00:57 [info]: Script used 2 mb of memory.
+2019-07-19 10:00:58 [info]: Script execution time 0.0072970390319824 seconds.
+2019-07-19 10:00:58 [info]: Script used 2 mb of memory.
+2019-07-19 10:01:02 [success]: Cache cleared.
+2019-07-19 10:01:02 [info]: Script execution time 0.010205984115601 seconds.
+2019-07-19 10:01:02 [info]: Script used 2 mb of memory.
+2019-07-19 10:15:49 [success]: Cache cleared.
+2019-07-19 10:15:49 [info]: Script execution time 0.0096480846405029 seconds.
+2019-07-19 10:15:49 [info]: Script used 2 mb of memory.
+2019-07-19 10:15:50 [error]: Return value of Algorithms\Hyphenation::getFromDatabase() must be of the type string, null returned
+2019-07-19 10:15:50 [info]: Script execution time 0.01252007484436 seconds.
+2019-07-19 10:15:50 [info]: Script used 2 mb of memory.
+2019-07-19 10:16:12 [success]: Cache cleared.
+2019-07-19 10:16:12 [info]: Script execution time 0.011730909347534 seconds.
+2019-07-19 10:16:12 [info]: Script used 2 mb of memory.
+2019-07-19 10:16:13 [error]: Return value of Algorithms\Hyphenation::getFromDatabase() must be of the type string, null returned
+2019-07-19 10:16:13 [info]: Script execution time 0.012526988983154 seconds.
+2019-07-19 10:16:13 [info]: Script used 2 mb of memory.
+2019-07-19 10:16:17 [success]: Cache cleared.
+2019-07-19 10:16:17 [info]: Script execution time 0.011971950531006 seconds.
+2019-07-19 10:16:17 [info]: Script used 2 mb of memory.
+2019-07-19 10:18:31 [success]: Cache cleared.
+2019-07-19 10:18:31 [info]: Script execution time 0.010412216186523 seconds.
+2019-07-19 10:18:31 [info]: Script used 2 mb of memory.
+2019-07-19 10:18:32 [error]: Return value of Algorithms\Hyphenation::getFromDatabase() must be of the type string, null returned
+2019-07-19 10:18:32 [info]: Script execution time 0.012128829956055 seconds.
+2019-07-19 10:18:32 [info]: Script used 2 mb of memory.
+2019-07-19 10:18:40 [success]: Cache cleared.
+2019-07-19 10:18:40 [info]: Script execution time 0.010798931121826 seconds.
+2019-07-19 10:18:40 [info]: Script used 2 mb of memory.
+2019-07-19 10:18:41 [error]: Return value of Algorithms\Hyphenation::getFromDatabase() must be of the type string, null returned
+2019-07-19 10:18:41 [info]: Script execution time 0.012480974197388 seconds.
+2019-07-19 10:18:41 [info]: Script used 2 mb of memory.
+2019-07-19 10:19:14 [success]: Cache cleared.
+2019-07-19 10:19:14 [info]: Script execution time 0.010802030563354 seconds.
+2019-07-19 10:19:14 [info]: Script used 2 mb of memory.
+2019-07-19 10:19:15 [info]: Pattern .mis1
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern 1tra
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern 2is.
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern 2n1s2
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern 2st.
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern 4te.
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern 5mi.
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern a2n
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern m2is
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern n2sl
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern s1l2
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern s3lat
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Pattern st4r
+ used for word mistranslate
+2019-07-19 10:19:15 [info]: Script execution time 0.053012847900391 seconds.
+2019-07-19 10:19:15 [info]: Script used 4 mb of memory.
+2019-07-19 10:20:59 [notice]: Patterns would be loaded from tex-hyphenation-patterns.txt!
+2019-07-19 10:20:59 [success]: New patterns imported.
+2019-07-19 10:20:59 [info]: Script execution time 0.67194795608521 seconds.
+2019-07-19 10:20:59 [info]: Script used 2 mb of memory.
+2019-07-19 10:28:26 [notice]: Patterns would be loaded from tex-hyphenation-patterns.txt!
+2019-07-19 10:28:26 [success]: New patterns imported.
+2019-07-19 10:28:26 [info]: Script execution time 0.68426895141602 seconds.
+2019-07-19 10:28:26 [info]: Script used 2 mb of memory.
+2019-07-19 10:35:55 [notice]: Patterns would be loaded from tex-hyphenation-patterns.txt!
+2019-07-19 10:35:56 [success]: New patterns imported.
+2019-07-19 10:35:56 [info]: Script execution time 0.68974184989929 seconds.
+2019-07-19 10:35:56 [info]: Script used 2 mb of memory.
+2019-07-19 10:42:21 [info]: Script execution time 0.013151884078979 seconds.
+2019-07-19 10:42:21 [info]: Script used 2 mb of memory.
+2019-07-19 10:42:25 [info]: Pattern .he2
+ used for word hello
+2019-07-19 10:42:25 [info]: Pattern 3lo.
+ used for word hello
+2019-07-19 10:42:25 [info]: Pattern ello4
+ used for word hello
+2019-07-19 10:42:25 [info]: Pattern l1l
+ used for word hello
+2019-07-19 10:42:25 [info]: Pattern ll4o
+ used for word hello
+2019-07-19 10:42:25 [info]: Script execution time 0.037580966949463 seconds.
+2019-07-19 10:42:25 [info]: Script used 2 mb of memory.
+2019-07-19 10:42:35 [info]: Script execution time 0.0073671340942383 seconds.
+2019-07-19 10:42:35 [info]: Script used 2 mb of memory.
+2019-07-19 10:45:47 [error]: Return value of Models\Word::delete() must be of the type boolean, object returned
+2019-07-19 10:50:22 [info]: Script execution time 0.0077259540557861 seconds.
+2019-07-19 10:50:22 [info]: Script used 2 mb of memory.
+2019-07-19 10:50:27 [info]: Pattern 2ie4
+ used for word newbie
+2019-07-19 10:50:27 [info]: Pattern 2ne.
+ used for word newbie
+2019-07-19 10:50:27 [info]: Pattern 3bie
+ used for word newbie
+2019-07-19 10:50:27 [info]: Pattern ne4w
+ used for word newbie
+2019-07-19 10:50:27 [info]: Pattern w1b
+ used for word newbie
+2019-07-19 10:50:27 [info]: Script execution time 0.040693044662476 seconds.
+2019-07-19 10:50:27 [info]: Script used 2 mb of memory.
+2019-07-19 15:17:21 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:17:23 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:17:24 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:17:24 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:18:18 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:18:19 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:18:20 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:21:56 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:25:48 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:25:49 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:26:08 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:26:54 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:26:56 [error]: array_shift() expects parameter 1 to be array, null given
+2019-07-19 15:28:16 [error]: Too few arguments to function {closure}(), 0 passed and exactly 1 expected
+2019-07-19 16:10:46 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:12:06 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:12:09 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:12:12 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:12:13 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:12:37 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:12:38 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:13:47 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:13:47 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:14:11 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:14:12 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:14:12 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:14:13 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:15:40 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:15:41 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:15:41 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:31 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:32 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:32 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:39 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:40 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:41 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:45 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:46 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:49 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:49 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:16:50 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:17:22 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:17:23 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:17:25 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:17:25 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:17:26 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:18:16 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:19 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:19 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:20 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:20 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:21 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:21 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:31 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:32 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:49 [error]: Class ShowPatterns does not exist
+2019-07-19 16:18:50 [error]: Class ShowPatterns does not exist
+2019-07-19 16:19:20 [error]: Class ShowPatterns does not exist
+2019-07-19 16:19:22 [error]: Class ShowPatterns does not exist
+2019-07-19 16:19:23 [error]: Class ShowPatterns does not exist
+2019-07-19 16:31:03 [error]: Class 'ShowPatterns' not found
+2019-07-19 16:31:04 [error]: Class 'ShowPatterns' not found

@@ -1,0 +1,78 @@
+2019-07-18 09:58:16 [error]: Too few arguments to function Core\API\Patterns::__construct(), 0 passed in /var/www/html/visma-internship/api.php on line 6 and exactly 1 expected
+2019-07-18 09:58:16 [info]: Script execution time 0.0071570873260498 seconds.
+2019-07-18 09:58:16 [info]: Script used 2 mb of memory.
+2019-07-18 10:00:19 [error]: Class Models\Patern does not exist
+2019-07-18 10:00:19 [info]: Script execution time 0.0086429119110107 seconds.
+2019-07-18 10:00:19 [info]: Script used 2 mb of memory.
+2019-07-18 10:00:32 [info]: Script execution time 0.0066511631011963 seconds.
+2019-07-18 10:00:32 [info]: Script used 2 mb of memory.
+2019-07-18 10:02:56 [info]: Script execution time 0.0059938430786133 seconds.
+2019-07-18 10:02:56 [info]: Script used 2 mb of memory.
+2019-07-18 10:03:43 [info]: Script execution time 0.0064868927001953 seconds.
+2019-07-18 10:03:43 [info]: Script used 2 mb of memory.
+2019-07-18 11:14:51 [info]: Pattern .le2
+ used for word lel
+2019-07-18 11:14:51 [info]: Script execution time 0.040426015853882 seconds.
+2019-07-18 11:14:51 [info]: Script used 4 mb of memory.
+2019-07-18 11:15:22 [info]: Script execution time 0.0047240257263184 seconds.
+2019-07-18 11:15:22 [info]: Script used 2 mb of memory.
+2019-07-18 11:26:50 [info]: Script execution time 0.0048511028289795 seconds.
+2019-07-18 11:26:50 [info]: Script used 2 mb of memory.
+2019-07-18 12:24:28 [error]: Your entered arguments count is not valid.
+2019-07-18 12:24:28 [info]: Script execution time 0.0071959495544434 seconds.
+2019-07-18 12:24:28 [info]: Script used 2 mb of memory.
+2019-07-18 12:25:05 [error]: Your entered arguments count is not valid.
+2019-07-18 12:25:05 [info]: Script execution time 0.0075440406799316 seconds.
+2019-07-18 12:25:05 [info]: Script used 2 mb of memory.
+2019-07-18 12:27:26 [error]: Your entered arguments count is not valid.
+2019-07-18 12:27:26 [info]: Script execution time 0.0076198577880859 seconds.
+2019-07-18 12:27:26 [info]: Script used 2 mb of memory.
+2019-07-18 12:41:03 [error]: Argument 1 passed to Core\DI\Container::get() must be of the type string, null given, called in /home/aleksandr/PhpstormProjects/visma-internship/Core/Application.php on line 93
+2019-07-18 12:41:03 [info]: Script execution time 0.016313076019287 seconds.
+2019-07-18 12:41:03 [info]: Script used 2 mb of memory.
+2019-07-18 12:41:22 [error]: Argument 1 passed to Core\DI\Container::get() must be of the type string, null given, called in /home/aleksandr/PhpstormProjects/visma-internship/Core/Application.php on line 93
+2019-07-18 12:41:22 [info]: Script execution time 0.0044159889221191 seconds.
+2019-07-18 12:41:22 [info]: Script used 2 mb of memory.
+2019-07-18 12:42:01 [info]: Script execution time 0.0051929950714111 seconds.
+2019-07-18 12:42:01 [info]: Script used 2 mb of memory.
+2019-07-18 12:42:05 [info]: Script execution time 0.0040249824523926 seconds.
+2019-07-18 12:42:05 [info]: Script used 2 mb of memory.
+2019-07-18 12:43:33 [error]: Argument 1 passed to Core\API\Patterns::__construct() must be an instance of Models\Pattern, instance of Core\Database\Connection given, called in /home/aleksandr/PhpstormProjects/visma-internship/Controllers/PatternController.php on line 21
+2019-07-18 12:53:15 [error]: Call to undefined method Controllers\PatternController::setRequestMethod()
+2019-07-18 12:53:25 [error]: Too few arguments to function Controllers\PatternController::processRequest(), 1 passed in /home/aleksandr/PhpstormProjects/visma-internship/Public/index.php on line 30 and exactly 2 expected
+2019-07-18 12:54:00 [info]: Pattern .te4
+ used for word test
+2019-07-18 12:54:00 [info]: Pattern 2st.
+ used for word test
+2019-07-18 12:54:00 [info]: Pattern 4te.
+ used for word test
+2019-07-18 12:54:00 [info]: Pattern 4tes.
+ used for word test
+2019-07-18 12:54:00 [info]: Script execution time 0.033700942993164 seconds.
+2019-07-18 12:54:00 [info]: Script used 2 mb of memory.
+2019-07-18 13:02:12 [error]: Call to undefined method Controllers\PatternController::setId()
+2019-07-18 13:02:19 [error]: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+2019-07-18 13:02:21 [error]: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+2019-07-18 13:02:29 [error]: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+2019-07-18 13:02:33 [error]: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+2019-07-18 13:03:18 [error]: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+2019-07-18 13:03:29 [error]: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+2019-07-18 13:03:32 [error]: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+2019-07-18 13:03:33 [error]: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+2019-07-18 13:06:15 [error]: header() expects parameter 1 to be string, null given
+2019-07-18 13:07:06 [error]: header() expects parameter 1 to be string, null given
+2019-07-18 13:07:13 [error]: header() expects parameter 1 to be string, null given
+2019-07-18 13:07:17 [error]: header() expects parameter 1 to be string, null given
+2019-07-18 13:07:18 [error]: header() expects parameter 1 to be string, null given
+2019-07-18 13:09:19 [error]: header() expects parameter 1 to be string, null given
+2019-07-18 13:10:59 [error]: Return value of Controllers\PatternController::createPatternFromRequest() must be of the type array, none returned
+2019-07-18 13:17:50 [error]: Return value of Controllers\PatternController::unprocessableEntityResponse() must be of the type array, none returned
+2019-07-18 13:17:59 [error]: header() expects parameter 1 to be string, null given
+2019-07-18 13:19:46 [error]: Return value of Models\Pattern::create() must be of the type boolean, object returned
+2019-07-18 13:26:53 [error]: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '.testing' for key 'pattern'
+2019-07-18 13:40:19 [error]: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'test5' for key 'pattern'
+2019-07-18 13:42:09 [error]: Call to undefined method Core\API\Patterns::find()
+2019-07-18 13:52:21 [error]: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'test6' for key 'pattern'
+2019-07-18 14:06:35 [error]: Argument 1 passed to Core\DI\Container::get() must be of the type string, null given, called in /home/aleksandr/PhpstormProjects/visma-internship/Core/Application.php on line 102
+2019-07-18 14:07:02 [error]: Argument 3 passed to Controllers\WordController::processRequest() must be of the type integer, null given, called in /home/aleksandr/PhpstormProjects/visma-internship/Public/index.php on line 39
+2019-07-18 14:07:21 [error]: header() expects parameter 1 to be string, null given

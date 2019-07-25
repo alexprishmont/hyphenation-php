@@ -1,0 +1,114 @@
+2019-07-25 08:51:43 [success]: Result: hel-lo
+2019-07-25 08:51:43 [info]: Script execution time 0.051378965377808 seconds.
+2019-07-25 08:51:43 [info]: Script used 4 mb of memory.
+2019-07-25 08:52:17 [success]: Cache successfully cleared.
+2019-07-25 08:52:17 [info]: Script execution time 0.0090570449829102 seconds.
+2019-07-25 08:52:17 [info]: Script used 2 mb of memory.
+2019-07-25 08:52:18 [success]: Result: hel-lo
+2019-07-25 08:52:18 [info]: Script execution time 0.006519079208374 seconds.
+2019-07-25 08:52:18 [info]: Script used 2 mb of memory.
+2019-07-25 08:52:42 [success]: Result: hel-lo
+2019-07-25 08:52:42 [info]: Script execution time 0.0055580139160156 seconds.
+2019-07-25 08:52:42 [info]: Script used 2 mb of memory.
+2019-07-25 08:52:43 [success]: Result: hel-lo
+2019-07-25 08:52:43 [info]: Script execution time 0.0055291652679443 seconds.
+2019-07-25 08:52:43 [info]: Script used 2 mb of memory.
+2019-07-25 09:04:42 [success]: Result: go-ing
+2019-07-25 09:04:42 [info]: Script execution time 0.047760009765625 seconds.
+2019-07-25 09:04:42 [info]: Script used 4 mb of memory.
+2019-07-25 09:04:50 [success]: Result: walk-ing
+2019-07-25 09:04:50 [info]: Script execution time 0.047967195510864 seconds.
+2019-07-25 09:04:50 [info]: Script used 2 mb of memory.
+2019-07-25 09:05:15 [success]: Result: pro-fes-sion-al
+2019-07-25 09:05:15 [info]: Script execution time 0.046875 seconds.
+2019-07-25 09:05:15 [info]: Script used 2 mb of memory.
+2019-07-25 09:05:37 [success]: Result: peo-ple
+2019-07-25 09:05:37 [info]: Script execution time 0.045958995819092 seconds.
+2019-07-25 09:05:37 [info]: Script used 2 mb of memory.
+2019-07-25 09:27:31 [success]: Result: clear-ing
+2019-07-25 09:27:31 [info]: Script execution time 0.050489187240601 seconds.
+2019-07-25 09:27:31 [info]: Script used 2 mb of memory.
+2019-07-25 09:40:55 [success]: Result: fea-ture is cool, but im bet-ter
+2019-07-25 09:40:55 [info]: Script execution time 0.21929097175598 seconds.
+2019-07-25 09:40:55 [info]: Script used 2 mb of memory.
+2019-07-25 09:40:58 [success]: Result: fea-ture is cool, but im bet-ter
+2019-07-25 09:40:58 [info]: Script execution time 0.0059719085693359 seconds.
+2019-07-25 09:40:58 [info]: Script used 2 mb of memory.
+2019-07-25 09:52:15 [success]: Result: stuff
+2019-07-25 09:52:15 [info]: Script execution time 0.047745943069458 seconds.
+2019-07-25 09:52:15 [info]: Script used 2 mb of memory.
+2019-07-25 14:16:31 [error]: Usage: php startup [flag] [target]
+2019-07-25 14:16:31 [info]: Script execution time 0.0077290534973145 seconds.
+2019-07-25 14:16:31 [info]: Script used 2 mb of memory.
+2019-07-25 14:16:34 [error]: Such flag [-f] does not exist.
+2019-07-25 14:16:34 [info]: Script execution time 0.0086691379547119 seconds.
+2019-07-25 14:16:34 [info]: Script used 2 mb of memory.
+2019-07-25 14:32:57 [success]: Result: mis-trans-late
+2019-07-25 14:32:57 [info]: Script execution time 0.015902996063232 seconds.
+2019-07-25 14:32:57 [info]: Script used 2 mb of memory.
+2019-07-25 14:33:01 [success]: Result: hel-lo
+2019-07-25 14:33:01 [info]: Script execution time 0.0080127716064453 seconds.
+2019-07-25 14:33:01 [info]: Script used 2 mb of memory.
+2019-07-25 14:33:03 [success]: Result: world
+2019-07-25 14:33:03 [info]: Script execution time 0.050956964492798 seconds.
+2019-07-25 14:33:03 [info]: Script used 2 mb of memory.
+2019-07-25 14:33:14 [success]: 
+2019-07-25 14:33:14 [info]: Script execution time 0.0079159736633301 seconds.
+2019-07-25 14:33:14 [info]: Script used 2 mb of memory.
+2019-07-25 14:33:18 [success]: 
+2019-07-25 14:33:18 [info]: Script execution time 0.0054831504821777 seconds.
+2019-07-25 14:33:18 [info]: Script used 2 mb of memory.
+2019-07-25 14:33:58 [success]: 
+2019-07-25 14:33:58 [info]: Script execution time 0.0066311359405518 seconds.
+2019-07-25 14:33:58 [info]: Script used 2 mb of memory.
+2019-07-25 14:34:17 [success]: Result: hel-lo world. This is test case in such be-gin-ner-s thing im the best one
+2019-07-25 14:34:17 [info]: Script execution time 0.35358905792236 seconds.
+2019-07-25 14:34:17 [info]: Script used 2 mb of memory.
+2019-07-25 14:34:23 [success]: Result: hel-lo world. This is test case in such be-gin-ner-s thing im the best one
+2019-07-25 14:34:23 [info]: Script execution time 0.0065689086914062 seconds.
+2019-07-25 14:34:23 [info]: Script used 2 mb of memory.
+2019-07-25 14:35:25 [success]: Result: hel-lo world. This is test case in such be-gin-ner-s thing im the best one
+2019-07-25 14:35:25 [info]: Script execution time 0.0068378448486328 seconds.
+2019-07-25 14:35:25 [info]: Script used 2 mb of memory.
+2019-07-25 14:35:29 [success]: Result: be-gin-ner
+2019-07-25 14:35:29 [info]: Script execution time 0.052166938781738 seconds.
+2019-07-25 14:35:29 [info]: Script used 2 mb of memory.
+2019-07-25 14:35:32 [success]: Result: be-gin-ner-s
+2019-07-25 14:35:32 [info]: Script execution time 0.005897045135498 seconds.
+2019-07-25 14:35:32 [info]: Script used 2 mb of memory.
+2019-07-25 14:35:42 [success]: Result: good-ness
+2019-07-25 14:35:42 [info]: Script execution time 0.047592878341675 seconds.
+2019-07-25 14:35:42 [info]: Script used 2 mb of memory.
+2019-07-25 14:35:44 [success]: Result: good-ness
+2019-07-25 14:35:44 [info]: Script execution time 0.0056500434875488 seconds.
+2019-07-25 14:35:44 [info]: Script used 2 mb of memory.
+2019-07-25 14:40:51 [error]: Usage: php bin/bin/startup [flag] [target]
+2019-07-25 14:40:51 [info]: Script execution time 0.0035190582275391 seconds.
+2019-07-25 14:40:51 [info]: Script used 2 mb of memory.
+2019-07-25 14:41:00 [error]: Usage: php bin/bin/startup [flag] [target]
+2019-07-25 14:41:00 [info]: Script execution time 0.0040740966796875 seconds.
+2019-07-25 14:41:00 [info]: Script used 2 mb of memory.
+2019-07-25 14:41:02 [success]: Result: test
+2019-07-25 14:41:02 [info]: Script execution time 0.0056300163269043 seconds.
+2019-07-25 14:41:02 [info]: Script used 2 mb of memory.
+2019-07-25 14:41:05 [success]: Result: mis-trans-late
+2019-07-25 14:41:05 [info]: Script execution time 0.0056750774383545 seconds.
+2019-07-25 14:41:05 [info]: Script used 2 mb of memory.
+2019-07-25 15:34:59 [error]: Usage: php bin/bin/startup [flag] [target]
+2019-07-25 15:34:59 [info]: Script execution time 0.0033469200134277 seconds.
+2019-07-25 15:34:59 [info]: Script used 2 mb of memory.
+2019-07-25 15:35:00 [error]: Usage: php bin/bin/startup [flag] [target]
+2019-07-25 15:35:00 [info]: Script execution time 0.0037319660186768 seconds.
+2019-07-25 15:35:00 [info]: Script used 2 mb of memory.
+2019-07-25 15:35:01 [error]: Usage: php bin/bin/startup [flag] [target]
+2019-07-25 15:35:01 [info]: Script execution time 0.0034849643707275 seconds.
+2019-07-25 15:35:01 [info]: Script used 2 mb of memory.
+2019-07-25 15:35:05 [error]: Usage: php bin/bin/startup [flag] [target]
+2019-07-25 15:35:05 [info]: Script execution time 0.003403902053833 seconds.
+2019-07-25 15:35:05 [info]: Script used 2 mb of memory.
+2019-07-25 15:36:54 [success]: Result: mis-trans-late
+2019-07-25 15:36:54 [info]: Script execution time 0.0060200691223145 seconds.
+2019-07-25 15:36:54 [info]: Script used 2 mb of memory.
+2019-07-25 15:36:57 [success]: Result: world
+2019-07-25 15:36:58 [info]: Script execution time 0.0057539939880371 seconds.
+2019-07-25 15:36:58 [info]: Script used 2 mb of memory.
