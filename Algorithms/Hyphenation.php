@@ -45,8 +45,9 @@ class Hyphenation implements HyphenationInterface
         for ($i = 0; $i < strlen($completedWordWithDigits); $i++) {
             $char = $completedWordWithDigits[$i];
 
-            if (!is_numeric($char))
+            if (!is_numeric($char)) {
                 continue;
+            }
 
             if ((int)$char % 2 > 0) {
                 $result = str_replace($char, '-', $result);
