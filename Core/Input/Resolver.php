@@ -35,17 +35,13 @@ class Resolver implements ResolverInterface
 
     public static function callMethod(object $object, string $target)
     {
+        if (self::isObjectAlgorithm()) {
+            $result = 'Result: ' . $object->hyphenate($target);
+            return $result;
+        }
+
         $result = '';
         switch (self::$objectName) {
-            case 'proxy':
-                $result = 'Result: ' . $object->hyphenate($target);
-                break;
-            case 'stringHyphenation':
-                $result = 'Result: ' . $object->hyphenate($target);
-                break;
-            case 'fileHyphenation':
-                $result = 'Result: ' . $object->hyphenate($target);
-                break;
             case 'cacheController':
                 $object->clear();
                 $result = 'Cache successfully cleared.';
@@ -64,6 +60,11 @@ class Resolver implements ResolverInterface
                 break;
         }
         return $result;
+    }
+
+    private static function isObjectAlgorithm()
+    {
+        return strpos(self::$objectName, 'hyphenation') >= 0 || self::$objectName === 'proxy';
     }
 
     private static function getObject(string $objectName)
