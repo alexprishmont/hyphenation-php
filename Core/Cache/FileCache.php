@@ -54,7 +54,7 @@ class FileCache implements CacheInterface
     public function get($key, $default = null)
     {
         $path = $this->getPath($key);
-        $expiresAt = filemtime($path);
+        $expiresAt = @filemtime($path);
 
         if ($expiresAt === false) {
             return $default;
