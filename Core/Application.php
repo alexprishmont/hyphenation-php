@@ -13,7 +13,6 @@ class Application
 {
     private $container;
 
-    private $exceptionHandler;
     private $logger;
     private $timing;
 
@@ -31,10 +30,10 @@ class Application
         $this->setInstance('config');
         self::$settings = $this->getInstance('config')->get('config');
 
-        $this->exceptionHandler = $this->getInstance('exceptionhandler');
+        $exceptionHandler = $this->getInstance('exceptionhandler');
 
         set_exception_handler([
-            $this->exceptionHandler,
+            $exceptionHandler,
             'exceptionHandlerFunction'
         ]);
 
