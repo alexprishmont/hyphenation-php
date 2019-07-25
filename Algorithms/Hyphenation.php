@@ -7,7 +7,6 @@ use Algorithms\Interfaces\HyphenationInterface;
 
 class Hyphenation implements HyphenationInterface
 {
-    private $word;
     private $validPatterns = [];
     private $patterns = [];
 
@@ -18,26 +17,23 @@ class Hyphenation implements HyphenationInterface
 
     public function hyphenate(string $word): string
     {
-        $this->word = $word;
         return $this->getResult($word);
     }
 
     public function getValidPatternsForWord(string $word): array
     {
-        $this->word = $word;
-        $valid = $this->findValidPatterns($this->patterns);
+        $valid = $this->findValidPatterns($this->patterns, $word);
         return $valid;
     }
 
     public function getResult(string $word): string
     {
-        $this->word = $word;
         $patterns = $this->patterns;
-        $this->validPatterns = $this->findValidPatterns($patterns);
+        $this->validPatterns = $this->findValidPatterns($patterns, $word);
 
         $result = $this->addSyllableSymbols(
             $this->completeWordWithDigits(
-                $this->pushDigitsToWord($this->validPatterns)
+                $word, $this->pushDigitsToWord($this->validPatterns, $word)
             )
         );
         return $result;
@@ -61,10 +57,10 @@ class Hyphenation implements HyphenationInterface
         return $result;
     }
 
-    private function completeWordWithDigits(array $digitsInWord = []): string
+    private function completeWordWithDigits(string $word, array $digitsInWord = []): string
     {
         $completedWordWithDigits = "";
-        foreach (str_split($this->word) as $i => $char) {
+        foreach (str_split($word) as $i => $char) {
             $completedWordWithDigits .= $char;
             if (isset($digitsInWord[$i])) {
                 $completedWordWithDigits .= $digitsInWord[$i];
@@ -73,13 +69,13 @@ class Hyphenation implements HyphenationInterface
         return $completedWordWithDigits;
     }
 
-    private function pushDigitsToWord(array $validPatterns = []): array
+    private function pushDigitsToWord(array $validPatterns, string $word): array
     {
         $digitsInWord = [];
         foreach ($validPatterns as $pattern) {
             $digitsInPattern = $this->extractDigitsFromWord($pattern);
             foreach ($digitsInPattern as $position => $digit) {
-                $position = $position + strpos($this->word, $this->clearPatternString($pattern));
+                $position = $position + strpos($word, $this->clearPatternString($pattern));
                 if (!isset($digitsInWord[$position]) || $digitsInWord[$position] < $digit) {
                     $digitsInWord[$position] = $digit;
                 }
@@ -110,16 +106,16 @@ class Hyphenation implements HyphenationInterface
         return trim(preg_replace("/\s+/", " ", $cleanString));
     }
 
-    private function findValidPatterns(array $patterns): array
+    private function findValidPatterns(array $patterns, string $word): array
     {
         $validPatterns = [];
         foreach ($patterns as $pattern) {
             $cleanString = $this->clearPatternString($pattern);
-            $position = strpos($this->word, $cleanString);
+            $position = strpos($word, $cleanString);
 
             if ($position === false ||
                 ($pattern[0] == '.' && $position !== 0) ||
-                ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($this->word) - strlen($cleanString))) {
+                ($pattern[strlen($pattern) - 1] == '.' && $position !== strlen($word) - strlen($cleanString))) {
                 continue;
             }
             $validPatterns[] = $pattern;
