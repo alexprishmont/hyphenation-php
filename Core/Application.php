@@ -77,9 +77,13 @@ class Application
     public function startup(array $input)
     {
         Validator::validateInput($input);
-        $object = Resolver::resolve($input[1]);
+
+        $flag = $input[1];
         $target = $input[2];
+
+        $object = Resolver::resolve($flag);
         $result = Resolver::callMethod($object, $target);
+
         $this->logger
             ->log(LogLevel::SUCCESS, $result);
     }
