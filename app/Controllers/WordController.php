@@ -29,9 +29,9 @@ class WordController
             $resultArray = $this->wordService->getAll();
             return WordsView::renderJson($resultArray);
         }
-        return WordsView::renderJson([
-            'message' => 'No words found in database.'
-        ]);
+
+        WordsView::notFound('No words found in database.');
+        return false;
     }
 
     public function showSingleWord(int $id)
@@ -41,9 +41,8 @@ class WordController
                 ->id($id)
                 ->find();
             if (!$check) {
-                return WordsView::renderJson([
-                    'message' => 'Word with id: ' . $id . ' not found'
-                ]);
+                WordsView::notFound('Word with id: ' . $id . ' not found.');
+                return false;
             }
             return WordsView::renderJson([
                 'data' => [
@@ -53,17 +52,13 @@ class WordController
                 ]
             ]);
         }
-        return WordsView::renderJson([
-            'message' => 'No words found in database.'
-        ]);
+        WordsView::notFound('No words found in database.');
     }
 
     public function createWord(array $data)
     {
         if ($this->patternService->count() === 0) {
-            WordsView::renderJson([
-                'message' => 'Cannot add new word as there is no patterns list imported.'
-            ]);
+            WordsView::notFound('Cannot add new word to database as there is no patterns list imported.');
             return;
         }
 
@@ -87,7 +82,7 @@ class WordController
             WordsView::createdResponse();
             return;
         }
-        echo WordsView::renderJson(['message' => 'Something went wrong...']);
+        WordsView::unhandledError();
     }
 
     public function deleteWord(int $id)

@@ -22,9 +22,7 @@ class PatternController extends Controller
             $resultArray = $this->patternService->getAll();
             return PatternsView::renderJson($resultArray);
         }
-        return PatternsView::renderJson([
-            'message' => 'No patterns found in database.'
-        ]);
+        PatternsView::notFound();
     }
 
     public function showSinglePattern(int $id)
@@ -34,9 +32,8 @@ class PatternController extends Controller
                 ->id($id)
                 ->find();
             if (!$check) {
-                return PatternsView::renderJson([
-                    'message' => 'Pattern with id: ' . $id . ' not found'
-                ]);
+                PatternsView::notFound('Pattern with id: ' . $id . ' not found.');
+                return false;
             }
             return PatternsView::renderJson([
                 'data' => [
@@ -47,9 +44,7 @@ class PatternController extends Controller
                 ]
             ]);
         }
-        return PatternsView::renderJson([
-            'message' => 'No patterns found in database.'
-        ]);
+        PatternsView::notFound();
     }
 
     public function createPattern(array $data)

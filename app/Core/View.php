@@ -26,6 +26,23 @@ class View
         ]);
     }
 
+    public static function unhandledError()
+    {
+        self::renderHTTPException([
+            'status_code_header' => 'HTTP/1.1 409 Conflict',
+            'body' => ['message' => 'Something went wrong.. Try again.']
+        ]);
+    }
+
+    public static function notFound(string $customBody = null)
+    {
+        self::renderHTTPException([
+            'status_code_header' => 'HTTP/1.1 404 Not Found',
+            'body' => ($customBody === null) ?
+                ['message' => 'Such element not found.'] : ['message' => $customBody]
+        ]);
+    }
+
     public static function createdResponse()
     {
         self::renderHTTPException([
