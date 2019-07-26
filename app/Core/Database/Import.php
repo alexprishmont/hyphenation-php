@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Database;
+namespace NXT\Core\Database;
 
 
-use Core\Cache\FileCache;
-use Core\Database\Interfaces\ImportInterface;
+use NXT\Core\Cache\FileCache;
+use NXT\Core\Database\Interfaces\ImportInterface;
 use PDO;
 
 class Import implements ImportInterface

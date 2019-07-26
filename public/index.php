@@ -1,6 +1,6 @@
 <?php
 $loader = require '../vendor/autoload.php';
 
-$app = new Core\Application;
+$app = new NXT\Application;
 
 require('../app/Routes.php');

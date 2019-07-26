@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Cache\Interfaces;
+namespace NXT\Core\Cache\Interfaces;
 
 interface CacheInterface
 {

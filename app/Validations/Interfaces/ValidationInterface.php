@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Validations\Interfaces;
+namespace NXT\Validations\Interfaces;
 
 interface ValidationInterface
 {

@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Input;
+namespace NXT\Core\Input;
 
-use Core\Application;
-use Core\DI\Container;
-use Core\DI\DependenciesLoader;
-use Core\Exceptions\InvalidFlagException;
-use Core\Input\Interfaces\ResolverInterface;
+use NXT\Core\Application;
+use NXT\Core\DI\Container;
+use NXT\Core\DI\DependenciesLoader;
+use NXT\Core\Exceptions\InvalidFlagException;
+use NXT\Core\Input\Interfaces\ResolverInterface;
 
 class Resolver implements ResolverInterface
 {

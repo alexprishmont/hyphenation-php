@@ -1,11 +1,11 @@
 <?php
 
-namespace Core\Cache;
+namespace NXT\Core\Cache;
 
-use Core\Application;
-use Core\Cache\Interfaces\CacheInterface;
-use Core\Exceptions\InvalidArgumentException;
-use Core\Tools;
+use NXT\Core\Application;
+use NXT\Core\Cache\Interfaces\CacheInterface;
+use NXT\Core\Exceptions\InvalidArgumentException;
+use NXT\Core\Tools;
 
 class FileCache implements CacheInterface
 {

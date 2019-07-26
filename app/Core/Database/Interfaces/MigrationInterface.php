@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Database\Interfaces;
+namespace NXT\Core\Database\Interfaces;
 
 interface MigrationInterface
 {

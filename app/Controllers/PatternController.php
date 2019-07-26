@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Controllers;
+namespace NXT\Controllers;
 
-use Core\Controller;
-use Models\Pattern;
-use Views\PatternsView;
+use NXT\Core\Controller;
+use NXT\Models\Pattern;
+use NXT\Views\PatternsView;
 
 class PatternController extends Controller
 {

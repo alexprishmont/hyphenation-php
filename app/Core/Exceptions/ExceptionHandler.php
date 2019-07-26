@@ -1,9 +1,9 @@
 <?php
 
-namespace Core\Exceptions;
+namespace NXT\Core\Exceptions;
 
-use Core\Log\Logger;
-use Core\Log\LogLevel;
+use NXT\Core\Log\Logger;
+use NXT\Core\Log\LogLevel;
 
 class ExceptionHandler
 {

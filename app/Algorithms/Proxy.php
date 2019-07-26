@@ -1,17 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Algorithms;
+namespace NXT\Algorithms;
 
-use Algorithms\Interfaces\HyphenationInterface;
-use Core\Application;
-use Core\Cache\FileCache;
-use Core\Database\Export;
-use Core\Log\Logger;
-use Core\Log\LogLevel;
-use Core\Scans\Scan;
-use Models\Pattern;
-use Models\Word;
+use NXT\Algorithms\Interfaces\HyphenationInterface;
+use NXT\Core\Application;
+use NXT\Core\Cache\FileCache;
+use NXT\Core\Database\Export;
+use NXT\Core\Scans\Scan;
+use NXT\Models\Pattern;
+use NXT\Models\Word;
 
 class Proxy implements HyphenationInterface
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Core\Log;
+namespace NXT\Core\Log;
 
-use Core\Config;
-use Core\Exceptions\LoggerException;
-use Core\Log\Interfaces\LoggerInterface;
-use Core\Tools;
+use NXT\Core\Config;
+use NXT\Core\Exceptions\LoggerException;
+use NXT\Core\Log\Interfaces\LoggerInterface;
+use NXT\Core\Tools;
 use DateTime;
 use DateTimeZone;
 

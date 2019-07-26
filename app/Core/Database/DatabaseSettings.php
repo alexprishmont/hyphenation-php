@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Database;
+namespace NXT\Core\Database;
 
-use Core\Config;
+use NXT\Core\Config;
 
 class DatabaseSettings
 {

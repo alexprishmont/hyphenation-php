@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Controllers;
+namespace NXT\Controllers;
 
-use Algorithms\Proxy;
-use Models\Pattern;
-use Models\Word;
-use Views\WordsView;
+use NXT\Algorithms\Proxy;
+use NXT\Models\Pattern;
+use NXT\Models\Word;
+use NXT\Views\WordsView;
 
 class WordController
 {

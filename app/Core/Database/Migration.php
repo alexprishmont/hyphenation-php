@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Database;
+namespace NXT\Core\Database;
 
-use Core\Database\Interfaces\MigrationInterface;
-use Core\Log\Logger;
-use Core\Log\LogLevel;
+use NXT\Core\Database\Interfaces\MigrationInterface;
+use NXT\Core\Log\Logger;
+use NXT\Core\Log\LogLevel;
 
 class Migration implements MigrationInterface
 {

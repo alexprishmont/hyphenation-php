@@ -31,3 +31,9 @@
 2019-07-26 09:56:55 [success]: Result: Unit Test-ing is the best way to test my code on fail-ure
 2019-07-26 09:56:55 [info]: Script execution time 0.25245499610901 seconds.
 2019-07-26 09:56:55 [info]: Script used 2 mb of memory.
+2019-07-26 11:01:33 [error]: Access to undeclared static property: Core\Application::$excludeActions
+2019-07-26 11:01:33 [info]: Script execution time 0.0045008659362793 seconds.
+2019-07-26 11:01:33 [info]: Script used 10 mb of memory.
+2019-07-26 11:29:49 [error]: Usage: php bin/bin/startup [flag] [target]
+2019-07-26 11:29:49 [info]: Script execution time 0.00478196144104 seconds.
+2019-07-26 11:29:49 [info]: Script used 2 mb of memory.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace NXT\Core;
 
 class Memory
 {

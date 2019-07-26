@@ -1,9 +1,9 @@
 <?php
 
-namespace Core;
+namespace NXT\Core;
 
-use Core\Database\QueryBuilder;
-use Core\Database\Singleton;
+use NXT\Core\Database\QueryBuilder;
+use NXT\Core\Database\Singleton;
 
 class Model
 {

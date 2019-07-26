@@ -1,9 +1,6 @@
 <?php
 
-namespace Core\Cache;
-
-use Core\Application;
-use Core\Tools;
+namespace NXT\Core\Cache;
 
 class Cache
 {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Core;
+namespace NXT\Core;
 
 class Config
 {

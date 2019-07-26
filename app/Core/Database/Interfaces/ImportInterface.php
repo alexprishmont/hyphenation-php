@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Database\Interfaces;
+namespace NXT\Core\Database\Interfaces;
 
 interface ImportInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-use Core\Router\Route;
+use NXT\Core\Router\Route;
 
 Route::add('/', function () {
     // TODO: homepage

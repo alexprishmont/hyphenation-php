@@ -1,8 +1,8 @@
 <?php
 
-namespace Core\Exceptions;
+namespace NXT\Core\Exceptions;
 
-use \Exception;
+use Exception;
 use Throwable;
 
 class LoggerException extends Exception

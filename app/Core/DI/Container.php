@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\DI;
+namespace NXT\Core\DI;
 
-use Core\DI\Interfaces\ContainerInterface;
+use NXT\Core\DI\Interfaces\ContainerInterface;
 use ReflectionClass;
 use Exception;
 

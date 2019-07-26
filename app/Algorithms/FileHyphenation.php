@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Algorithms;
+namespace NXT\Algorithms;
 
-use Algorithms\Interfaces\HyphenationInterface;
-use Core\Application;
-use Core\Exceptions\InvalidFlagException;
+use NXT\Algorithms\Interfaces\HyphenationInterface;
+use NXT\Core\Application;
+use NXT\Core\Exceptions\InvalidFlagException;
 
 class FileHyphenation implements HyphenationInterface
 {

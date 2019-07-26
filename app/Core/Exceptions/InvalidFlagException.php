@@ -1,5 +1,5 @@
 <?php
-namespace Core\Exceptions;
+namespace NXT\Core\Exceptions;
 
 use Throwable;
 

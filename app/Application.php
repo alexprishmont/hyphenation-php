@@ -1,13 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace Core;
+namespace NXT;
 
-use Core\DI\Container;
-use Core\DI\DependenciesLoader;
-use Core\Input\Resolver;
-use Core\Input\Validator;
-use Core\Log\LogLevel;
+use NXT\Core\DI\Container;
+use NXT\Core\DI\DependenciesLoader;
+use NXT\Core\Input\Resolver;
+use NXT\Core\Input\Validator;
+use NXT\Core\Log\LogLevel;
+use NXT\Core\Memory;
+use NXT\Core\Timing;
 
 class Application
 {

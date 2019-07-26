@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Router;
+namespace NXT\Core\Router;
 
-use Core\Router\Interfaces\RouterInterface;
+use NXT\Core\Router\Interfaces\RouterInterface;
 
 class Route implements RouterInterface
 {

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Scans\Interfaces;
+namespace NXT\Core\Scans\Interfaces;
 
 interface ScanInterface
 {

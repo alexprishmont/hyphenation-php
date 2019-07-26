@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Router\Interfaces;
+namespace NXT\Core\Router\Interfaces;
 
 interface RouterInterface
 {

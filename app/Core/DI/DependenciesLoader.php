@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 
-namespace Core\DI;
+namespace NXT\Core\DI;
 
-use Core\Config;
+use NXT\Core\Config;
 
 class DependenciesLoader
 {

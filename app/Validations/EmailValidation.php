@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Validations;
+namespace NXT\Validations;
 
-use Validations\Interfaces\ValidationInterface;
+use NXT\Validations\Interfaces\ValidationInterface;
 
 class EmailValidation implements ValidationInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Log\Interfaces;
+namespace NXT\Core\Log\Interfaces;
 
 interface LoggerInterface
 {

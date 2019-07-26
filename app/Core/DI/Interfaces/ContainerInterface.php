@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\DI\Interfaces;
+namespace NXT\Core\DI\Interfaces;
 
 interface ContainerInterface
 {

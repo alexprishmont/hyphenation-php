@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Views;
+namespace NXT\Views;
 
-use Core\View;
+use NXT\Core\View;
 
 class WordsView extends View
 {

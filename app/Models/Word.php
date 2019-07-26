@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Models;
+namespace NXT\Models;
 
-use Core\Model;
+use NXT\Core\Model;
 
 class Word extends Model
 {

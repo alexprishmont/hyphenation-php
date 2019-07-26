@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Database;
+namespace NXT\Core\Database;
 
-use Core\Cache\FileCache;
-use Core\Database\Interfaces\ExportInterface;
+use NXT\Core\Cache\FileCache;
+use NXT\Core\Database\Interfaces\ExportInterface;
 
 class Export implements ExportInterface
 {

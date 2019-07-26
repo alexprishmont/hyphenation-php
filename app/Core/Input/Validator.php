@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Input;
+namespace NXT\Core\Input;
 
-use Core\Exceptions\InvalidFlagException;
-use Core\Input\Interfaces\ValidatorInterface;
+use NXT\Core\Exceptions\InvalidFlagException;
+use NXT\Core\Input\Interfaces\ValidatorInterface;
 
 class Validator implements ValidatorInterface
 {

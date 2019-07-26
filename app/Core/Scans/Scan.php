@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Core\Scans;
+namespace NXT\Core\Scans;
 
-use Core\Application;
-use Core\Cache\FileCache;
-use Core\Scans\Interfaces\ScanInterface;
+use NXT\Core\Application;
+use NXT\Core\Cache\FileCache;
+use NXT\Core\Scans\Interfaces\ScanInterface;
 use SplFileObject;
 
 class Scan implements ScanInterface

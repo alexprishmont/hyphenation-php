@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Algorithms;
+namespace NXT\Algorithms;
 
-use Algorithms\Interfaces\HyphenationInterface;
+use NXT\Algorithms\Interfaces\HyphenationInterface;
 
 class StringHyphenation implements HyphenationInterface
 {

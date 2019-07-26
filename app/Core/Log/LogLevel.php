@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Log;
+namespace NXT\Core\Log;
 
 class LogLevel
 {
