@@ -2,13 +2,13 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Core\Application;
-use Models\Pattern;
-use Models\Word;
-use Core\Scans\Scan;
-use Core\Config;
-use Algorithms\Proxy;
-use Algorithms\StringHyphenation;
+use NXT\Application;
+use NXT\Models\Pattern;
+use NXT\Models\Word;
+use NXT\Core\Scans\Scan;
+use NXT\Core\Config;
+use NXT\Algorithms\Proxy;
+use NXT\Algorithms\StringHyphenation;
 
 class StringHyphenationAlgorithmTest extends TestCase
 {

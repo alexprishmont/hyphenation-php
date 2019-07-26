@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use Algorithms\Hyphenation;
+use NXT\Algorithms\Hyphenation;
 
 class HyphenationAlgorithmTest extends TestCase
 {
