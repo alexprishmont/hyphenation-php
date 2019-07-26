@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace NXT\Algorithms;
 
 use NXT\Algorithms\Interfaces\HyphenationInterface;
-use NXT\Core\Application;
+use NXT\Application;
 use NXT\Core\Cache\FileCache;
 use NXT\Core\Database\Export;
 use NXT\Core\Scans\Scan;

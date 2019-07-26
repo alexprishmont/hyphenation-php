@@ -2,7 +2,7 @@
 
 namespace NXT\Core\Cache;
 
-use NXT\Core\Application;
+use NXT\Application;
 use NXT\Core\Cache\Interfaces\CacheInterface;
 use NXT\Core\Exceptions\InvalidArgumentException;
 use NXT\Core\Tools;
