@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace Core\Database;
 
+use Core\Config;
+
 class DatabaseSettings
 {
     public static function get(): array
     {
-        $path = dirname(__DIR__, 2) . '/Config/database.json';
-        return json_decode(file_get_contents($path), true);
+        $config = new Config;
+        return $config->get('database');
     }
 }

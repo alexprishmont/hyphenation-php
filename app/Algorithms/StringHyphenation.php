@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Algorithms;
 
 use Algorithms\Interfaces\HyphenationInterface;
+
 class StringHyphenation implements HyphenationInterface
 {
     private $algorithm;
@@ -18,7 +19,7 @@ class StringHyphenation implements HyphenationInterface
         $words = $this->extractWordsFromString($string);
         $result = $string;
 
-        foreach($words as $word) {
+        foreach ($words as $word) {
             $result = str_replace($word, $this->algorithm->hyphenate($word), $result);
         }
 

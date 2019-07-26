@@ -43,9 +43,7 @@ class Application
     public function __destruct()
     {
         $this->getInstance('config')
-            ->write('DEFAULT_SOURCE',
-                self::$settings['DEFAULT_SOURCE'],
-                'config');
+            ->set('config', self::$settings);
 
         if (PHP_SAPI === 'cli') {
             $this->timing->stop();

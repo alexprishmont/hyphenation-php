@@ -112,3 +112,6 @@
 2019-07-25 15:36:57 [success]: Result: world
 2019-07-25 15:36:58 [info]: Script execution time 0.0057539939880371 seconds.
 2019-07-25 15:36:58 [info]: Script used 2 mb of memory.
+2019-07-25 15:43:56 [error]: Usage: php bin/bin/startup [flag] [target]
+2019-07-25 15:43:56 [info]: Script execution time 0.0035369396209717 seconds.
+2019-07-25 15:43:56 [info]: Script used 2 mb of memory.
