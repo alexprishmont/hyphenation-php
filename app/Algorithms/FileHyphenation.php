@@ -23,7 +23,6 @@ class FileHyphenation implements HyphenationInterface
             $array = $this->getArrayFromFile($src);
             $array = implode(' ', $array);
             $result = $this->algorithm->hyphenate($array);
-            var_dump($result);
             return $result;
         }
         throw new InvalidFlagException('Your entered file does not exist. [' . $src . ']');
