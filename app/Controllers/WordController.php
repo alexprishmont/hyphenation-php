@@ -37,9 +37,7 @@ class WordController
     public function showSingleWord(int $id)
     {
         if ($this->wordService->count() > 0) {
-            $check = $this->wordService
-                ->id($id)
-                ->find();
+            $check = $this->wordService->find($id);
             if (!$check) {
                 WordsView::notFound('Word with id: ' . $id . ' not found.');
                 return false;
@@ -67,9 +65,7 @@ class WordController
             return;
         }
 
-        $check = $this->wordService
-            ->word($data['word'])
-            ->find();
+        $check = $this->wordService->find($data['word']);
 
         if ($check) {
             WordsView::invalidData();
@@ -87,9 +83,7 @@ class WordController
 
     public function deleteWord(int $id)
     {
-        $check = $this->wordService
-            ->id($id)
-            ->find();
+        $check = $this->wordService->find($id);
 
         if (!$check) {
             WordsView::invalidData();

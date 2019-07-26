@@ -24,27 +24,25 @@ class Pattern extends Model
         return $this;
     }
 
-    public function find(): bool
+    public function find($input): bool
     {
-        if ($this->pattern === null && $this->id !== null) {
+        if (is_int($input)) {
+            $this->id = $input;
             $statement = $this->builder
                 ->table($this->tableName)
                 ->select(["id"])
                 ->from($this->tableName)
                 ->where(["id" => $this->id])
                 ->execute();
-
-            if ($statement->rowCount() > 0) {
-                return true;
-            }
-            return false;
+        } else if (is_string($input)) {
+            $this->pattern = $input;
+            $statement = $this->builder
+                ->table($this->tableName)
+                ->select(['id'])
+                ->from($this->tableName)
+                ->where(['pattern' => $this->pattern])
+                ->execute();
         }
-        $statement = $this->builder
-            ->table($this->tableName)
-            ->select(['id'])
-            ->from($this->tableName)
-            ->where(['pattern' => $this->pattern])
-            ->execute();
 
         if ($statement->rowCount() > 0) {
             return true;

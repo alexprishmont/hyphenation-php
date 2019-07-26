@@ -20,7 +20,7 @@ class Model
     {
     }
 
-    public function find()
+    public function find($input)
     {
     }
 

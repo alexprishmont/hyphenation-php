@@ -34,9 +34,7 @@ class Proxy implements HyphenationInterface
             return (string)$this->cache->get($word);
         }
 
-        $dbCheck = $this->wordModel
-            ->word($word)
-            ->find();
+        $dbCheck = $this->wordModel->find($word);
 
         if ($dbCheck) {
             $result = $this->wordModel

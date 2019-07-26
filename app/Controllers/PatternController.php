@@ -28,9 +28,7 @@ class PatternController extends Controller
     public function showSinglePattern(int $id)
     {
         if ($this->patternService->count() > 0) {
-            $check = $this->patternService
-                ->id($id)
-                ->find();
+            $check = $this->patternService->find($id);
             if (!$check) {
                 PatternsView::notFound('Pattern with id: ' . $id . ' not found.');
                 return false;
@@ -54,9 +52,7 @@ class PatternController extends Controller
             return;
         }
 
-        $check = $this->patternService
-            ->pattern($data['pattern'])
-            ->find();
+        $check = $this->patternService->find($data['pattern']);
 
         if ($check) {
             PatternsView::invalidData();
@@ -75,9 +71,7 @@ class PatternController extends Controller
             return;
         }
 
-        $check = $this->patternService
-            ->id($id)
-            ->find();
+        $check = $this->patternService->find($id);
 
         if (!$check) {
             PatternsView::invalidData();
@@ -100,9 +94,7 @@ class PatternController extends Controller
             return;
         }
 
-        $check = $this->patternService
-            ->id($id)
-            ->find();
+        $check = $this->patternService->find($id);
 
         if (!$check) {
             PatternsView::invalidData();

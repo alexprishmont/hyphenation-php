@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace NXT\Core\Input;
 
-use NXT\Core\Application;
+use NXT\Application;
 use NXT\Core\DI\Container;
 use NXT\Core\DI\DependenciesLoader;
 use NXT\Core\Exceptions\InvalidFlagException;
@@ -64,7 +64,7 @@ class Resolver implements ResolverInterface
 
     private static function isObjectAlgorithm()
     {
-        return strpos(self::$objectName, 'hyphenation') >= 0 || self::$objectName === 'proxy';
+        return (strpos(self::$objectName, 'Hyphenation') !== false) || (self::$objectName === 'proxy');
     }
 
     private static function getObject(string $objectName)

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace NXT\Core\Scans;
 
-use NXT\Core\Application;
+use NXT\Application;
 use NXT\Core\Cache\FileCache;
 use NXT\Core\Scans\Interfaces\ScanInterface;
 use SplFileObject;

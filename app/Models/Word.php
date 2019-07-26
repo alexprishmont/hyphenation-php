@@ -55,11 +55,13 @@ class Word extends Model
         return $stmt->rowCount();
     }
 
-    public function find(): bool
+    public function find($input): bool
     {
-        if ($this->id !== null) {
+        if (is_int($input)) {
+            $this->id = $input;
             $statement = $this->findById();
-        } else if ($this->word !== null) {
+        } else if (is_string($input)) {
+            $this->word = $input;
             $statement = $this->findByWord();
         }
 
@@ -78,7 +80,7 @@ class Word extends Model
             array_push($resultArray['data'],
                 [
                     'id' => $data['id'],
-                    'pattern' => $data['word'],
+                    'original_word' => $data['word'],
                     'hyphenated' => $data['result']
                 ]
             );
