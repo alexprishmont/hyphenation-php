@@ -4,6 +4,7 @@ class ApiCest
 {
     /**
      * @param ApiTester $I
+     * @param Codeception\Example $example    
      * @example { "pattern": ".ad4der" }
      */
     public function checkFullPatternsList(ApiTester $I, Codeception\Example $example)
@@ -21,6 +22,7 @@ class ApiCest
 
     /**
      * @param ApiTester $I
+     * @param Codeception\Example $example
      * @example { "word": "mistranslate" }
      */
     public function checkFullWordsList(ApiTester $I, Codeception\Example $example)
@@ -38,6 +40,7 @@ class ApiCest
 
     /**
      * @param ApiTester $I
+     * @param Codeception\Example $example
      * @example {"wordID": 1500000, "patternID": 150000}
      */
     public function tryToGetNotExistingWordAndPattern(ApiTester $I, Codeception\Example $example)
@@ -65,6 +68,7 @@ class ApiCest
 
     /**
      * @param ApiTester $I
+     * @param Codeception\Example $example
      * @dataProvider wordProvider
      */
     public function tryCreateWord(ApiTester $I, Codeception\Example $example)
@@ -82,6 +86,7 @@ class ApiCest
 
     /**
      * @param ApiTester $I
+     * @param Codeception\Example $example
      * @dataProvider wordProvider
      */
     public function tryDeleteWord(ApiTester $I, Codeception\Example $example)
@@ -110,6 +115,7 @@ class ApiCest
 
     /**
      * @param ApiTester $I
+     * @param Codeception\Example $example
      * @dataProvider patternProvider
      */
     public function tryCreatePattern(ApiTester $I, Codeception\Example $example)
@@ -128,6 +134,7 @@ class ApiCest
 
     /**
      * @param ApiTester $I
+     * @param Codeception\Example $example
      * @dataProvider patternProvider
      */
     public function tryDeletePattern(ApiTester $I, Codeception\Example $example)
