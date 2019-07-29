@@ -22,14 +22,13 @@ class Hyphenation implements HyphenationInterface
 
     public function getValidPatternsForWord(string $word): array
     {
-        $valid = $this->findValidPatterns($this->patterns, $word);
+        $valid = $this->findValidPatterns($word);
         return $valid;
     }
 
     public function getResult(string $word): string
     {
-        $patterns = $this->patterns;
-        $this->validPatterns = $this->findValidPatterns($patterns, $word);
+        $this->validPatterns = $this->findValidPatterns($word);
 
         $result = $this->addSyllableSymbols(
             $this->completeWordWithDigits(
@@ -107,8 +106,9 @@ class Hyphenation implements HyphenationInterface
         return trim(preg_replace("/\s+/", " ", $cleanString));
     }
 
-    private function findValidPatterns(array $patterns, string $word): array
+    private function findValidPatterns(string $word): array
     {
+        $patterns = $this->patterns;
         $validPatterns = [];
         foreach ($patterns as $pattern) {
             $cleanString = $this->clearPatternString($pattern);

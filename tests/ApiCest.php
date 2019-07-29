@@ -2,7 +2,7 @@
 
 class ApiCest
 {
-    const FIND_IN_PATTERNS = '.pts2';
+    const FIND_IN_PATTERNS = '.ad4der';
     const FIND_IN_WORDS = 'mistranslate';
 
     public function checkFullPatternsList(ApiTester $I)
