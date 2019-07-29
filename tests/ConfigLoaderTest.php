@@ -27,12 +27,7 @@ class ConfigLoaderTest extends TestCase
     public function testConfigReading()
     {
         $result = $this->config->get('config');
-        $this->settings = json_decode(
-            file_get_contents(dirname(__FILE__, 2) . '/config/config.json'),
-            true
-        );
-
-        $this->assertEquals($this->settings, $result);
+        $this->assertEquals(self::DEFAULT_SETTINGS, $result);
     }
 
     public function testConfigWriting()
