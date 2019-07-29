@@ -7,6 +7,7 @@ class ApiCest
 
     public function checkFullPatternsList(ApiTester $I)
     {
+        $I->wantToTest('Get full patterns list');
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendGET('/pattern');
         $I->seeResponseCodeIs(200);
@@ -19,6 +20,7 @@ class ApiCest
 
     public function checkFullWordsList(ApiTester $I)
     {
+        $I->wantToTest('Get full words list');
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendGET('/word');
         $I->seeResponseCodeIsSuccessful();
@@ -31,6 +33,7 @@ class ApiCest
 
     public function tryToGetNotExistingWordAndPattern(ApiTester $I)
     {
+        $I->wantToTest('Try to get not existing word and pattern');
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->sendGET('/pattern/1500000');
         $I->seeResponseCodeIsClientError();
@@ -43,6 +46,7 @@ class ApiCest
 
     public function tryCreateWord(ApiTester $I)
     {
+        $I->wantToTest('Try to create word via API');
         $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPOST('/word', ['word' => 'working']);
@@ -55,6 +59,7 @@ class ApiCest
 
     public function tryCreatePattern(ApiTester $I)
     {
+        $I->wantToTest('Try to create pattern via API');
         $I->haveHttpHeader('Content-Type', 'application/json');
 
         $I->sendPOST('/pattern', ['pattern' => 'testcase']);
@@ -68,6 +73,7 @@ class ApiCest
 
     public function tryDeleteWord(ApiTester $I)
     {
+        $I->wantToTest('Try to delete temporary word.');
         $I->sendGET('/word');
         $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
@@ -84,6 +90,7 @@ class ApiCest
 
     public function tryDeletePattern(ApiTester $I)
     {
+        $I->wantToTest('Try to delete temporary pattern.');
         $I->sendGET('/pattern');
         $I->seeResponseCodeIsSuccessful();
         $I->seeResponseContainsJson();
