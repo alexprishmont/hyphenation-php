@@ -4,7 +4,7 @@ class ApiCest
 {
     /**
      * @param ApiTester $I
-     * @param Codeception\Example $example    
+     * @param Codeception\Example $example
      * @example { "pattern": ".ad4der" }
      */
     public function checkFullPatternsList(ApiTester $I, Codeception\Example $example)
