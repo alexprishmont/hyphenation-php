@@ -1,0 +1,7 @@
+app/Output/
+tests/_data
+tests/_output
+tests/_support
+vendor
+composer.lock
+.idea
