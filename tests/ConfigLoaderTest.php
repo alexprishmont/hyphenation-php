@@ -7,7 +7,12 @@ class ConfigLoaderTest extends TestCase
 {
     private $config;
     private $settings = [];
-
+    private const DEFAULT_SETTINGS = [
+        'PATTENRS_SOURCE' => 'tex-hyphenation-patterns.txt',
+        'INPUT_SRC' => '/Data',
+        'OUTPUT_SRC' => '/Output',
+        'CACHE_OUTPUT_SRC' => '/Cache'
+    ];
     protected function setUp(): void
     {
         $this->config = new \NXT\Core\Config;
@@ -15,6 +20,7 @@ class ConfigLoaderTest extends TestCase
 
     protected function tearDown(): void
     {
+        $this->config->set('config', self::DEFAULT_SETTINGS);
         $this->config = null;
     }
 
