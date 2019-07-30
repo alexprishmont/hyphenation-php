@@ -15,7 +15,7 @@ class FileHyphenationAlgorithmTest extends TestCase
     protected function setUp(): void
     {
         $string = $this->createMock(StringHyphenation::class);
-        // move to testFileHyphenation
+
         $string->expects($this->any())
             ->method('hyphenate')
             ->with(self::TEST_CASE)

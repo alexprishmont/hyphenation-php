@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use NXT\Algorithms\{Proxy, StringHyphenation};
 
 class StringHyphenationAlgorithmTest extends TestCase
 {
@@ -9,15 +10,20 @@ class StringHyphenationAlgorithmTest extends TestCase
 
     protected function setUp(): void
     {
-        $proxy = $this->createMock(\NXT\Algorithms\Proxy::class);
-        $proxy->expects($this->once())
+        $proxy = $this->createMock(Proxy::class);
+
+        $map = [
+            ['mistranslate', 'mis-trans-late'],
+            ['is', 'is'],
+            ['successfully', 'suc-cess-ful-ly'],
+            ['proceeded', 'pro-ceed-ed']
+        ];
+
+        $proxy->expects($this->any())
             ->method('hyphenate')
-            ->with('mistranslate')
-            ->willReturn('mis-trans-late');
+            ->willReturnMap($map);
 
-        // willReturnMap([]);
-
-        $this->hyphenation = new \NXT\Algorithms\StringHyphenation($proxy);
+        $this->hyphenation = new StringHyphenation($proxy);
     }
 
     protected function tearDown(): void
@@ -27,8 +33,10 @@ class StringHyphenationAlgorithmTest extends TestCase
 
     public function testStringHyphenation(): void
     {
-        $result = $this->hyphenation->hyphenate('mistranslate');
-        $this->assertEquals('mis-trans-late', $result);
+
+
+        $result = $this->hyphenation->hyphenate('mistranslate is successfully proceeded');
+        $this->assertEquals('mis-trans-late is suc-cess-ful-ly pro-ceed-ed', $result);
     }
 
 }

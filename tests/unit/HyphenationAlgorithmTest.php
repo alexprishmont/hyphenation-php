@@ -44,12 +44,46 @@ class HyphenationAlgorithmTest extends TestCase
         ];
     }
 
+    public function addDataProviderForValidPatterns()
+    {
+        return [
+            [
+                'mistranslate',
+                [
+                    '.mis1',
+                    '1tra',
+                    '2n1s2',
+                    '4te.',
+                    'a2n',
+                    'm2is',
+                    'n2sl',
+                    's1l2',
+                    's3lat',
+                    'st4r'
+                ]
+            ]
+        ];
+    }
+
     /**
      * @dataProvider addDataProviderForWords
+     * @param $word
+     * @param $expected
      */
     public function testHyphenationAlgorithm($word, $expected)
     {
         $result = $this->hyphenation->hyphenate($word);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @dataProvider addDataProviderForValidPatterns
+     * @param $word
+     * @param $expected
+     */
+    public function testGetValidPatternsForWord($word, $expected)
+    {
+        $result = $this->hyphenation->getValidPatternsForWord($word);
         $this->assertEquals($expected, $result);
     }
 }
