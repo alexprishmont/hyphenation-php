@@ -17,6 +17,7 @@ class Proxy implements HyphenationInterface
     private $wordModel;
     private $patternModel;
     private $scan;
+    private $hyphenation;
 
     public function __construct(
         Word $word,
@@ -27,6 +28,8 @@ class Proxy implements HyphenationInterface
         $this->wordModel = $word;
         $this->patternModel = $pattern;
         $this->scan = $scan;
+
+        $this->hyphenation = new Hyphenation($this->getPatterns());
     }
 
     public function hyphenate(string $word): string
@@ -46,13 +49,12 @@ class Proxy implements HyphenationInterface
             return $result;
         }
 
-        $hyphenation = new Hyphenation($this->getPatterns());
-        $result = $hyphenation->hyphenate($word);
+        $result = $this->hyphenation->hyphenate($word);
 
         $this->wordModel
             ->word($word)
             ->hyphenated($result)
-            ->patterns($hyphenation->getValidPatternsForWord($word))
+            ->patterns($this->hyphenation->getValidPatternsForWord($word))
             ->create();
 
         $this->cache->set($word, $result);
