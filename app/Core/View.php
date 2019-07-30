@@ -10,10 +10,8 @@ class View
 {
     public static function create(string $template, array $data = [])
     {
-        $viewsPath = dirname(__FILE__, 3) . '/public/views';
-
-        $loader = new FilesystemLoader($viewsPath);
-        $twig = new Environment($loader);
+        $instance = Twig::getInstance();
+        $twig = $instance->twig();
 
         return $twig->render($template . '.html.twig', $data);
     }
