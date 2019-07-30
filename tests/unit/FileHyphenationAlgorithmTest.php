@@ -34,7 +34,7 @@ class FileHyphenationAlgorithmTest extends TestCase
 
     public function testFileHyphenation(): void
     {
-        $result = $this->hyphenation->hyphenate('../tests/' . self::TEMP_FILE);
+        $result = $this->hyphenation->hyphenate('/tests/' . self::TEMP_FILE);
         $this->assertEquals(self::RESULT_FOR_TEST_CASE, $result);
     }
 
