@@ -40,6 +40,11 @@ class Application
         ]);
 
         $this->logger = $this->getInstance('logger');
+
+        if (!file_exists(self::$settings['OUTPUT_SRC'])) {
+            mkdir(dirname(__FILE__, 2) . '/output');
+        }
+
     }
 
     public function __destruct()
