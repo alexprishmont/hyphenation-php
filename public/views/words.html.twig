@@ -1,16 +1,16 @@
-{% extends "layouts/app.html" %}
-{% import "macros/pagination.html" as pagination %}
+{% extends "layouts/app.html.twig" %}
+{% import "macros/pagination.html.twig" as pagination %}
 
-
-{% block title %}Patterns{% endblock %}
+{% block title %}Words{% endblock %}
 
 {% block content %}
+
 
 {% if deleteFailure == true %}
 <div class="row">
     <div class="col-md-12">
         <div class="alert alert-danger">
-            Cannot delete pattern with id <b>{{ body }}</b>
+            Cannot delete word with id <b>{{ body }}</b>
         </div>
     </div>
 </div>
@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="alert alert-success">
-            Pattern with ID <b>{{ body }}</b> deleted.
+            Word (<b>{{ word }}</b>) with ID <b>{{ body }}</b> deleted.
         </div>
     </div>
 </div>
@@ -29,7 +29,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <a href="/visma-internship/patterns/create" class="btn btn-danger">Add pattern</a>
+        <a href="/visma-internship/words/create" class="btn btn-danger">Add word</a>
     </div>
 </div>
 <div class="row">
@@ -38,27 +38,29 @@
             <thead>
                 <tr>
                 <th scope="col">#</th>
-                <th scope="col">Pattern</th>
+                <th scope="col">Word</th>
+                <th scope="col">Hyphenated</th>
                 <th scope="col">Options</th>
                 </tr>
             </thead>
             <tbody>
-            {% for pattern in patterns %}
+            {% for word in words %}
             <tr>
-                <th scope="row">{{ pattern.id }}</th>
-                <td>{{ pattern.pattern }}</td>
+                <th scope="row">{{ word.id }}</th>
+                <td>{{ word.word }}</td>
+                <td>{{ word.result }}</td>
                 <td>
-                    <a class="patternDelete btn btn-danger" href="/visma-internship/patterns/delete/{{ pattern.id }}">
+                    <a class="patternDelete btn btn-danger" href="/visma-internship/words/delete/{{ word.id }}">
                         <i class="fas fa-trash-alt"></i> Delete
                     </a>
                 </td>
             </tr>
             {% else %}
-            <p>No patterns in database.</p>
+            <p>No words in database.</p>
             {% endfor %}
             </tbody>
         </table>
     </div>
-    {{ pagination.show(currentPage, pages, "patterns") }}
+    {{ pagination.show(currentPage, pages, "words") }}
 </div>
 {% endblock %}

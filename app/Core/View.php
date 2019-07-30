@@ -15,7 +15,7 @@ class View
         $loader = new FilesystemLoader($viewsPath);
         $twig = new Environment($loader);
 
-        return $twig->render($template . '.html', $data);
+        return $twig->render($template . '.html.twig', $data);
     }
 
     public static function renderJson(array $data)
@@ -69,7 +69,7 @@ class View
         ]);
     }
 
-    private static function renderHTTPException(array $response)
+    public static function renderHTTPException(array $response)
     {
         header($response['status_code_header']);
         if ($response['body']) {
