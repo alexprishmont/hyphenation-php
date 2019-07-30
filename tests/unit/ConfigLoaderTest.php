@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use NXT\Core\Config;
+use NXT\Core\Exceptions\InvalidFlagException;
 
 class ConfigLoaderTest extends TestCase
 {
@@ -13,9 +15,10 @@ class ConfigLoaderTest extends TestCase
         'OUTPUT_SRC' => '/output',
         'CACHE_OUTPUT_SRC' => '/cache'
     ];
+
     protected function setUp(): void
     {
-        $this->config = new \NXT\Core\Config();
+        $this->config = new Config();
     }
 
     protected function tearDown(): void
@@ -39,5 +42,21 @@ class ConfigLoaderTest extends TestCase
         $testCase = $this->config->get('config');
 
         $this->assertEquals($newTestcase, $testCase);
+    }
+
+    public function testTryReadEmptyConfig(): void
+    {
+        $this->expectException(InvalidFlagException::class);
+
+        $newTestcase = [];
+        $this->config->set('config', $newTestcase);
+        $this->config->get('config');
+    }
+
+    public function testTryReadNotExistingConfig(): void
+    {
+        $this->expectException(InvalidFlagException::class);
+
+        $this->config->get('notexistingConfig');
     }
 }
