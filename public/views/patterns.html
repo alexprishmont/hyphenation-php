@@ -1,0 +1,64 @@
+{% extends "layouts/app.html" %}
+{% import "macros/pagination.html" as pagination %}
+
+
+{% block title %}Patterns{% endblock %}
+
+{% block content %}
+
+{% if deleteFailure == true %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger">
+            Cannot delete pattern with id <b>{{ body }}</b>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% if deleteSuccess == true %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-success">
+            Pattern with ID <b>{{ body }}</b> deleted.
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="/visma-internship/patterns/create" class="btn btn-danger">Add pattern</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Pattern</th>
+                <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for pattern in patterns %}
+            <tr>
+                <th scope="row">{{ pattern.id }}</th>
+                <td>{{ pattern.pattern }}</td>
+                <td>
+                    <a class="patternDelete btn btn-danger" href="/visma-internship/patterns/delete/{{ pattern.id }}">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <p>No patterns in database.</p>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ pagination.show(currentPage, pages, "patterns") }}
+</div>
+{% endblock %}

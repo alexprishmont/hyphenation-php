@@ -10,6 +10,7 @@ use NXT\Core\Input\Validator;
 use NXT\Core\Log\LogLevel;
 use NXT\Core\Memory;
 use NXT\Core\Timing;
+use NXT\Core\Tools;
 
 class Application
 {
@@ -43,8 +44,8 @@ class Application
 
         if (!$this->isOutputDirExists()) {
             mkdir(dirname(__FILE__, 2) . '/output');
+            chmod(dirname(__FILE__, 2) . '/output', 0755);
         }
-
     }
 
     public function __destruct()
@@ -96,4 +97,10 @@ class Application
     {
         return file_exists(dirname(__FILE__, 2) . self::$settings['OUTPUT_SRC']);
     }
+
+    private function isCacheDirExists()
+    {
+        return file_exists(Tools::getDefaultCachePath(self::$settings));
+    }
+
 }

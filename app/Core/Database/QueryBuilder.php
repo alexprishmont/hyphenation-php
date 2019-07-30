@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace NXT\Core\Database;
 
 use NXT\Core\Database\Interfaces\BuilderInterface;
+use NXT\Core\Exceptions\InvalidArgumentException;
 
 class QueryBuilder implements BuilderInterface
 {
@@ -131,14 +132,10 @@ class QueryBuilder implements BuilderInterface
 
     public function limit(array $limits)
     {
-        $this->queryCondition .= ' LIMIT ';
-        foreach ($limits as $limit) {
-            if ($this->checkKeyPosition($limits, $limit)) {
-                $this->queryCondition .= $limit . ', ';
-                continue;
-            }
-            $this->queryCondition .= $limit;
+        if (count($limits) > 2) {
+            throw new InvalidArgumentException('Limits can be only [from, to].');
         }
+        $this->queryCondition .= ' LIMIT ' . $limits[0] . ', ' . $limits[1] . ' ';
         return $this;
     }
 

@@ -1,0 +1,19 @@
+{% macro error() %}
+    <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger" role="alert">
+                    Invalid input. Try again.
+                </div>
+            </div>
+        </div>
+{% endmacro %}
+
+{% macro success(type, body) %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-success" role="alert">
+                New {{ type }} (<b>{{ body }}</b>) successfully created.
+            </div>
+        </div>
+    </div>
+{% endmacro %}

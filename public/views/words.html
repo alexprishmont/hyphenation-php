@@ -1,0 +1,66 @@
+{% extends "layouts/app.html" %}
+{% import "macros/pagination.html" as pagination %}
+
+{% block title %}Words{% endblock %}
+
+{% block content %}
+
+
+{% if deleteFailure == true %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger">
+            Cannot delete word with id <b>{{ body }}</b>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% if deleteSuccess == true %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-success">
+            Word (<b>{{ word }}</b>) with ID <b>{{ body }}</b> deleted.
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+        <a href="/visma-internship/words/create" class="btn btn-danger">Add word</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Word</th>
+                <th scope="col">Hyphenated</th>
+                <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for word in words %}
+            <tr>
+                <th scope="row">{{ word.id }}</th>
+                <td>{{ word.word }}</td>
+                <td>{{ word.result }}</td>
+                <td>
+                    <a class="patternDelete btn btn-danger" href="/visma-internship/words/delete/{{ word.id }}">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <p>No words in database.</p>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ pagination.show(currentPage, pages, "words") }}
+</div>
+{% endblock %}

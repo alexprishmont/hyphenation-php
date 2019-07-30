@@ -3,9 +3,21 @@ declare(strict_types=1);
 
 namespace NXT\Core;
 
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class View
 {
+    public static function create(string $template, array $data = [])
+    {
+        $viewsPath = dirname(__FILE__, 3) . '/public/views';
+
+        $loader = new FilesystemLoader($viewsPath);
+        $twig = new Environment($loader);
+
+        return $twig->render($template . '.html', $data);
+    }
+
     public static function renderJson(array $data)
     {
         header('Access-Control-Allow-Origin: *');

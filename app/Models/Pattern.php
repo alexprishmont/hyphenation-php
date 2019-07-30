@@ -12,6 +12,8 @@ class Pattern extends Model
     private $id;
     private $pattern;
 
+    private const ITEM_PER_PAGE = 10;
+
     public function id(int $id)
     {
         $this->id = $id;
@@ -22,6 +24,29 @@ class Pattern extends Model
     {
         $this->pattern = $pattern;
         return $this;
+    }
+
+    public function getByPage(int $page): array
+    {
+        $itemPerPage = self::ITEM_PER_PAGE;
+        $startFrom = ($page - 1) * $itemPerPage;
+
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->select(['*'])
+            ->from($this->tableName)
+            ->order('id', 'asc')
+            ->limit([$startFrom, $itemPerPage])
+            ->execute();
+
+        $row = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function getPageCount(): int
+    {
+        $count = $this->count();
+        return (int) ceil($count / self::ITEM_PER_PAGE);
     }
 
     public function find($input): bool

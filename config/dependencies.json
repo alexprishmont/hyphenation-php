@@ -13,5 +13,8 @@
   "migration": "NXT\\Core\\Database\\Migration",
   "patternController": "NXT\\Controllers\\PatternController",
   "wordController": "NXT\\Controllers\\WordController",
-  "queryBuilder": "NXT\\Core\\Database\\QueryBuilder"
+  "queryBuilder": "NXT\\Core\\Database\\QueryBuilder",
+  "indexController": "NXT\\Controllers\\IndexPageController",
+  "patternsController": "NXT\\Controllers\\PatternsPageController",
+  "wordsController": "NXT\\Controllers\\WordsPageController"
 }

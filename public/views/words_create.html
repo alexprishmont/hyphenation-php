@@ -1,0 +1,42 @@
+{% extends "layouts/app.html" %}
+
+{% import "macros/alerts.html" as alert %}
+
+{% block title %}Words | Create{% endblock %}
+
+{% block content %}
+
+
+{% if failure == true %}
+    {{ alert.error() }}
+{% endif %}
+
+{% if success == true %}
+    {{ alert.success("word", body) }}
+{% endif %}
+
+{% if found == true %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-warning">
+            Word <b>{{ body }}</b> exists in database.
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <div class="form-group">
+                <label for="word">Word: </label>
+                <input type="text" class="form-control" placeholder="Word" id="word" name="word"/>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="form-control btn btn-success">CREATE</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

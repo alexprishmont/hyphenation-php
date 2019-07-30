@@ -15,6 +15,7 @@ class Word extends Model
     private $hyphenatedWord;
     private $usedPatterns;
 
+    private const ITEM_PER_PAGE = 10;
 
     public function id(int $id)
     {
@@ -53,6 +54,32 @@ class Word extends Model
             ->from($this->tableName)
             ->execute();
         return $stmt->rowCount();
+    }
+
+    public function getByPage(int $page): array
+    {
+        $itemPerPage = self::ITEM_PER_PAGE;
+        $startFrom = ($page - 1) * $itemPerPage;
+
+        $statement = $this->builder
+            ->table($this->tableName)
+            ->select(['*'])
+            ->from()
+            ->inner()
+            ->join($this->resultTable)
+            ->on(['results.wordID' => 'words.id'])
+            ->order('words.id', 'asc')
+            ->limit([$startFrom, $itemPerPage])
+            ->execute();
+
+        $row = $statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $row;
+    }
+
+    public function getPageCount(): int
+    {
+        $count = $this->count();
+        return (int) ceil($count / self::ITEM_PER_PAGE);
     }
 
     public function find($input): bool
