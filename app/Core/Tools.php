@@ -13,14 +13,14 @@ class Tools
         $replace = [];
         foreach ($context as $key => $val) {
             if (self::isB($val))
-                $replace['{'.$key.'}'] = $val;
+                $replace['{' . $key . '}'] = $val;
         }
         return strtr($message, $replace);
     }
 
     public static function getDefaultCachePath(array $settings): string
     {
-        $cachePath = dirname(__FILE__, 2) . $settings['OUTPUT_SRC'] . $settings['CACHE_OUTPUT_SRC'];
+        $cachePath = dirname(__FILE__, 3) . $settings['OUTPUT_SRC'] . $settings['CACHE_OUTPUT_SRC'];
         assert(file_exists($cachePath));
         assert(is_writable($cachePath));
         return $cachePath;

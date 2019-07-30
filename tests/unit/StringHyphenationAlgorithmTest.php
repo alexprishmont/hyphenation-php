@@ -15,6 +15,8 @@ class StringHyphenationAlgorithmTest extends TestCase
             ->with('mistranslate')
             ->willReturn('mis-trans-late');
 
+        // willReturnMap([]);
+
         $this->hyphenation = new \NXT\Algorithms\StringHyphenation($proxy);
     }
 
@@ -23,7 +25,7 @@ class StringHyphenationAlgorithmTest extends TestCase
         $this->hyphenation = null;
     }
 
-    public function testStringHyphenation()
+    public function testStringHyphenation(): void
     {
         $result = $this->hyphenation->hyphenate('mistranslate');
         $this->assertEquals('mis-trans-late', $result);

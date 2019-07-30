@@ -66,7 +66,7 @@ class Container implements ContainerInterface
                 $dependencies[] = $parameter->getDefaultValue();
                 continue;
             }
-            
+
             throw new Exception('Cannot resolve class ' . $parameter->name . ' dependencies.');
         }
         return $dependencies;

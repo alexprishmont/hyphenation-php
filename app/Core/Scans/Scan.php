@@ -19,7 +19,7 @@ class Scan implements ScanInterface
 
     public function readDataFromFile(string $src): array
     {
-        $src = dirname(__FILE__, 3) . Application::$settings['INPUT_SRC'] . '/' . $src;
+        $src = dirname(__FILE__, 4) . Application::$settings['INPUT_SRC'] . '/' . $src;
 
         if (!$this->cache->has('patterns')) {
             $file = new SplFileObject($src);

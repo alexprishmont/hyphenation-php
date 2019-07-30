@@ -18,10 +18,11 @@ class Proxy implements HyphenationInterface
     private $patternModel;
     private $scan;
 
-    public function __construct(Word $word,
-                                Pattern $pattern,
-                                Scan $scan)
-    {
+    public function __construct(
+        Word $word,
+        Pattern $pattern,
+        Scan $scan
+    ) {
         $this->cache = FileCache::getInstanceOf();
         $this->wordModel = $word;
         $this->patternModel = $pattern;

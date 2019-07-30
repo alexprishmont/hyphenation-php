@@ -9,13 +9,13 @@ class ConfigLoaderTest extends TestCase
     private $settings = [];
     private const DEFAULT_SETTINGS = [
         'PATTENRS_SOURCE' => 'tex-hyphenation-patterns.txt',
-        'INPUT_SRC' => '/Data',
-        'OUTPUT_SRC' => '/Output',
-        'CACHE_OUTPUT_SRC' => '/Cache'
+        'INPUT_SRC' => '/resources',
+        'OUTPUT_SRC' => '/output',
+        'CACHE_OUTPUT_SRC' => '/cache'
     ];
     protected function setUp(): void
     {
-        $this->config = new \NXT\Core\Config;
+        $this->config = new \NXT\Core\Config();
     }
 
     protected function tearDown(): void
@@ -24,13 +24,13 @@ class ConfigLoaderTest extends TestCase
         $this->config = null;
     }
 
-    public function testConfigReading()
+    public function testConfigReading(): void
     {
         $result = $this->config->get('config');
         $this->assertEquals(self::DEFAULT_SETTINGS, $result);
     }
 
-    public function testConfigWriting()
+    public function testConfigWriting(): void
     {
         $newTestcase = $this->settings;
         $newTestcase['PATTERNS_SOURCE'] = 'test';

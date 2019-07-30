@@ -47,9 +47,9 @@ class HyphenationAlgorithmTest extends TestCase
     /**
      * @dataProvider addDataProviderForWords
      */
-    public function testHyphenationAlgorithm($a, $expected)
+    public function testHyphenationAlgorithm($word, $expected)
     {
-        $result = $this->hyphenation->hyphenate($a);
+        $result = $this->hyphenation->hyphenate($word);
         $this->assertEquals($expected, $result);
     }
 }

@@ -33,10 +33,11 @@ class StringHyphenation implements HyphenationInterface
 
         $spaces = [];
         $words = array_reduce($temp, function (&$result, $item) use (&$spaces) {
-            if (strlen(trim($item)) === 0)
+            if (strlen(trim($item)) === 0) {
                 $spaces[] = strlen($item);
-            else
+            } else {
                 $result[] = $item;
+            }
             return $result;
         }, []);
         return $words;

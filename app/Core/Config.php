@@ -15,7 +15,7 @@ class Config
         return $config;
     }
 
-    public function set(string $configName, array  $config)
+    public function set(string $configName, array $config): void
     {
         file_put_contents(
             $this->getConfigPath($configName),

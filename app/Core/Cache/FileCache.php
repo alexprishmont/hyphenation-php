@@ -17,8 +17,12 @@ class FileCache implements CacheInterface
     private $fileMode;
     private static $instance;
 
-    public function __construct($cachePath, $defaultTTL, $dirMode = 0775, $fileMode = 0664)
-    {
+    public function __construct(
+        $cachePath,
+        $defaultTTL,
+        $dirMode = 0775,
+        $fileMode = 0664
+    ) {
         $this->defaultTTL = $defaultTTL;
         $this->dirMode = $dirMode;
         $this->fileMode = $fileMode;

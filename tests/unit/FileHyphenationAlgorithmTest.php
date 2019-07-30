@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
+use NXT\Core\Exceptions\InvalidFlagException;
+use NXT\Algorithms\{FileHyphenation, StringHyphenation};
 
 class FileHyphenationAlgorithmTest extends TestCase
 {
@@ -12,13 +14,14 @@ class FileHyphenationAlgorithmTest extends TestCase
 
     protected function setUp(): void
     {
-        $string = $this->createMock(\NXT\Algorithms\StringHyphenation::class);
-        $string->expects($this->once())
+        $string = $this->createMock(StringHyphenation::class);
+        // move to testFileHyphenation
+        $string->expects($this->any())
             ->method('hyphenate')
             ->with(self::TEST_CASE)
             ->willReturn(self::RESULT_FOR_TEST_CASE);
 
-        $this->hyphenation = new \NXT\Algorithms\FileHyphenation($string);
+        $this->hyphenation = new FileHyphenation($string);
         $this->createTempFile();
         $this->writeTempFile();
     }
@@ -29,10 +32,16 @@ class FileHyphenationAlgorithmTest extends TestCase
         $this->deleteTempFile();
     }
 
-    public function testFileHyphenation()
+    public function testFileHyphenation(): void
     {
         $result = $this->hyphenation->hyphenate('../tests/' . self::TEMP_FILE);
         $this->assertEquals(self::RESULT_FOR_TEST_CASE, $result);
+    }
+
+    public function testWrongFilePath(): void
+    {
+        $this->expectException(InvalidFlagException::class);
+        $this->hyphenation->hyphenate('wrongpath.tst');
     }
 
     private function writeTempFile(): void
@@ -42,13 +51,13 @@ class FileHyphenationAlgorithmTest extends TestCase
 
     private function createTempFile(): void
     {
-        $file = fopen('tests/' . self::TEMP_FILE, 'w') or die('Cannot open temp. file.');
+        $file = fopen('tests/' . self::TEMP_FILE, 'w');
         fclose($file);
     }
 
     private function deleteTempFile(): void
     {
-        unlink('tests/' . self::TEMP_FILE) or die('Cannot delete temp. file');
+        unlink('tests/' . self::TEMP_FILE);
     }
 
 }

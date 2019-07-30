@@ -13,9 +13,9 @@ class Migration implements MigrationInterface
     private $db;
     private $logger;
 
-    public function __construct(Connection $db, Logger $log)
+    public function __construct(Logger $log)
     {
-        $this->db = $db;
+        $this->db = Singleton::getInstanceOf();
         $this->logger = $log;
     }
 

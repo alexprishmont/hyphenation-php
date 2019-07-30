@@ -18,7 +18,7 @@ class FileHyphenation implements HyphenationInterface
 
     public function hyphenate(string $src): string
     {
-        $src = dirname(__FILE__, 2) . Application::$settings['INPUT_SRC'] . '/' . $src;
+        $src = dirname(__FILE__, 3) . Application::$settings['INPUT_SRC'] . '/' . $src;
         if ($this->isFileExists($src)) {
             $array = $this->getArrayFromFile($src);
             $array = implode(' ', $array);

@@ -7,22 +7,22 @@ class Timing
     private $startTime;
     private $endTime;
 
-    public function start()
+    public function start(): void
     {
         $this->startTime = microtime(true);
     }
 
-    public function stop()
+    public function stop(): void
     {
         $this->endTime = microtime(true);
     }
 
-    public function printTiming()
+    public function printTiming(): string
     {
         return $this->getExecutionTime();
     }
 
-    private function getExecutionTime()
+    private function getExecutionTime(): string
     {
         return $this->endTime - $this->startTime;
     }

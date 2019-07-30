@@ -1,6 +1,6 @@
 {
   "LOG_ENABLED": true,
-  "LOG_DIR": "/Output/Logs",
+  "LOG_DIR": "/output/logs",
   "LOG_EXT": "log",
   "LOG_TO_CONSOLE": true,
   "LOG_VALID_PATTERNS": false,

@@ -11,8 +11,11 @@ class Route implements RouterInterface
     private static $pathNotFound = null;
     private static $methodNotAllowed = null;
 
-    public static function add($expression, $function, string $method = 'get'): void
-    {
+    public static function add(
+        $expression,
+        $function,
+        string $method = 'get'
+    ): void {
         self::$routes[] = [
             'expression' => $expression,
             'function' => $function,
@@ -76,11 +79,12 @@ class Route implements RouterInterface
         return $parsedUrl['path'];
     }
 
-    private static function noRouteMatchFoundResponse(bool $routeMatchFound,
-                                                      bool $pathMatchFound,
-                                                      string $path,
-                                                      string $method): void
-    {
+    private static function noRouteMatchFoundResponse(
+        bool $routeMatchFound,
+        bool $pathMatchFound,
+        string $path,
+        string $method
+    ): void {
         if (!$routeMatchFound) {
             if ($pathMatchFound) {
                 header("HTTP/1.1 405 Method Not Allowed");

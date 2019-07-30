@@ -126,8 +126,9 @@ class Logger implements LoggerInterface
 
     private function processLog($message, array $context, $priority, string $priorityMessage, int $color)
     {
-        if (!$this->config['LOG_ENABLED'])
+        if (!$this->config['LOG_ENABLED']) {
             return;
+        }
 
         $date = new DateTime('now', new DateTimeZone($this->config['DATE_TIMEZONE']));
         $date = $date->format($this->config['DATE_FORMAT']);
@@ -152,7 +153,7 @@ class Logger implements LoggerInterface
         $date = new DateTime('now', new DateTimeZone($this->config['DATE_TIMEZONE']));
         $logName = $date->format('Y-m-d');
 
-        $dir = dirname(__FILE__, 3) . $this->config['LOG_DIR'];
+        $dir = dirname(__FILE__, 4) . $this->config['LOG_DIR'];
 
         $date = $date->format($this->config['DATE_FORMAT']);
         $data = $date . ' ' . $priorityMsg . ': ' . print_r($log, true) . PHP_EOL;
@@ -162,8 +163,9 @@ class Logger implements LoggerInterface
             $this->config['LOG_EXT']
         );
 
-        if (!file_exists($dir))
+        if (!file_exists($dir)) {
             mkdir($dir, 0700);
+        }
 
         if (!file_exists($logFile)) {
             $log = fopen($logFile, 'w');

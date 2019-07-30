@@ -14,10 +14,11 @@ class WordController
     private $algorithmService;
     private $patternService;
 
-    public function __construct(Word $word,
-                                Proxy $algorithm,
-                                Pattern $pattern)
-    {
+    public function __construct(
+        Word $word,
+        Proxy $algorithm,
+        Pattern $pattern
+    ) {
         $this->wordService = $word;
         $this->algorithmService = $algorithm;
         $this->patternService = $pattern;
