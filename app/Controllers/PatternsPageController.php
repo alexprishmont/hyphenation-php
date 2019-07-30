@@ -29,6 +29,10 @@ class PatternsPageController extends Controller
 
     public function page(int $page): void
     {
+        if ($page <= 0 || $page > $this->service->getPageCount()) {
+            $page = 1;
+        }
+
         $patterns = $this->service->getByPage($page);
         echo View::create('patterns', [
                 'patterns' => $patterns,

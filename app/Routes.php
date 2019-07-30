@@ -2,6 +2,10 @@
 
 use NXT\Core\Router\Route;
 
+Route::pathNotFound(function() use ($app) {
+    return $app->getInstance('pathController')->pathNotFound();
+});
+
 Route::add('/', function () use ($app) {
     return $app->getInstance('indexController')->index();
 });

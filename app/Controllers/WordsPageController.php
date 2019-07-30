@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace NXT\Controllers;
 
-use NXT\Algorithms\Hyphenation;
 use NXT\Algorithms\Proxy;
 use NXT\Core\Controller;
 use NXT\Core\View;
@@ -33,6 +32,10 @@ class WordsPageController extends Controller
 
     public function page(int $page): void
     {
+        if ($page <= 0 || $page > $this->service->getPageCount()) {
+            $page = 1;
+        }
+
         $words = $this->service->getByPage($page);
         echo View::create('words', [
                 'words' => $words,

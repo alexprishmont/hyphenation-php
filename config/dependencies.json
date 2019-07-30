@@ -16,5 +16,6 @@
   "queryBuilder": "NXT\\Core\\Database\\QueryBuilder",
   "indexController": "NXT\\Controllers\\IndexPageController",
   "patternsController": "NXT\\Controllers\\PatternsPageController",
-  "wordsController": "NXT\\Controllers\\WordsPageController"
+  "wordsController": "NXT\\Controllers\\WordsPageController",
+  "pathController": "NXT\\Controllers\\PathController"
 }
