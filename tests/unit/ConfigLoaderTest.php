@@ -59,4 +59,16 @@ class ConfigLoaderTest extends TestCase
 
         $this->config->get('notexistingConfig');
     }
+
+    public function testTrySetNotExistingConfig(): void
+    {
+        $this->expectException(InvalidFlagException::class);
+        $this->config->set('notexisting', []);
+    }
+
+    public function testTrySetEmptyConfig(): void
+    {
+        $this->expectException(InvalidFlagException::class);
+        $this->config->set('config', []);
+    }
 }
