@@ -92,6 +92,11 @@ class WordsPageController extends Controller
             return;
         }
 
+        $deleted = $this->service->id($id)->read()['word'];
+        $this->service
+            ->id($id)
+            ->delete();
+
         echo View::create('words',
             [
                 'words' => $this->service->getByPage(1),
@@ -99,13 +104,10 @@ class WordsPageController extends Controller
                 'currentPage' => 1,
                 'pages' => $this->service->getPageCount(),
                 'body' => $id,
-                'word' => $this->service->id($id)->read()['word']
+                'word' => $deleted
             ]
         );
 
-        $this->service
-            ->id($id)
-            ->delete();
     }
 
     private function validatePOST(array $post): bool
