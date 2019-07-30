@@ -3,17 +3,14 @@ declare(strict_types=1);
 
 namespace NXT\Core;
 
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
-
 class View
 {
     public static function create(string $template, array $data = [])
     {
         $instance = Twig::getInstance();
-        $twig = $instance->twig();
+        $loadedTemplate = $instance->getTemplates();
 
-        return $twig->render($template . '.html.twig', $data);
+        return $loadedTemplate[$template]->render($data);
     }
 
     public static function renderJson(array $data)
