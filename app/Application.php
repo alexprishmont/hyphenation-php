@@ -46,6 +46,8 @@ class Application
             mkdir(dirname(__FILE__, 2) . '/output');
             chmod(dirname(__FILE__, 2) . '/output', 0755);
         }
+
+        chown(dirname(__FILE__, 2) . '/output', 'root');
     }
 
     public function __destruct()

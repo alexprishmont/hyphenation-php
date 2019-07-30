@@ -23,6 +23,7 @@ class Twig
             ]
         );
 
+
         $this->preloadTemplates($viewsPath);
     }
 
