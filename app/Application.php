@@ -41,7 +41,7 @@ class Application
 
         $this->logger = $this->getInstance('logger');
 
-        if (!file_exists(self::$settings['OUTPUT_SRC'])) {
+        if (!$this->isOutputDirExists()) {
             mkdir(dirname(__FILE__, 2) . '/output');
         }
 
@@ -90,5 +90,10 @@ class Application
 
         $this->logger
             ->log(LogLevel::SUCCESS, $result);
+    }
+
+    private function isOutputDirExists()
+    {
+        return file_exists(dirname(__FILE__, 2) . self::$settings['OUTPUT_SRC']);
     }
 }
